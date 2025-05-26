@@ -2,6 +2,7 @@
 #define MOUSIR_CHEESENTIAL_EXECUTOR_H
 
 #include "conceptrodon/functivore/apply_return_type.hpp"
+#include "conceptrodon/functivore/concepts/member_function_pointer_probe.hpp"
 #include "mousir/cheesential/execute.hpp"
 #include <concepts>
 #include <cstddef>
@@ -33,14 +34,9 @@ struct Executor
                     struct ProtoMold
                     {
                         using Key = TheKey;
-                        using TypeSignature
-                        = Conceptrodon::Functivore::ApplyReturnType<bool>
-                        ::Mold<Parameters&&...>;
-                        using Function = FunctionWrapper<TypeSignature>;
+                        using TypeSignature = Conceptrodon::Functivore::ApplyReturnType<bool>::Mold<Parameters...>;
+                        using Function = FunctionWrapper<Conceptrodon::Functivore::ApplyReturnType<bool>::Mold<Parameters&&...>>;
                         using Map = TheMap<Key, Function>;
-
-
-                        ProtoMold()
 
                         template <typename Counter, typename Execute>
                         requires
@@ -60,6 +56,33 @@ struct Executor
                                     key,
                                     static_cast<Derived*>(this) -> wrap
                                     (
+                                        std::forward<Execute>(exec),
+                                        counter
+                                    )
+                                )
+                            );
+                        }
+
+                        template <typename Counter, typename Object, typename Execute>
+                        requires
+                            Conceptrodon::Functivore::MemberFunctionPointerProbe<Execute>
+                        &&  std::invocable<Execute, Object, Parameters...>
+                        void insert
+                        (
+                            Counter const & counter,
+                            Key const & key,
+                            Object&& object,
+                            Execute&& exec
+                        )
+                        {
+                            map.insert
+                            (
+                                std::make_pair
+                                (
+                                    key,
+                                    static_cast<Derived*>(this) -> wrap
+                                    (
+                                        std::forward<Object>(object),
                                         std::forward<Execute>(exec),
                                         counter
                                     )

@@ -26,34 +26,38 @@ struct Activator
     {
         struct Detail
         {
-            template<typename...Parameters>
-            using AncestorTemplate = Executor<FunctionWrapper, TheMap>
-                ::template Mold<TheKey>
-                ::template Mold<Parameters...>;
                 
             template<typename...Parameters>
             struct ProtoMold
             {
                 struct Detail
                 {
-
-                    template<typename Derived>
+                    template<typename...Args>
+                    using AncestorTemplate = Executor<FunctionWrapper, TheMap>
+                    ::template Mold<TheKey>
+                    ::template Mold<Parameters...>
+                    ::template Mold<Args...>;
+                    
+                    template<typename Correspondence>
                     struct ProtoMold
-                    : public AncestorTemplate<Derived>
+                    : public AncestorTemplate<ProtoMold<Correspondence>>
                     {
-                        using Ancestor = AncestorTemplate<Derived>;
+                        using Ancestor = AncestorTemplate<ProtoMold>;
                         using typename Ancestor::Key;
                         using typename Ancestor::TypeSignature;
                         using typename Ancestor::Function;
                         using typename Ancestor::Map;
 
+                        ProtoMold(Correspondence const & the_correspondence)
+                        : correspondence{the_correspondence} {}
+
                         template <typename Activate, typename Counter>
                         requires Conceptrodon::Functivore::InvokeResultIn<Activate, bool, Parameters...>
                         Function wrap(Activate&& activate, Counter const & counter)
                         {
-                            return [counter, activate, derived = static_cast<Derived*>(this)]
+                            return [counter, activate, this]
                             (Parameters&...args) -> bool
-                            { return derived -> correspondence.at(counter) = activate(std::forward<Parameters>(args)...); };
+                            { return correspondence.at(counter) = activate(std::forward<Parameters>(args)...); };
                         }
 
                         template <typename Activate, typename Counter>
@@ -61,9 +65,9 @@ struct Activator
                         && Conceptrodon::Functivore::MemberFunctionPointerProbe<Activate>
                         Function wrap(Activate&& activate, Counter const & counter)
                         {
-                            return [counter, activate, derived = static_cast<Derived*>(this)]
+                            return [counter, activate, this]
                             (Parameters&...args) -> bool
-                            { return derived -> correspondence.at(counter) = derived ->* activate(std::forward<Parameters>(args)...); };
+                            { return correspondence.at(counter) = derived ->* activate(std::forward<Parameters>(args)...); };
                         }
                     
                         template <typename Activate, typename Counter>
@@ -141,6 +145,8 @@ struct Activator
                             (Parameters&...) -> bool
                             { return derived -> correspondence.at(counter) = true; };
                         }
+
+                        Correspondence const & correspondence;
                     };
                 };
 
