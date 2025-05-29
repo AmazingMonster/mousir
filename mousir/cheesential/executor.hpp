@@ -2,10 +2,8 @@
 #define MOUSIR_CHEESENTIAL_EXECUTOR_H
 
 #include "conceptrodon/functivore/apply_return_type.hpp"
-#include "conceptrodon/functivore/concepts/member_function_pointer_probe.hpp"
 #include "mousir/cheesential/execute.hpp"
 #include <concepts>
-#include <cstddef>
 #include <functional>
 #include <unordered_map>
 #include <utility>
@@ -39,9 +37,6 @@ struct Executor
                         using Map = TheMap<Key, Function>;
 
                         template <typename Counter, typename Execute>
-                        requires
-                            std::same_as<Execute, nullptr_t>
-                        ||  std::invocable<Execute, Parameters...>
                         void insert
                         (
                             Counter const & counter,
@@ -49,43 +44,34 @@ struct Executor
                             Execute&& exec
                         )
                         {
-                            map.insert
+                            map.emplace
                             (
-                                std::make_pair
+                                key,
+                                static_cast<Derived*>(this) -> wrap
                                 (
-                                    key,
-                                    static_cast<Derived*>(this) -> wrap
-                                    (
-                                        std::forward<Execute>(exec),
-                                        counter
-                                    )
+                                    std::forward<Execute>(exec),
+                                    counter
                                 )
                             );
                         }
 
-                        template <typename Counter, typename Object, typename Execute>
-                        requires
-                            Conceptrodon::Functivore::MemberFunctionPointerProbe<Execute>
-                        &&  std::invocable<Execute, Object, Parameters...>
+                        template <typename Counter, typename ObjectPointer, typename Execute>
                         void insert
                         (
                             Counter const & counter,
                             Key const & key,
-                            Object&& object,
+                            ObjectPointer&& object_pointer,
                             Execute&& exec
                         )
                         {
-                            map.insert
+                            map.emplace
                             (
-                                std::make_pair
+                                key,
+                                static_cast<Derived*>(this) -> wrap
                                 (
-                                    key,
-                                    static_cast<Derived*>(this) -> wrap
-                                    (
-                                        std::forward<Object>(object),
-                                        std::forward<Execute>(exec),
-                                        counter
-                                    )
+                                    std::forward<ObjectPointer>(object_pointer),
+                                    std::forward<Execute>(exec),
+                                    counter
                                 )
                             );
                         }

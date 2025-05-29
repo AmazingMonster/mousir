@@ -2,6 +2,7 @@
 #define MOUSIR_CHEESENTIAL_PRACTICER_H
 
 #include "conceptrodon/functivore/apply_return_type.hpp"
+#include "conceptrodon/functivore/concepts/invoke_return_as.hpp"
 #include "conceptrodon/functivore/concepts/member_function_pointer_probe.hpp"
 #include "conceptrodon/mouldivore/concepts/confess.hpp"
 #include <functional>
@@ -28,80 +29,157 @@ struct Practicer
             {
                 struct Detail
                 {
-                    template<typename Derived>
+                    template<typename Correspondence>
                     struct ProtoMold
                     {
                         using Key = TheCorrespondenceKey;
-                        using TypeSignature
-                        = Conceptrodon::Functivore::ApplyReturnType<void>
-                        ::Mold<Parameters&&...>;
-                        using Function = FunctionWrapper<TypeSignature>;
+                        using TypeSignature = Conceptrodon::Functivore::ApplyReturnType<bool>::Mold<Parameters...>;
+                        using Function = FunctionWrapper<Conceptrodon::Functivore::ApplyReturnType<bool>::Mold<Parameters&&...>>;
                         using Map = TheMap<Key, Function>;
                         
-                        template <typename Counter, typename Practice>
+                        template <typename Practice>
                         requires std::invocable<Practice, Parameters...>
                         void insert
                         (
-                            Counter const & counter,
                             Key const & key,
                             Practice&& practice
                         )
                         {
-                            map.insert
+                            map.emplace
                             (
-                                std::make_pair
+                                key,
+                                wrap(std::forward<Practice>(practice))
+                            );
+                        }
+                        
+                        template <typename ObjectPointer, typename Practice>
+                        requires std::invocable<Practice, Parameters...>
+                        void insert
+                        (
+                            Key const & key,
+                            ObjectPointer&& object_pointer,
+                            Practice&& practice
+                        )
+                        {
+                            map.emplace
+                            (
+                                key,
+                                wrap
                                 (
-                                    key,
-                                    static_cast<Derived*>(this) -> wrap
-                                    (std::forward<Practice>(practice))
+                                    std::forward<ObjectPointer>(object_pointer),
+                                    std::forward<Practice>(practice)
                                 )
                             );
                         }
 
-                        template <typename Practice, typename Counter>
+                        template <typename Practice>
+                        requires Conceptrodon::Functivore::InvokeReturnAs<Practice, bool, Parameters...>
                         Function wrap(Practice&& practice)
                         {
                             return [practice]
-                            (Parameters&...args) -> void
-                            {
-                                practice(std::forward<Parameters>(args)...);
-                                return;
-                            };
+                            (Parameters&...args) -> bool
+                            { return practice(std::forward<Parameters>(args)...); };
                         }
 
-                        template <typename Practice, typename Counter>
-                        requires Conceptrodon::Functivore::MemberFunctionPointerProbe<Practice>
-                        Function wrap(Practice&& practice)
+                        template <typename Practice, typename ObjectPointer>
+                        requires
+                            Conceptrodon::Functivore::InvokeReturnAs<Practice, bool, Parameters...>
+                        &&  Conceptrodon::Functivore::MemberFunctionPointerProbe<Practice>
+                        Function wrap(ObjectPointer&& object_pointer, Practice&& practice)
                         {
-                            return [practice, derived=static_cast<Derived* >(this)]
-                            (Parameters&...args) -> void
+                            if constexpr (std::is_lvalue_reference_v<ObjectPointer>)
                             {
-                                (derived ->* practice)(std::forward<Parameters>(args)...);
-                                return;
-                            };
+                                return [practice, &object_pointer]
+                                (Parameters&...args) -> bool
+                                { return (object_pointer ->* practice)(std::forward<Parameters>(args)...); };
+                            }
+                    
+                            else
+                            {
+                                return [practice, object_pointer=std::move(object_pointer)]
+                                (Parameters&...args) -> bool
+                                { return (object_pointer ->* practice)(std::forward<Parameters>(args)...); };
+                            }
                         }
                     
-                        template <typename Practice, typename Counter>
-                        requires Conceptrodon::Mouldivore::Confess<std::is_class, Practice>
+                        template <typename Practice>
+                        requires
+                            Conceptrodon::Functivore::InvokeReturnAs<Practice, bool, Parameters...>
+                        &&  Conceptrodon::Mouldivore::Confess<std::is_class, Practice>
                         Function wrap(Practice&& practice)
                         {
                             if constexpr (std::is_lvalue_reference_v<Practice>)
                             {
-                                return [&practice, derived=static_cast<Derived*>(this)]
-                                (Parameters&...args) -> void
+                                return [&practice]
+                                (Parameters&...args) -> bool
+                                { return practice(std::forward<Parameters>(args)...); };
+                            }
+                    
+                            else
+                            {
+                                return [practice=std::move(practice)]
+                                (Parameters&...args) -> bool
+                                { return practice(std::forward<Parameters>(args)...); };
+                            }
+                        }
+
+                        template <typename Practice>
+                        Function wrap(Practice&& practice)
+                        {
+                            return [practice]
+                            (Parameters&...args) -> bool
+                            {
+                                practice(std::forward<Parameters>(args)...);
+                                return true;
+                            };
+                        }
+
+                        template <typename Practice, typename ObjectPointer>
+                        requires Conceptrodon::Functivore::MemberFunctionPointerProbe<Practice>
+                        Function wrap(ObjectPointer&& object_pointer, Practice&& practice)
+                        {
+                            if constexpr (std::is_lvalue_reference_v<ObjectPointer>)
+                            {
+                                return [practice, &object_pointer]
+                                (Parameters&...args) -> bool
                                 {
-                                    practice(std::forward<Parameters>(args)...);
-                                    return;
+                                    (object_pointer ->* practice)(std::forward<Parameters>(args)...);
+                                    return true;
                                 };
                             }
                     
                             else
                             {
-                                return [practice=std::move(practice), derived=static_cast<Derived*>(this)]
-                                (Parameters&...args) -> void
+                                return [practice, object_pointer=std::move(object_pointer)]
+                                (Parameters&...args) -> bool
+                                {
+                                    (object_pointer ->* practice)(std::forward<Parameters>(args)...);
+                                    return true;
+                                };
+                            }
+                        }
+                    
+                        template <typename Practice>
+                        requires Conceptrodon::Mouldivore::Confess<std::is_class, Practice>
+                        Function wrap(Practice&& practice)
+                        {
+                            if constexpr (std::is_lvalue_reference_v<Practice>)
+                            {
+                                return [&practice]
+                                (Parameters&...args) -> bool
                                 {
                                     practice(std::forward<Parameters>(args)...);
-                                    return;
+                                    return true;
+                                };
+                            }
+                    
+                            else
+                            {
+                                return [practice=std::move(practice)]
+                                (Parameters&...args) -> bool
+                                {
+                                    practice(std::forward<Parameters>(args)...);
+                                    return true;
                                 };
                             }
                         }
@@ -111,19 +189,21 @@ struct Practicer
                         && std::convertible_to<GivenCorrespondenceKey, Key>
                         bool execute(GivenCorrespondenceKey const & the_key, Args&&...args)
                         {
-                            if (static_cast<Derived*>(this) -> correspondence[the_key])
+                            bool& flag = correspondence[the_key];
+                            if (flag)
                             {
                                 auto [begin, end] = map.equal_range(the_key);
                                 for (auto iter {begin}; iter != end; iter++)
                                 {
-                                    iter -> second(std::forward<Args>(args)...);
+                                    flag = flag && iter -> second(std::forward<Args>(args)...);
                                 }
-                                return true;
+                                return flag;
                             }
                             return false;
                         }
 
                         Map map;
+                        Correspondence const & correspondence;
                     };
                 };
 

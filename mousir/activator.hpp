@@ -1,7 +1,7 @@
-#ifndef MOUSIR_CHEESENTIAL_ACTIVATOR_H
-#define MOUSIR_CHEESENTIAL_ACTIVATOR_H
+#ifndef MOUSIR_ACTIVATOR_H
+#define MOUSIR_ACTIVATOR_H
 
-#include "conceptrodon/functivore/concepts/invoke_result_in.hpp"
+#include "conceptrodon/functivore/concepts/invoke_return_as.hpp"
 #include "conceptrodon/functivore/concepts/member_function_pointer_probe.hpp"
 #include "conceptrodon/mouldivore/concepts/confess.hpp"
 #include <type_traits>
@@ -12,7 +12,6 @@
 #include <utility>
 
 namespace Mousir {
-namespace Cheesential {
 
 template
 <
@@ -33,7 +32,7 @@ struct Activator
                 struct Detail
                 {
                     template<typename...Args>
-                    using AncestorTemplate = Executor<FunctionWrapper, TheMap>
+                    using AncestorTemplate = Cheesential::Executor<FunctionWrapper, TheMap>
                     ::template Mold<TheKey>
                     ::template Mold<Parameters...>
                     ::template Mold<Args...>;
@@ -52,7 +51,7 @@ struct Activator
                         : correspondence{the_correspondence} {}
 
                         template <typename Activate, typename Counter>
-                        requires Conceptrodon::Functivore::InvokeResultIn<Activate, bool, Parameters...>
+                        requires Conceptrodon::Functivore::InvokeReturnAs<Activate, bool, Parameters...>
                         Function wrap(Activate&& activate, Counter const & counter)
                         {
                             return [counter, activate, this]
@@ -60,57 +59,80 @@ struct Activator
                             { return correspondence.at(counter) = activate(std::forward<Parameters>(args)...); };
                         }
 
-                        template <typename Activate, typename Counter>
-                        requires Conceptrodon::Functivore::InvokeResultIn<Activate, bool, Parameters...>
+                        template <typename Activate, typename ObjectPointer, typename Counter>
+                        requires Conceptrodon::Functivore::InvokeReturnAs<Activate, bool, Parameters...>
                         && Conceptrodon::Functivore::MemberFunctionPointerProbe<Activate>
-                        Function wrap(Activate&& activate, Counter const & counter)
+                        Function wrap(ObjectPointer&& object_pointer, Activate&& activate, Counter const & counter)
                         {
-                            return [counter, activate, this]
-                            (Parameters&...args) -> bool
-                            { return correspondence.at(counter) = derived ->* activate(std::forward<Parameters>(args)...); };
+                            if constexpr (std::is_lvalue_reference_v<ObjectPointer>)
+                            {
+                                return [counter, activate, object_pointer, this]
+                                (Parameters&...args) -> bool
+                                { return correspondence.at(counter) = (object_pointer ->* activate)(std::forward<Parameters>(args)...); };
+                            }
+                            
+                            else
+                            {
+                                return [counter, activate, object_pointer = std::move(object_pointer), this]
+                                (Parameters&...args) -> bool
+                                { return correspondence.at(counter) = (object_pointer ->* activate)(std::forward<Parameters>(args)...); };
+                            }
                         }
                     
                         template <typename Activate, typename Counter>
-                        requires Conceptrodon::Functivore::InvokeResultIn<Activate, bool, Parameters...>
+                        requires Conceptrodon::Functivore::InvokeReturnAs<Activate, bool, Parameters...>
                         && Conceptrodon::Mouldivore::Confess<std::is_class, Activate>
                         Function wrap(Activate&& activate, Counter const & counter)
                         {
                             if constexpr (std::is_lvalue_reference_v<Activate>)
                             {
-                                return [counter, &activate, derived = static_cast<Derived*>(this)]
+                                return [counter, &activate, this]
                                 (Parameters&...args) -> bool
-                                { return derived -> correspondence.at(counter) = activate(std::forward<Parameters>(args)...); };
+                                { return correspondence.at(counter) = activate(std::forward<Parameters>(args)...); };
                             }
                     
                             else
                             {
-                                return [counter, activate=std::move(activate), derived = static_cast<Derived*>(this)]
+                                return [counter, activate=std::move(activate), this]
                                 (Parameters&...args) -> bool
-                                { return derived -> correspondence.at(counter) = activate(std::forward<Parameters>(args)...); };
+                                { return correspondence.at(counter) = activate(std::forward<Parameters>(args)...); };
                             }
                         }
 
                         template <typename Activate, typename Counter>
                         Function wrap(Activate&& activate, Counter const & counter)
                         {
-                            return [counter, activate, derived = static_cast<Derived*>(this)]
+                            return [counter, activate, this]
                             (Parameters&...args) -> bool
                             {
                                 activate(activate(std::forward<Parameters>(args)...));
-                                return derived -> correspondence.at(counter) = true;
+                                return correspondence.at(counter) = true;
                             };
                         }
 
-                        template <typename Activate, typename Counter>
+                        template <typename Activate, typename ObjectPointer, typename Counter>
                         requires Conceptrodon::Functivore::MemberFunctionPointerProbe<Activate>
-                        Function wrap(Activate&& activate, Counter const & counter)
+                        Function wrap(ObjectPointer&& object_pointer, Activate&& activate, Counter const & counter)
                         {
-                            return [counter, activate, derived = static_cast<Derived*>(this)]
-                            (Parameters&...args) -> bool
+                            if constexpr (std::is_lvalue_reference_v<ObjectPointer>)
                             {
-                                derived ->* activate(std::forward<Parameters>(args)...);
-                                return derived -> correspondence.at(counter) = true;
-                            };
+                                return [counter, activate, object_pointer, this]
+                                (Parameters&...args) -> bool
+                                {
+                                    (object_pointer ->* activate)(std::forward<Parameters>(args)...);
+                                    return correspondence.at(counter) = true;
+                                };
+                            }
+                            
+                            else
+                            {
+                                return [counter, activate, object_pointer, this]
+                                (Parameters&...args) -> bool
+                                {
+                                    (object_pointer ->* activate)(std::forward<Parameters>(args)...);
+                                    return correspondence.at(counter) = true;
+                                };
+                            }
                         }
                     
                         template <typename Activate, typename Counter>
@@ -119,21 +141,21 @@ struct Activator
                         {
                             if constexpr (std::is_lvalue_reference_v<Activate>)
                             {
-                                return [counter, &activate, derived = static_cast<Derived*>(this)]
+                                return [counter, &activate, this]
                                 (Parameters&...args) -> bool
                                 {
                                     activate(std::forward<Parameters>(args)...);
-                                    return derived -> correspondence.at(counter) = true;
+                                    return correspondence.at(counter) = true;
                                 };
                             }
                     
                             else
                             {
-                                return [counter, activate=std::move(activate), derived = static_cast<Derived*>(this)]
+                                return [counter, activate=std::move(activate), this]
                                 (Parameters&...args) -> bool
                                 {
                                     activate(std::forward<Parameters>(args)...);
-                                    return derived -> correspondence.at(counter) = true;
+                                    return correspondence.at(counter) = true;
                                 };
                             }
                         }
@@ -141,9 +163,9 @@ struct Activator
                         template <typename Counter>
                         Function wrap(std::nullptr_t, Counter const & counter)
                         {
-                            return [counter, derived = static_cast<Derived*>(this)]
+                            return [counter, this]
                             (Parameters&...) -> bool
-                            { return derived -> correspondence.at(counter) = true; };
+                            { return correspondence.at(counter) = true; };
                         }
 
                         Correspondence const & correspondence;
@@ -163,6 +185,6 @@ struct Activator
     using Mold = ProtoMold<Args...>;
 };
 
-}}
+}
 
 #endif
