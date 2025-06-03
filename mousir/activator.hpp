@@ -1,3 +1,6 @@
+// Copyright 2025 Feng Mofan
+// SPDX-License-Identifier: Apache-2.0
+
 #ifndef MOUSIR_ACTIVATOR_H
 #define MOUSIR_ACTIVATOR_H
 

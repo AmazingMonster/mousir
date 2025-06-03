@@ -1,3 +1,6 @@
+// Copyright 2025 Feng Mofan
+// SPDX-License-Identifier: Apache-2.0
+
 #ifndef MOUSIR_CHEESENTIAL_PRACTICER_H
 #define MOUSIR_CHEESENTIAL_PRACTICER_H
 
@@ -36,6 +39,9 @@ struct Practicer
                         using TypeSignature = Conceptrodon::Functivore::ApplyReturnType<bool>::Mold<Parameters...>;
                         using Function = FunctionWrapper<Conceptrodon::Functivore::ApplyReturnType<bool>::Mold<Parameters&&...>>;
                         using Map = TheMap<Key, Function>;
+
+                        ProtoMold(Correspondence const & the_correspondence)
+                        : correspondence{the_correspondence} {}
                         
                         template <typename Practice>
                         requires std::invocable<Practice, Parameters...>
