@@ -1,5 +1,8 @@
 cmake_minimum_required(VERSION 3.28)
 
+# Generate compile_commands.json for clangd
+# set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 project(
     Mousir
     VERSION 1.0.0.0
@@ -34,6 +37,10 @@ add_executable(TestMousir
 target_include_directories(TestMousir
     PRIVATE ${CMAKE_CURRENT_LIST_DIR}
 )
+
+
+find_package(Conceptrodon REQUIRED CONFIG)
+target_link_libraries(TestMousir PRIVATE Conceptrodon::Facilities)
 
 endif()
 
