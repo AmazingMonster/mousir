@@ -4,15 +4,7 @@
 #ifndef MOUSIR_CORRESPONDENCE_H
 #define MOUSIR_CORRESPONDENCE_H
 
-#include "conceptrodon/functivore/concepts/invoke_return_as.hpp"
-#include "conceptrodon/functivore/concepts/member_function_pointer_probe.hpp"
-#include "conceptrodon/mouldivore/concepts/confess.hpp"
-#include <type_traits>
-#include "mousir/cheesential/executor.hpp"
-#include <cstddef>
-#include <functional>
 #include <unordered_map>
-#include <utility>
 
 namespace Mousir {
 
