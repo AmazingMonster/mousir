@@ -55,9 +55,9 @@ struct Releasor
                         Function wrap(Release&& release, Counter const & counter)
                         {
                             return [counter, release, this]
-                            (Parameters&...args) -> bool
+                            (std::remove_reference_t<Parameters>&...args) -> bool
                             { 
-                                bool& flag {correspondence.at(counter)};
+                                bool& flag {(*correspondence.find(counter)).second};
                                 if (flag)
                                 {
                                     flag = false;
@@ -78,9 +78,9 @@ struct Releasor
                             if constexpr (std::is_lvalue_reference_v<ObjectPointer>)
                             {
                                 return [counter, release, object_pointer, this]
-                                (Parameters&...args) -> bool
+                                (std::remove_reference_t<Parameters>&...args) -> bool
                                 { 
-                                    bool& flag {correspondence.at(counter)};
+                                    bool& flag {(*(correspondence.find(counter))).second};
                                     if (flag)
                                     {
                                         flag = false;
@@ -96,9 +96,9 @@ struct Releasor
                             else
                             {
                                 return [counter, release, object_pointer = std::move(object_pointer), this]
-                                (Parameters&...args) -> bool
+                                (std::remove_reference_t<Parameters>&...args) -> bool
                                 { 
-                                    bool& flag {correspondence.at(counter)};
+                                    bool& flag {(*(correspondence.find(counter))).second};
                                     if (flag)
                                     {
                                         flag = false;
@@ -120,9 +120,9 @@ struct Releasor
                             if constexpr (std::is_lvalue_reference_v<Release>)
                             {
                                 return [counter, &release, this]
-                                (Parameters&...args) -> bool
+                                (std::remove_reference_t<Parameters>&...args) -> bool
                                 {
-                                    bool& flag {correspondence.at(counter)};
+                                    bool& flag {(*(correspondence.find(counter))).second};
                                     if (flag)
                                     {
                                         flag = false;
@@ -138,9 +138,9 @@ struct Releasor
                             else
                             {
                                 return [counter, release=std::move(release), this]
-                                (Parameters&...args) -> bool
+                                (std::remove_reference_t<Parameters>&...args) -> bool
                                 { 
-                                    bool& flag {correspondence.at(counter)};
+                                    bool& flag {(*(correspondence.find(counter))).second};
                                     if (flag)
                                     {
                                         flag = false;
@@ -158,9 +158,9 @@ struct Releasor
                         Function wrap(Release&& release, Counter const & counter)
                         {
                             return [counter, release, this]
-                            (Parameters&...args) -> bool
+                            (std::remove_reference_t<Parameters>&...args) -> bool
                             {
-                                bool& flag {correspondence.at(counter)};
+                                bool& flag {(*(correspondence.find(counter))).second};
                                 if (flag)
                                 {
                                     flag = false;
@@ -180,9 +180,9 @@ struct Releasor
                             if constexpr (std::is_lvalue_reference_v<ObjectPointer>)
                             {
                                 return [counter, release, object_pointer, this]
-                                (Parameters&...args) -> bool
+                                (std::remove_reference_t<Parameters>&...args) -> bool
                                 { 
-                                    bool& flag {correspondence.at(counter)};
+                                    bool& flag {(*(correspondence.find(counter))).second};
                                     if (flag)
                                     {
                                         flag = false;
@@ -198,9 +198,9 @@ struct Releasor
                             else
                             {
                                 return [counter, release, object_pointer = std::move(object_pointer), this]
-                                (Parameters&...args) -> bool
+                                (std::remove_reference_t<Parameters>&...args) -> bool
                                 { 
-                                    bool& flag {correspondence.at(counter)};
+                                    bool& flag {(*(correspondence.find(counter))).second};
                                     if (flag)
                                     {
                                         flag = false;
@@ -221,9 +221,9 @@ struct Releasor
                             if constexpr (std::is_lvalue_reference_v<Release>)
                             {
                                 return [counter, &release, this]
-                                (Parameters&...args) -> bool
+                                (std::remove_reference_t<Parameters>&...args) -> bool
                                 {
-                                    bool& flag {correspondence.at(counter)};
+                                    bool& flag {(*(correspondence.find(counter))).second};
                                     if (flag)
                                     {
                                         flag = false;
@@ -239,9 +239,9 @@ struct Releasor
                             else
                             {
                                 return [counter, release=std::move(release), this]
-                                (Parameters&...args) -> bool
+                                (std::remove_reference_t<Parameters>&...args) -> bool
                                 {
-                                    bool& flag {correspondence.at(counter)};
+                                    bool& flag {(*(correspondence.find(counter))).second};
                                     if (flag)
                                     {
                                         flag = false;
@@ -259,9 +259,9 @@ struct Releasor
                         Function wrap(std::nullptr_t, Counter const & counter)
                         {
                             return [counter, this]
-                            (Parameters&...) -> bool
+                            (std::remove_reference_t<Parameters>&...) -> bool
                             {
-                                bool& flag {correspondence.at(counter)};
+                                bool& flag {(*(correspondence.find(counter))).second};
                                 if (flag)
                                 {
                                     flag = false;

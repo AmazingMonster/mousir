@@ -18,16 +18,19 @@ struct Correspondence
         using Key = TheKey;
         using Map = TheMap<Key, bool>;
         
-        ProtoMold(): map{}, counter{} {}
+        ProtoMold(): map{}, counter{-1} {}
+
+        bool isValid()
+        { return map.find(counter) != map.end(); }
 
         Key get()
         { return counter; }
 
-        bool at(Key const& key) const
-        { return map.at(key); }
+        auto find(Key const& key) const
+        { return map.find(key); }
 
-        bool & at(Key const& key)
-        { return map.at(key); }
+        auto find(Key const& key)
+        { return map.find(key); }
 
         Key increment()
         {

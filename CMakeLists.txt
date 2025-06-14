@@ -1,8 +1,5 @@
 cmake_minimum_required(VERSION 3.28)
 
-set(CMAKE_CXX_STANDARD 20)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
 # Generate compile_commands.json for clangd
 # set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
@@ -28,20 +25,21 @@ target_include_directories(MousirFacilities INTERFACE
 )
 
 
-find_package(Conceptrodon REQUIRED CONFIG)
-target_link_libraries(MousirFacilities INTERFACE Conceptrodon::Facilities)
+if(CMAKE_SOURCE_DIR STREQUAL Mousir_SOURCE_DIR OR TEST_MOUSIR)
 
-# Test
-if(CMAKE_SOURCE_DIR STREQUAL Mousir_SOURCE_DIR OR TEST_Mousir)
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 add_executable(TestMousir
     ${CMAKE_CURRENT_LIST_DIR}/tests/tests.cpp
 )
 
+
 target_include_directories(TestMousir
     PRIVATE ${CMAKE_CURRENT_LIST_DIR}
 )
 
+find_package(Conceptrodon REQUIRED CONFIG)
 target_link_libraries(TestMousir PRIVATE Conceptrodon::Facilities)
 
 endif()
@@ -53,7 +51,7 @@ install(
 )
 
 install(
-    DIRECTORY Mousir
+    DIRECTORY mousir
     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
 )
 
@@ -61,7 +59,7 @@ install(
     EXPORT Mousir
     FILE Mousir.cmake
     NAMESPACE Mousir::
-    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/Mousir
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/mousir
 )
 
 # include the package config helpers and generate the file below
@@ -69,10 +67,10 @@ include(CMakePackageConfigHelpers)
 
 configure_package_config_file(${CMAKE_CURRENT_LIST_DIR}/Config.cmake.in
   "${CMAKE_CURRENT_BINARY_DIR}/MousirConfig.cmake"
-  INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/Mousir
+  INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/mousir
 )
 
 install(FILES
     "${CMAKE_CURRENT_BINARY_DIR}/MousirConfig.cmake"
-    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/Mousir
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/mousir
 )

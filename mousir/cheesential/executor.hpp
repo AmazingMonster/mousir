@@ -8,6 +8,7 @@
 #include "mousir/cheesential/execute.hpp"
 #include <concepts>
 #include <functional>
+#include <type_traits>
 #include <unordered_map>
 #include <utility>
 
@@ -36,7 +37,7 @@ struct Executor
                     {
                         using Key = TheKey;
                         using TypeSignature = Conceptrodon::Functivore::ApplyReturnType<bool>::Mold<Parameters...>;
-                        using Function = FunctionWrapper<Conceptrodon::Functivore::ApplyReturnType<bool>::Mold<Parameters&...>>;
+                        using Function = FunctionWrapper<Conceptrodon::Functivore::ApplyReturnType<bool>::Mold<std::remove_reference_t<Parameters>&...>>;
                         using Map = TheMap<Key, Function>;
 
                         template <typename Counter, typename Execute>

@@ -1,9 +1,6 @@
 // Copyright 2024 Feng Mofan
 // SPDX-License-Identifier: Apache-2.0
 
-
-#include "conceptrodon/functivore/analyzer.hpp"
-Conceptrodon::Functivore::Analyzer<void()> x;
 #include "mousir/activator.hpp"
 #include "mousir/practicer.hpp"
 #include "mousir/releasor.hpp"
@@ -55,6 +52,7 @@ int main()
     };
 
     Correspondence<>::Mold<> correspondence {};
+    correspondence.increment();
     Activator<>::Mold<int>::Mold<int>::Mold<Correspondence<>::Mold<>> act {correspondence};
     act.insert(correspondence.get(), 0, activate);
     Practicer<>::Mold<int>::Mold<int, int>::Mold<Correspondence<>::Mold<>> pra {correspondence};
@@ -68,21 +66,20 @@ int main()
     int x {0};
     int y {0};
     int z {0};
-    while (true) {
-        std::cout << "a = " << a << '\n';
-        std::cout << "Activate:" << '\n';
-        std::cin >> key >> x;
-        act.execute(key, x);
-        std::cout << "a = " << a << '\n';
-        std::cout << "Practice:" << '\n';
-        std::cin >> key >> x >> y;
-        pra.execute(key, x, y);
-        std::cout << "a = " << a << '\n';
-        std::cout << "Release:" << '\n';
-        std::cin >> key >> x >> y >> z;
-        rel.execute(key, x, y, z);
-        std::cout << "a = " << a << '\n';
-    }
+
+    std::cout << "a = " << a << '\n';
+    std::cout << "Activate:" << '\n';
+    std::cin >> key >> x;
+    act.execute(key, x);
+    std::cout << "a = " << a << '\n';
+    std::cout << "Practice:" << '\n';
+    std::cin >> key >> x >> y;
+    pra.execute(key, x, y);
+    std::cout << "a = " << a << '\n';
+    std::cout << "Release:" << '\n';
+    std::cin >> key >> x >> y >> z;
+    rel.execute(key, x, y, z);
+    std::cout << "a = " << a << '\n';
  
     return 0; 
 }

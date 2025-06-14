@@ -58,8 +58,8 @@ struct Activator
                         Function wrap(Activate&& activate, Counter const & counter)
                         {
                             return [counter, activate, this]
-                            (Parameters&...args) -> bool
-                            { return correspondence.at(counter) = activate(std::forward<Parameters>(args)...); };
+                            (std::remove_reference_t<Parameters>&...args) -> bool
+                            { return (*correspondence.find(counter)).second = activate(std::forward<Parameters>(args)...); };
                         }
 
                         template <typename Activate, typename ObjectPointer, typename Counter>
@@ -70,15 +70,15 @@ struct Activator
                             if constexpr (std::is_lvalue_reference_v<ObjectPointer>)
                             {
                                 return [counter, activate, object_pointer, this]
-                                (Parameters&...args) -> bool
-                                { return correspondence.at(counter) = (object_pointer ->* activate)(std::forward<Parameters>(args)...); };
+                                (std::remove_reference_t<Parameters>&...args) -> bool
+                                { return (*correspondence.find(counter)).second = (object_pointer ->* activate)(std::forward<Parameters>(args)...); };
                             }
                             
                             else
                             {
                                 return [counter, activate, object_pointer = std::move(object_pointer), this]
-                                (Parameters&...args) -> bool
-                                { return correspondence.at(counter) = (object_pointer ->* activate)(std::forward<Parameters>(args)...); };
+                                (std::remove_reference_t<Parameters>&...args) -> bool
+                                { return (*correspondence.find(counter)).second = (object_pointer ->* activate)(std::forward<Parameters>(args)...); };
                             }
                         }
                     
@@ -90,15 +90,15 @@ struct Activator
                             if constexpr (std::is_lvalue_reference_v<Activate>)
                             {
                                 return [counter, &activate, this]
-                                (Parameters&...args) -> bool
-                                { return correspondence.at(counter) = activate(std::forward<Parameters>(args)...); };
+                                (std::remove_reference_t<Parameters>&...args) -> bool
+                                { return (*correspondence.find(counter)).second = activate(std::forward<Parameters>(args)...); };
                             }
                     
                             else
                             {
                                 return [counter, activate=std::move(activate), this]
-                                (Parameters&...args) -> bool
-                                { return correspondence.at(counter) = activate(std::forward<Parameters>(args)...); };
+                                (std::remove_reference_t<Parameters>&...args) -> bool
+                                { return (*correspondence.find(counter)).second = activate(std::forward<Parameters>(args)...); };
                             }
                         }
 
@@ -106,10 +106,10 @@ struct Activator
                         Function wrap(Activate&& activate, Counter const & counter)
                         {
                             return [counter, activate, this]
-                            (Parameters&...args) -> bool
+                            (std::remove_reference_t<Parameters>&...args) -> bool
                             {
                                 activate(activate(std::forward<Parameters>(args)...));
-                                return correspondence.at(counter) = true;
+                                return (*correspondence.find(counter)).second = true;
                             };
                         }
 
@@ -120,20 +120,20 @@ struct Activator
                             if constexpr (std::is_lvalue_reference_v<ObjectPointer>)
                             {
                                 return [counter, activate, object_pointer, this]
-                                (Parameters&...args) -> bool
+                                (std::remove_reference_t<Parameters>&...args) -> bool
                                 {
                                     (object_pointer ->* activate)(std::forward<Parameters>(args)...);
-                                    return correspondence.at(counter) = true;
+                                    return (*correspondence.find(counter)).second = true;
                                 };
                             }
                             
                             else
                             {
                                 return [counter, activate, object_pointer, this]
-                                (Parameters&...args) -> bool
+                                (std::remove_reference_t<Parameters>&...args) -> bool
                                 {
                                     (object_pointer ->* activate)(std::forward<Parameters>(args)...);
-                                    return correspondence.at(counter) = true;
+                                    return (*correspondence.find(counter)).second = true;
                                 };
                             }
                         }
@@ -145,20 +145,20 @@ struct Activator
                             if constexpr (std::is_lvalue_reference_v<Activate>)
                             {
                                 return [counter, &activate, this]
-                                (Parameters&...args) -> bool
+                                (std::remove_reference_t<Parameters>&...args) -> bool
                                 {
                                     activate(std::forward<Parameters>(args)...);
-                                    return correspondence.at(counter) = true;
+                                    return (*correspondence.find(counter)).second = true;
                                 };
                             }
                     
                             else
                             {
                                 return [counter, activate=std::move(activate), this]
-                                (Parameters&...args) -> bool
+                                (std::remove_reference_t<Parameters>&...args) -> bool
                                 {
                                     activate(std::forward<Parameters>(args)...);
-                                    return correspondence.at(counter) = true;
+                                    return (*correspondence.find(counter)).second = true;
                                 };
                             }
                         }
@@ -167,8 +167,8 @@ struct Activator
                         Function wrap(std::nullptr_t, Counter const & counter)
                         {
                             return [counter, this]
-                            (Parameters&...) -> bool
-                            { return correspondence.at(counter) = true; };
+                            (std::remove_reference_t<Parameters>&...) -> bool
+                            { return (*correspondence.find(counter)).second = true; };
                         }
 
                         Correspondence & correspondence;
