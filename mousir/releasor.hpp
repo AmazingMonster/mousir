@@ -47,7 +47,7 @@ struct Releasor
                         using typename Ancestor::TypeSignature;
                         using typename Ancestor::Function;
                         using typename Ancestor::Map;
-                        ProtoMold(Correspondence const & the_correspondence)
+                        ProtoMold(Correspondence & the_correspondence)
                         : correspondence{the_correspondence} {}
 
                         template <typename Release, typename Counter>
@@ -271,7 +271,7 @@ struct Releasor
                             };
                         }
 
-                        Correspondence const & correspondence;
+                        Correspondence & correspondence;
                     };
                 };
 

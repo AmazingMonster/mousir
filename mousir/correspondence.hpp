@@ -9,7 +9,7 @@
 namespace Mousir {
 
 template
-<template<typename...> class TheMap=std::unordered_multimap>
+<template<typename...> class TheMap=std::unordered_map>
 struct Correspondence
 {
     template<typename TheKey=int>
@@ -23,7 +23,10 @@ struct Correspondence
         Key get()
         { return counter; }
 
-        bool at(Key const& key)
+        bool at(Key const& key) const
+        { return map.at(key); }
+
+        bool & at(Key const& key)
         { return map.at(key); }
 
         Key increment()

@@ -1,5 +1,8 @@
 cmake_minimum_required(VERSION 3.28)
 
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
 # Generate compile_commands.json for clangd
 # set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
@@ -24,11 +27,12 @@ target_include_directories(MousirFacilities INTERFACE
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
 )
 
+
+find_package(Conceptrodon REQUIRED CONFIG)
+target_link_libraries(MousirFacilities INTERFACE Conceptrodon::Facilities)
+
 # Test
 if(CMAKE_SOURCE_DIR STREQUAL Mousir_SOURCE_DIR OR TEST_Mousir)
-
-set(CMAKE_CXX_STANDARD 20)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 add_executable(TestMousir
     ${CMAKE_CURRENT_LIST_DIR}/tests/tests.cpp
@@ -38,8 +42,6 @@ target_include_directories(TestMousir
     PRIVATE ${CMAKE_CURRENT_LIST_DIR}
 )
 
-
-find_package(Conceptrodon REQUIRED CONFIG)
 target_link_libraries(TestMousir PRIVATE Conceptrodon::Facilities)
 
 endif()

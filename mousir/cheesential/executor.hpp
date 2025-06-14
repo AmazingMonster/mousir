@@ -36,10 +36,11 @@ struct Executor
                     {
                         using Key = TheKey;
                         using TypeSignature = Conceptrodon::Functivore::ApplyReturnType<bool>::Mold<Parameters...>;
-                        using Function = FunctionWrapper<Conceptrodon::Functivore::ApplyReturnType<bool>::Mold<Parameters&&...>>;
+                        using Function = FunctionWrapper<Conceptrodon::Functivore::ApplyReturnType<bool>::Mold<Parameters&...>>;
                         using Map = TheMap<Key, Function>;
 
                         template <typename Counter, typename Execute>
+                        requires std::invocable<Execute, Parameters...>
                         void insert
                         (
                             Counter const & counter,

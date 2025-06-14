@@ -50,7 +50,7 @@ struct Activator
                         using typename Ancestor::Function;
                         using typename Ancestor::Map;
 
-                        ProtoMold(Correspondence const & the_correspondence)
+                        ProtoMold(Correspondence & the_correspondence)
                         : correspondence{the_correspondence} {}
 
                         template <typename Activate, typename Counter>
@@ -171,7 +171,7 @@ struct Activator
                             { return correspondence.at(counter) = true; };
                         }
 
-                        Correspondence const & correspondence;
+                        Correspondence & correspondence;
                     };
                 };
 
