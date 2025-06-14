@@ -80,7 +80,7 @@ struct Releasor
                                 return [counter, release, object_pointer, this]
                                 (std::remove_reference_t<Parameters>&...args) -> bool
                                 { 
-                                    bool& flag {(*(correspondence.find(counter))).second};
+                                    bool& flag {(*correspondence.find(counter)).second};
                                     if (flag)
                                     {
                                         flag = false;
@@ -98,7 +98,7 @@ struct Releasor
                                 return [counter, release, object_pointer = std::move(object_pointer), this]
                                 (std::remove_reference_t<Parameters>&...args) -> bool
                                 { 
-                                    bool& flag {(*(correspondence.find(counter))).second};
+                                    bool& flag {(*correspondence.find(counter)).second};
                                     if (flag)
                                     {
                                         flag = false;
@@ -122,7 +122,7 @@ struct Releasor
                                 return [counter, &release, this]
                                 (std::remove_reference_t<Parameters>&...args) -> bool
                                 {
-                                    bool& flag {(*(correspondence.find(counter))).second};
+                                    bool& flag {(*correspondence.find(counter)).second};
                                     if (flag)
                                     {
                                         flag = false;
@@ -140,7 +140,7 @@ struct Releasor
                                 return [counter, release=std::move(release), this]
                                 (std::remove_reference_t<Parameters>&...args) -> bool
                                 { 
-                                    bool& flag {(*(correspondence.find(counter))).second};
+                                    bool& flag {(*correspondence.find(counter)).second};
                                     if (flag)
                                     {
                                         flag = false;
@@ -160,7 +160,7 @@ struct Releasor
                             return [counter, release, this]
                             (std::remove_reference_t<Parameters>&...args) -> bool
                             {
-                                bool& flag {(*(correspondence.find(counter))).second};
+                                bool& flag {(*correspondence.find(counter)).second};
                                 if (flag)
                                 {
                                     flag = false;
@@ -182,7 +182,7 @@ struct Releasor
                                 return [counter, release, object_pointer, this]
                                 (std::remove_reference_t<Parameters>&...args) -> bool
                                 { 
-                                    bool& flag {(*(correspondence.find(counter))).second};
+                                    bool& flag {(*correspondence.find(counter)).second};
                                     if (flag)
                                     {
                                         flag = false;
@@ -200,7 +200,7 @@ struct Releasor
                                 return [counter, release, object_pointer = std::move(object_pointer), this]
                                 (std::remove_reference_t<Parameters>&...args) -> bool
                                 { 
-                                    bool& flag {(*(correspondence.find(counter))).second};
+                                    bool& flag {(*correspondence.find(counter)).second};
                                     if (flag)
                                     {
                                         flag = false;
@@ -223,7 +223,7 @@ struct Releasor
                                 return [counter, &release, this]
                                 (std::remove_reference_t<Parameters>&...args) -> bool
                                 {
-                                    bool& flag {(*(correspondence.find(counter))).second};
+                                    bool& flag {(*correspondence.find(counter)).second};
                                     if (flag)
                                     {
                                         flag = false;
@@ -241,7 +241,7 @@ struct Releasor
                                 return [counter, release=std::move(release), this]
                                 (std::remove_reference_t<Parameters>&...args) -> bool
                                 {
-                                    bool& flag {(*(correspondence.find(counter))).second};
+                                    bool& flag {(*correspondence.find(counter)).second};
                                     if (flag)
                                     {
                                         flag = false;
@@ -261,7 +261,7 @@ struct Releasor
                             return [counter, this]
                             (std::remove_reference_t<Parameters>&...) -> bool
                             {
-                                bool& flag {(*(correspondence.find(counter))).second};
+                                bool& flag {(*correspondence.find(counter)).second};
                                 if (flag)
                                 {
                                     flag = false;
