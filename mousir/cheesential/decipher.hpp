@@ -4,31 +4,62 @@
 #ifndef MOUSIR_CHEESENTIAL_DECIPHER_H
 #define MOUSIR_CHEESENTIAL_DECIPHER_H
 
+#include <memory>
 #include <type_traits>
 #include "conceptrodon/mouldivore/concepts/confess.hpp"
 #include "conceptrodon/mouldivore/concepts/deceive.hpp"
-#include <utility>
 
 namespace Mousir {
 namespace Cheesential {
 
-template<typename Given>
+template<typename Supposed>
 struct Decipher
 {
-    template<typename Passed>
-    Decipher(std::remove_reference_t<Passed>& the_reference): reference{the_reference} {}
-
-        auto forward() { return std::forward<Given>(reference); }
-
+    struct ArgumentConcept
+    { virtual bool isForwardSafe()=0; };
     
-    template<typename Passed>
-    requires Conceptrodon::Mouldivore::Confess<std::is_lvalue_reference, Passed>
-    &&  Conceptrodon::Mouldivore::Deceive<std::is_lvalue_reference, Given>
-    &&  Conceptrodon::Mouldivore::Deceive<std::is_rvalue_reference, Given>
-    Decipher(Passed&& the_reference) {}
+    template<typename Provided>
+    Decipher(std::type_identity_t<Provided>)
+    : is_forward_safe {std::make_unique<ArgumentConcept>()} {}
 
-        void* forward;
+    bool isForwardSafe()
+    { return is_forward_safe -> isForwardSafe(); }
+
+    std::unique_ptr<ArgumentConcept> is_forward_safe;
+};
+
+template<typename Supposed>
+requires Conceptrodon::Mouldivore::Deceive<std::is_lvalue_reference, Supposed>
+&&  Conceptrodon::Mouldivore::Deceive<std::is_rvalue_reference, Supposed>
+struct Decipher<Supposed>
+{
+    struct ArgumentConcept
+    { virtual bool isForwardSafe()=0; };
+
+    template<typename Provided>
+    struct Argument: public ArgumentConcept
+    {
+        bool isForwardSafe() override
+        { return true; }
     };
+
+    template<typename Provided>
+    requires Conceptrodon::Mouldivore::Confess<std::is_lvalue_reference, Provided>
+    struct Argument<Provided>: public ArgumentConcept
+    {
+        bool isForwardSafe() override
+        { return false; }
+    };
+    
+    template<typename Provided>
+    Decipher(std::type_identity_t<Provided>)
+    : is_forward_safe {std::make_unique<ArgumentConcept>(Argument<Provided>{})} {}
+
+    bool isForwardSafe()
+    { return is_forward_safe -> isForwardSafe(); }
+
+    std::unique_ptr<ArgumentConcept> is_forward_safe;
+};
 
 }}
 
