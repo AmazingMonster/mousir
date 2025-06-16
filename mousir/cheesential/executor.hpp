@@ -82,10 +82,10 @@ struct Executor
                         }
 
                         template<typename GivenKey, typename...Args>
-                        requires std::invocable<Function, Args...>
+                        requires std::invocable<TypeSignature, Args...>
                         && std::convertible_to<GivenKey, Key>
                         auto execute(GivenKey const & the_key, Args&&...args)
-                        { Cheesential::execute(map, static_cast<Key const &>(the_key), std::forward<Args>(args)...); }
+                        { Cheesential::execute(map, static_cast<Key const &>(the_key), args...); }
 
                         Map map;
                     };

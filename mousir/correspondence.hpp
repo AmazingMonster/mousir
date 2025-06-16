@@ -8,8 +8,7 @@
 
 namespace Mousir {
 
-template
-<template<typename...> class TheMap=std::unordered_map>
+template<template<typename...> class TheMap=std::unordered_map>
 struct Correspondence
 {
     template<typename TheKey=int>

@@ -8,7 +8,7 @@
 #include "conceptrodon/functivore/concepts/invoke_result_in.hpp"
 #include "mousir/configuration.hpp"
 
-namespace Mousir{
+namespace Mousir {
 namespace Cheesential {
 
 template <typename Key, typename Map, typename...Args>

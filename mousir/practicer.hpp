@@ -83,7 +83,7 @@ struct Practicer
                         Function wrap(Practice&& practice)
                         {
                             return [practice]
-                            (std::remove_reference_t<Parameters>&...args) -> bool
+                            (std::remove_reference_t<Parameters>&...args) mutable -> bool
                             { return practice(std::forward<Parameters>(args)...); };
                         }
 
@@ -96,14 +96,14 @@ struct Practicer
                             if constexpr (std::is_lvalue_reference_v<ObjectPointer>)
                             {
                                 return [practice, &object_pointer]
-                                (std::remove_reference_t<Parameters>&...args) -> bool
+                                (std::remove_reference_t<Parameters>&...args) mutable -> bool
                                 { return (object_pointer ->* practice)(std::forward<Parameters>(args)...); };
                             }
                     
                             else
                             {
                                 return [practice, object_pointer=std::move(object_pointer)]
-                                (std::remove_reference_t<Parameters>&...args) -> bool
+                                (std::remove_reference_t<Parameters>&...args) mutable -> bool
                                 { return (object_pointer ->* practice)(std::forward<Parameters>(args)...); };
                             }
                         }
@@ -117,14 +117,14 @@ struct Practicer
                             if constexpr (std::is_lvalue_reference_v<Practice>)
                             {
                                 return [&practice]
-                                (std::remove_reference_t<Parameters>&...args) -> bool
+                                (std::remove_reference_t<Parameters>&...args) mutable -> bool
                                 { return practice(std::forward<Parameters>(args)...); };
                             }
                     
                             else
                             {
                                 return [practice=std::move(practice)]
-                                (std::remove_reference_t<Parameters>&...args) -> bool
+                                (std::remove_reference_t<Parameters>&...args) mutable -> bool
                                 { return practice(std::forward<Parameters>(args)...); };
                             }
                         }
@@ -133,7 +133,7 @@ struct Practicer
                         Function wrap(Practice&& practice)
                         {
                             return [practice]
-                            (std::remove_reference_t<Parameters>&...args) -> bool
+                            (std::remove_reference_t<Parameters>&...args) mutable -> bool
                             {
                                 practice(std::forward<Parameters>(args)...);
                                 return true;
@@ -147,7 +147,7 @@ struct Practicer
                             if constexpr (std::is_lvalue_reference_v<ObjectPointer>)
                             {
                                 return [practice, &object_pointer]
-                                (std::remove_reference_t<Parameters>&...args) -> bool
+                                (std::remove_reference_t<Parameters>&...args) mutable -> bool
                                 {
                                     (object_pointer ->* practice)(std::forward<Parameters>(args)...);
                                     return true;
@@ -157,7 +157,7 @@ struct Practicer
                             else
                             {
                                 return [practice, object_pointer=std::move(object_pointer)]
-                                (std::remove_reference_t<Parameters>&...args) -> bool
+                                (std::remove_reference_t<Parameters>&...args) mutable -> bool
                                 {
                                     (object_pointer ->* practice)(std::forward<Parameters>(args)...);
                                     return true;
@@ -166,13 +166,13 @@ struct Practicer
                         }
                     
                         template <typename Practice>
-                        requires Conceptrodon::Mouldivore::Confess<std::is_class, Practice>
+                        requires Conceptrodon::Mouldivore::Confess<std::is_class, std::remove_cvref_t<Practice>>
                         Function wrap(Practice&& practice)
                         {
                             if constexpr (std::is_lvalue_reference_v<Practice>)
                             {
                                 return [&practice]
-                                (std::remove_reference_t<Parameters>&...args) -> bool
+                                (std::remove_reference_t<Parameters>&...args) mutable -> bool
                                 {
                                     practice(std::forward<Parameters>(args)...);
                                     return true;
@@ -182,7 +182,7 @@ struct Practicer
                             else
                             {
                                 return [practice=std::move(practice)]
-                                (std::remove_reference_t<Parameters>&...args) -> bool
+                                (std::remove_reference_t<Parameters>&...args) mutable -> bool
                                 {
                                     practice(std::forward<Parameters>(args)...);
                                     return true;
@@ -191,21 +191,23 @@ struct Practicer
                         }
 
                         template<typename GivenCorrespondenceKey, typename...Args>
-                        requires std::invocable<Function, Args...>
-                        && std::convertible_to<GivenCorrespondenceKey, Key>
-                        bool execute(GivenCorrespondenceKey const & the_key, Args&&...args)
+                        requires std::invocable<TypeSignature, Args...>
+                        bool execute(Args&&...args)
                         {
-                            bool& flag {(*correspondence.find(the_key)).second};
-                            if (flag)
+                            bool result {true};
+                            for (auto [key, flag] : correspondence)
                             {
-                                auto [begin, end] = map.equal_range(the_key);
-                                for (auto iter {begin}; iter != end; iter++)
+                                if (flag)
                                 {
-                                    flag = flag && iter -> second(std::forward<Args>(args)...);
+                                    auto [begin, end] = map.equal_range(key);
+                                    for (auto iter {begin}; iter != end; iter++)
+                                    {
+                                        flag = flag && iter -> second(args...);
+                                    }
+                                    result = result && flag;
                                 }
-                                return flag;
                             }
-                            return false;
+                            return result;
                         }
 
                         Map map;

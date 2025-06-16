@@ -58,7 +58,7 @@ struct Activator
                         Function wrap(Activate&& activate, Counter const & counter)
                         {
                             return [counter, activate, this]
-                            (std::remove_reference_t<Parameters>&...args) -> bool
+                            (std::remove_reference_t<Parameters>&...args) mutable -> bool
                             { return (*correspondence.find(counter)).second = activate(std::forward<Parameters>(args)...); };
                         }
 
@@ -70,34 +70,35 @@ struct Activator
                             if constexpr (std::is_lvalue_reference_v<ObjectPointer>)
                             {
                                 return [counter, activate, object_pointer, this]
-                                (std::remove_reference_t<Parameters>&...args) -> bool
+                                (std::remove_reference_t<Parameters>&...args) mutable -> bool
                                 { return (*correspondence.find(counter)).second = (object_pointer ->* activate)(std::forward<Parameters>(args)...); };
                             }
                             
                             else
                             {
                                 return [counter, activate, object_pointer = std::move(object_pointer), this]
-                                (std::remove_reference_t<Parameters>&...args) -> bool
+                                (std::remove_reference_t<Parameters>&...args) mutable -> bool
                                 { return (*correspondence.find(counter)).second = (object_pointer ->* activate)(std::forward<Parameters>(args)...); };
                             }
                         }
                     
                         template <typename Activate, typename Counter>
                         requires Conceptrodon::Functivore::InvokeReturnAs<Activate, bool, Parameters...>
-                        && Conceptrodon::Mouldivore::Confess<std::is_class, Activate>
+                        && Conceptrodon::Mouldivore::Confess<std::is_class, std::remove_cvref_t<Activate>>
                         Function wrap(Activate&& activate, Counter const & counter)
                         {
+                            
                             if constexpr (std::is_lvalue_reference_v<Activate>)
                             {
                                 return [counter, &activate, this]
-                                (std::remove_reference_t<Parameters>&...args) -> bool
+                                (std::remove_reference_t<Parameters>&...args) mutable -> bool
                                 { return (*correspondence.find(counter)).second = activate(std::forward<Parameters>(args)...); };
                             }
                     
                             else
                             {
                                 return [counter, activate=std::move(activate), this]
-                                (std::remove_reference_t<Parameters>&...args) -> bool
+                                (std::remove_reference_t<Parameters>&...args) mutable -> bool
                                 { return (*correspondence.find(counter)).second = activate(std::forward<Parameters>(args)...); };
                             }
                         }
@@ -106,7 +107,7 @@ struct Activator
                         Function wrap(Activate&& activate, Counter const & counter)
                         {
                             return [counter, activate, this]
-                            (std::remove_reference_t<Parameters>&...args) -> bool
+                            (std::remove_reference_t<Parameters>&...args) mutable -> bool
                             {
                                 activate(activate(std::forward<Parameters>(args)...));
                                 return (*correspondence.find(counter)).second = true;
@@ -120,7 +121,7 @@ struct Activator
                             if constexpr (std::is_lvalue_reference_v<ObjectPointer>)
                             {
                                 return [counter, activate, object_pointer, this]
-                                (std::remove_reference_t<Parameters>&...args) -> bool
+                                (std::remove_reference_t<Parameters>&...args) mutable -> bool
                                 {
                                     (object_pointer ->* activate)(std::forward<Parameters>(args)...);
                                     return (*correspondence.find(counter)).second = true;
@@ -130,7 +131,7 @@ struct Activator
                             else
                             {
                                 return [counter, activate, object_pointer, this]
-                                (std::remove_reference_t<Parameters>&...args) -> bool
+                                (std::remove_reference_t<Parameters>&...args) mutable -> bool
                                 {
                                     (object_pointer ->* activate)(std::forward<Parameters>(args)...);
                                     return (*correspondence.find(counter)).second = true;
@@ -139,13 +140,13 @@ struct Activator
                         }
                     
                         template <typename Activate, typename Counter>
-                        requires Conceptrodon::Mouldivore::Confess<std::is_class, Activate>
+                        requires Conceptrodon::Mouldivore::Confess<std::is_class, std::remove_cvref_t<Activate>>
                         Function wrap(Activate&& activate, Counter const & counter)
                         {
                             if constexpr (std::is_lvalue_reference_v<Activate>)
                             {
                                 return [counter, &activate, this]
-                                (std::remove_reference_t<Parameters>&...args) -> bool
+                                (std::remove_reference_t<Parameters>&...args) mutable -> bool
                                 {
                                     activate(std::forward<Parameters>(args)...);
                                     return (*correspondence.find(counter)).second = true;
@@ -155,7 +156,7 @@ struct Activator
                             else
                             {
                                 return [counter, activate=std::move(activate), this]
-                                (std::remove_reference_t<Parameters>&...args) -> bool
+                                (std::remove_reference_t<Parameters>&...args) mutable -> bool
                                 {
                                     activate(std::forward<Parameters>(args)...);
                                     return (*correspondence.find(counter)).second = true;
@@ -167,7 +168,7 @@ struct Activator
                         Function wrap(std::nullptr_t, Counter const & counter)
                         {
                             return [counter, this]
-                            (std::remove_reference_t<Parameters>&...) -> bool
+                            (std::remove_reference_t<Parameters>&...) mutable -> bool
                             { return (*correspondence.find(counter)).second = true; };
                         }
 

@@ -55,7 +55,7 @@ struct Releasor
                         Function wrap(Release&& release, Counter const & counter)
                         {
                             return [counter, release, this]
-                            (std::remove_reference_t<Parameters>&...args) -> bool
+                            (std::remove_reference_t<Parameters>&...args) mutable -> bool
                             { 
                                 bool& flag {(*correspondence.find(counter)).second};
                                 if (flag)
@@ -78,7 +78,7 @@ struct Releasor
                             if constexpr (std::is_lvalue_reference_v<ObjectPointer>)
                             {
                                 return [counter, release, object_pointer, this]
-                                (std::remove_reference_t<Parameters>&...args) -> bool
+                                (std::remove_reference_t<Parameters>&...args) mutable -> bool
                                 { 
                                     bool& flag {(*correspondence.find(counter)).second};
                                     if (flag)
@@ -96,7 +96,7 @@ struct Releasor
                             else
                             {
                                 return [counter, release, object_pointer = std::move(object_pointer), this]
-                                (std::remove_reference_t<Parameters>&...args) -> bool
+                                (std::remove_reference_t<Parameters>&...args) mutable -> bool
                                 { 
                                     bool& flag {(*correspondence.find(counter)).second};
                                     if (flag)
@@ -114,13 +114,13 @@ struct Releasor
                     
                         template <typename Release, typename Counter>
                         requires Conceptrodon::Functivore::InvokeReturnAs<Release, bool, Parameters...>
-                        && Conceptrodon::Mouldivore::Confess<std::is_class, Release>
+                        && Conceptrodon::Mouldivore::Confess<std::is_class, std::remove_cvref_t<Release>>
                         Function wrap(Release&& release, Counter const & counter)
                         {
                             if constexpr (std::is_lvalue_reference_v<Release>)
                             {
                                 return [counter, &release, this]
-                                (std::remove_reference_t<Parameters>&...args) -> bool
+                                (std::remove_reference_t<Parameters>&...args) mutable -> bool
                                 {
                                     bool& flag {(*correspondence.find(counter)).second};
                                     if (flag)
@@ -138,7 +138,7 @@ struct Releasor
                             else
                             {
                                 return [counter, release=std::move(release), this]
-                                (std::remove_reference_t<Parameters>&...args) -> bool
+                                (std::remove_reference_t<Parameters>&...args) mutable -> bool
                                 { 
                                     bool& flag {(*correspondence.find(counter)).second};
                                     if (flag)
@@ -158,7 +158,7 @@ struct Releasor
                         Function wrap(Release&& release, Counter const & counter)
                         {
                             return [counter, release, this]
-                            (std::remove_reference_t<Parameters>&...args) -> bool
+                            (std::remove_reference_t<Parameters>&...args) mutable -> bool
                             {
                                 bool& flag {(*correspondence.find(counter)).second};
                                 if (flag)
@@ -180,7 +180,7 @@ struct Releasor
                             if constexpr (std::is_lvalue_reference_v<ObjectPointer>)
                             {
                                 return [counter, release, object_pointer, this]
-                                (std::remove_reference_t<Parameters>&...args) -> bool
+                                (std::remove_reference_t<Parameters>&...args) mutable -> bool
                                 { 
                                     bool& flag {(*correspondence.find(counter)).second};
                                     if (flag)
@@ -198,7 +198,7 @@ struct Releasor
                             else
                             {
                                 return [counter, release, object_pointer = std::move(object_pointer), this]
-                                (std::remove_reference_t<Parameters>&...args) -> bool
+                                (std::remove_reference_t<Parameters>&...args) mutable -> bool
                                 { 
                                     bool& flag {(*correspondence.find(counter)).second};
                                     if (flag)
@@ -215,13 +215,13 @@ struct Releasor
                         }
                     
                         template <typename Release, typename Counter>
-                        requires Conceptrodon::Mouldivore::Confess<std::is_class, Release>
+                        requires Conceptrodon::Mouldivore::Confess<std::is_class, std::remove_cvref_t<Release>>
                         Function wrap(Release&& release, Counter const & counter)
                         {
                             if constexpr (std::is_lvalue_reference_v<Release>)
                             {
                                 return [counter, &release, this]
-                                (std::remove_reference_t<Parameters>&...args) -> bool
+                                (std::remove_reference_t<Parameters>&...args) mutable -> bool
                                 {
                                     bool& flag {(*correspondence.find(counter)).second};
                                     if (flag)
@@ -239,7 +239,7 @@ struct Releasor
                             else
                             {
                                 return [counter, release=std::move(release), this]
-                                (std::remove_reference_t<Parameters>&...args) -> bool
+                                (std::remove_reference_t<Parameters>&...args) mutable -> bool
                                 {
                                     bool& flag {(*correspondence.find(counter)).second};
                                     if (flag)
@@ -259,7 +259,7 @@ struct Releasor
                         Function wrap(std::nullptr_t, Counter const & counter)
                         {
                             return [counter, this]
-                            (std::remove_reference_t<Parameters>&...) -> bool
+                            (std::remove_reference_t<Parameters>&...) mutable -> bool
                             {
                                 bool& flag {(*correspondence.find(counter)).second};
                                 if (flag)
