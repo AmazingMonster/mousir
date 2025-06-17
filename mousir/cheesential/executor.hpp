@@ -5,12 +5,12 @@
 #define MOUSIR_CHEESENTIAL_EXECUTOR_H
 
 #include "conceptrodon/functivore/apply_return_type.hpp"
-#include "mousir/cheesential/execute.hpp"
 #include <concepts>
 #include <functional>
 #include <type_traits>
 #include <unordered_map>
 #include <utility>
+#include "mousir/cheesential/decipher.hpp"
 
 namespace Mousir {
 namespace Cheesential {
@@ -37,7 +37,7 @@ struct Executor
                     {
                         using Key = TheKey;
                         using TypeSignature = Conceptrodon::Functivore::ApplyReturnType<bool>::Mold<Parameters...>;
-                        using Function = FunctionWrapper<Conceptrodon::Functivore::ApplyReturnType<bool>::Mold<std::remove_reference_t<Parameters>&...>>;
+                        using Function = FunctionWrapper<Conceptrodon::Functivore::ApplyReturnType<bool>::Mold<std::remove_reference_t<Parameters>&..., Decipher<Parameters>...>>;
                         using Map = TheMap<Key, Function>;
 
                         template <typename Counter, typename Execute>
@@ -85,7 +85,15 @@ struct Executor
                         requires std::invocable<TypeSignature, Args...>
                         && std::convertible_to<GivenKey, Key>
                         auto execute(GivenKey const & the_key, Args&&...args)
-                        { Cheesential::execute(map, static_cast<Key const &>(the_key), args...); }
+                        {
+                            auto [begin, end] = map.equal_range(static_cast<Key const &>(the_key));
+                            bool result {false};
+                            for (auto iter {begin}; iter != end; iter++)
+                            {
+                                result = result || iter -> second(args..., Decipher<Parameters>{std::type_identity<Args>{}}...);
+                            }
+                            return result;
+                        }
 
                         Map map;
                     };

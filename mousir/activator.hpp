@@ -4,9 +4,11 @@
 #ifndef MOUSIR_ACTIVATOR_H
 #define MOUSIR_ACTIVATOR_H
 
+#include "cheesential/decipher.hpp"
 #include "conceptrodon/functivore/concepts/invoke_return_as.hpp"
 #include "conceptrodon/functivore/concepts/member_function_pointer_probe.hpp"
 #include "conceptrodon/mouldivore/concepts/confess.hpp"
+#include <concepts>
 #include <type_traits>
 #include "mousir/cheesential/executor.hpp"
 #include <cstddef>
@@ -58,27 +60,35 @@ struct Activator
                         Function wrap(Activate&& activate, Counter const & counter)
                         {
                             return [counter, activate, this]
-                            (std::remove_reference_t<Parameters>&...args) mutable -> bool
-                            { return (*correspondence.find(counter)).second = activate(std::forward<Parameters>(args)...); };
+                            (std::remove_reference_t<Parameters>&...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
+                            { return (*correspondence.find(counter)).second = activate((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...); };
                         }
 
                         template <typename Activate, typename ObjectPointer, typename Counter>
                         requires Conceptrodon::Functivore::InvokeReturnAs<Activate, bool, Parameters...>
                         && Conceptrodon::Functivore::MemberFunctionPointerProbe<Activate>
+                        && Conceptrodon::Mouldivore::Confess<std::is_lvalue_reference, ObjectPointer>
                         Function wrap(ObjectPointer&& object_pointer, Activate&& activate, Counter const & counter)
                         {
                             if constexpr (std::is_lvalue_reference_v<ObjectPointer>)
                             {
                                 return [counter, activate, object_pointer, this]
-                                (std::remove_reference_t<Parameters>&...args) mutable -> bool
-                                { return (*correspondence.find(counter)).second = (object_pointer ->* activate)(std::forward<Parameters>(args)...); };
+                                (std::remove_reference_t<Parameters>&...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
+                                { return (*correspondence.find(counter)).second = (object_pointer ->* activate)((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...); };
+                            }
+                            
+                            else if constexpr (std::invocable<decltype(&ObjectPointer::operator->*), decltype(*std::declval<ObjectPointer>), Activate>)
+                            {
+                                return [counter, activate, object_pointer = std::move(object_pointer), this]
+                                (std::remove_reference_t<Parameters>&...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
+                                { return (*correspondence.find(counter)).second = (object_pointer ->* activate)((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...); };
                             }
                             
                             else
                             {
                                 return [counter, activate, object_pointer = std::move(object_pointer), this]
-                                (std::remove_reference_t<Parameters>&...args) mutable -> bool
-                                { return (*correspondence.find(counter)).second = (object_pointer ->* activate)(std::forward<Parameters>(args)...); };
+                                (std::remove_reference_t<Parameters>&...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
+                                { return (*correspondence.find(counter)).second = (object_pointer.get() ->* activate)((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...); };
                             }
                         }
                     
@@ -91,15 +101,15 @@ struct Activator
                             if constexpr (std::is_lvalue_reference_v<Activate>)
                             {
                                 return [counter, &activate, this]
-                                (std::remove_reference_t<Parameters>&...args) mutable -> bool
-                                { return (*correspondence.find(counter)).second = activate(std::forward<Parameters>(args)...); };
+                                (std::remove_reference_t<Parameters>&...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
+                                { return (*correspondence.find(counter)).second = activate((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...); };
                             }
                     
                             else
                             {
                                 return [counter, activate=std::move(activate), this]
-                                (std::remove_reference_t<Parameters>&...args) mutable -> bool
-                                { return (*correspondence.find(counter)).second = activate(std::forward<Parameters>(args)...); };
+                                (std::remove_reference_t<Parameters>&...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
+                                { return (*correspondence.find(counter)).second = activate((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...); };
                             }
                         }
 
@@ -107,9 +117,9 @@ struct Activator
                         Function wrap(Activate&& activate, Counter const & counter)
                         {
                             return [counter, activate, this]
-                            (std::remove_reference_t<Parameters>&...args) mutable -> bool
+                            (std::remove_reference_t<Parameters>&...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
                             {
-                                activate(activate(std::forward<Parameters>(args)...));
+                                activate(activate((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...));
                                 return (*correspondence.find(counter)).second = true;
                             };
                         }
@@ -121,21 +131,32 @@ struct Activator
                             if constexpr (std::is_lvalue_reference_v<ObjectPointer>)
                             {
                                 return [counter, activate, object_pointer, this]
-                                (std::remove_reference_t<Parameters>&...args) mutable -> bool
+                                (std::remove_reference_t<Parameters>&...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
                                 {
-                                    (object_pointer ->* activate)(std::forward<Parameters>(args)...);
+                                    (object_pointer ->* activate)((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...);
                                     return (*correspondence.find(counter)).second = true;
                                 };
                             }
                             
+                            else if constexpr (std::invocable<decltype(&ObjectPointer::operator->*), decltype(*std::declval<ObjectPointer>), Activate>)
+                            {
+                                return [counter, activate, object_pointer, this]
+                                (std::remove_reference_t<Parameters>&...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
+                                {
+                                    (object_pointer ->* activate)((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...);
+                                    return (*correspondence.find(counter)).second = true;
+                                };
+                            }
+
                             else
                             {
                                 return [counter, activate, object_pointer, this]
-                                (std::remove_reference_t<Parameters>&...args) mutable -> bool
+                                (std::remove_reference_t<Parameters>&...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
                                 {
-                                    (object_pointer ->* activate)(std::forward<Parameters>(args)...);
+                                    (object_pointer.get() ->* activate)((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...);
                                     return (*correspondence.find(counter)).second = true;
                                 };
+                            
                             }
                         }
                     
@@ -146,9 +167,9 @@ struct Activator
                             if constexpr (std::is_lvalue_reference_v<Activate>)
                             {
                                 return [counter, &activate, this]
-                                (std::remove_reference_t<Parameters>&...args) mutable -> bool
+                                (std::remove_reference_t<Parameters>&...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
                                 {
-                                    activate(std::forward<Parameters>(args)...);
+                                    activate((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...);
                                     return (*correspondence.find(counter)).second = true;
                                 };
                             }
@@ -156,9 +177,9 @@ struct Activator
                             else
                             {
                                 return [counter, activate=std::move(activate), this]
-                                (std::remove_reference_t<Parameters>&...args) mutable -> bool
+                                (std::remove_reference_t<Parameters>&...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
                                 {
-                                    activate(std::forward<Parameters>(args)...);
+                                    activate((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...);
                                     return (*correspondence.find(counter)).second = true;
                                 };
                             }
@@ -168,7 +189,7 @@ struct Activator
                         Function wrap(std::nullptr_t, Counter const & counter)
                         {
                             return [counter, this]
-                            (std::remove_reference_t<Parameters>&...) mutable -> bool
+                            (std::remove_reference_t<Parameters>&..., Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
                             { return (*correspondence.find(counter)).second = true; };
                         }
 

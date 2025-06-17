@@ -13,6 +13,7 @@
 #include <type_traits>
 #include <unordered_map>
 #include <utility>
+#include "mousir/cheesential/decipher.hpp"
 
 namespace Mousir {
 
@@ -38,7 +39,7 @@ struct Practicer
                     {
                         using Key = TheCorrespondenceKey;
                         using TypeSignature = Conceptrodon::Functivore::ApplyReturnType<bool>::Mold<Parameters...>;
-                        using Function = FunctionWrapper<Conceptrodon::Functivore::ApplyReturnType<bool>::Mold<std::remove_reference_t<Parameters>&...>>;
+                        using Function = FunctionWrapper<Conceptrodon::Functivore::ApplyReturnType<bool>::Mold<std::remove_reference_t<Parameters>&..., Cheesential::Decipher<Parameters>...>>;
                         using Map = TheMap<Key, Function>;
 
                         ProtoMold(Correspondence & the_correspondence)
@@ -83,8 +84,8 @@ struct Practicer
                         Function wrap(Practice&& practice)
                         {
                             return [practice]
-                            (std::remove_reference_t<Parameters>&...args) mutable -> bool
-                            { return practice(std::forward<Parameters>(args)...); };
+                            (std::remove_reference_t<Parameters>&...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
+                            { return practice((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...); };
                         }
 
                         template <typename Practice, typename ObjectPointer>
@@ -96,15 +97,15 @@ struct Practicer
                             if constexpr (std::is_lvalue_reference_v<ObjectPointer>)
                             {
                                 return [practice, &object_pointer]
-                                (std::remove_reference_t<Parameters>&...args) mutable -> bool
-                                { return (object_pointer ->* practice)(std::forward<Parameters>(args)...); };
+                                (std::remove_reference_t<Parameters>&...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
+                                { return (object_pointer ->* practice)((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...); };
                             }
                     
                             else
                             {
                                 return [practice, object_pointer=std::move(object_pointer)]
-                                (std::remove_reference_t<Parameters>&...args) mutable -> bool
-                                { return (object_pointer ->* practice)(std::forward<Parameters>(args)...); };
+                                (std::remove_reference_t<Parameters>&...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
+                                { return (object_pointer ->* practice)((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...); };
                             }
                         }
                     
@@ -117,15 +118,15 @@ struct Practicer
                             if constexpr (std::is_lvalue_reference_v<Practice>)
                             {
                                 return [&practice]
-                                (std::remove_reference_t<Parameters>&...args) mutable -> bool
-                                { return practice(std::forward<Parameters>(args)...); };
+                                (std::remove_reference_t<Parameters>&...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
+                                { return practice((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...); };
                             }
                     
                             else
                             {
                                 return [practice=std::move(practice)]
-                                (std::remove_reference_t<Parameters>&...args) mutable -> bool
-                                { return practice(std::forward<Parameters>(args)...); };
+                                (std::remove_reference_t<Parameters>&...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
+                                { return practice((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...); };
                             }
                         }
 
@@ -133,9 +134,9 @@ struct Practicer
                         Function wrap(Practice&& practice)
                         {
                             return [practice]
-                            (std::remove_reference_t<Parameters>&...args) mutable -> bool
+                            (std::remove_reference_t<Parameters>&...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
                             {
-                                practice(std::forward<Parameters>(args)...);
+                                practice((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...);
                                 return true;
                             };
                         }
@@ -147,9 +148,9 @@ struct Practicer
                             if constexpr (std::is_lvalue_reference_v<ObjectPointer>)
                             {
                                 return [practice, &object_pointer]
-                                (std::remove_reference_t<Parameters>&...args) mutable -> bool
+                                (std::remove_reference_t<Parameters>&...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
                                 {
-                                    (object_pointer ->* practice)(std::forward<Parameters>(args)...);
+                                    (object_pointer ->* practice)((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...);
                                     return true;
                                 };
                             }
@@ -157,9 +158,9 @@ struct Practicer
                             else
                             {
                                 return [practice, object_pointer=std::move(object_pointer)]
-                                (std::remove_reference_t<Parameters>&...args) mutable -> bool
+                                (std::remove_reference_t<Parameters>&...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
                                 {
-                                    (object_pointer ->* practice)(std::forward<Parameters>(args)...);
+                                    (object_pointer ->* practice)((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...);
                                     return true;
                                 };
                             }
@@ -172,9 +173,9 @@ struct Practicer
                             if constexpr (std::is_lvalue_reference_v<Practice>)
                             {
                                 return [&practice]
-                                (std::remove_reference_t<Parameters>&...args) mutable -> bool
+                                (std::remove_reference_t<Parameters>&...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
                                 {
-                                    practice(std::forward<Parameters>(args)...);
+                                    practice((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...);
                                     return true;
                                 };
                             }
@@ -182,9 +183,9 @@ struct Practicer
                             else
                             {
                                 return [practice=std::move(practice)]
-                                (std::remove_reference_t<Parameters>&...args) mutable -> bool
+                                (std::remove_reference_t<Parameters>&...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
                                 {
-                                    practice(std::forward<Parameters>(args)...);
+                                    practice((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...);
                                     return true;
                                 };
                             }
@@ -202,7 +203,7 @@ struct Practicer
                                     auto [begin, end] = map.equal_range(key);
                                     for (auto iter {begin}; iter != end; iter++)
                                     {
-                                        flag = flag && iter -> second(args...);
+                                        flag = flag && iter -> second(args..., Cheesential::Decipher<Parameters>{std::type_identity<Args>{}}...);
                                     }
                                     result = result && flag;
                                 }

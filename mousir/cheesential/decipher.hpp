@@ -15,17 +15,8 @@ namespace Cheesential {
 template<typename Supposed>
 struct Decipher
 {
-    struct ArgumentConcept
-    { virtual bool isForwardSafe()=0; };
-    
-    template<typename Provided>
-    Decipher(std::type_identity_t<Provided>)
-    : is_forward_safe {std::make_unique<ArgumentConcept>()} {}
-
     bool isForwardSafe()
-    { return is_forward_safe -> isForwardSafe(); }
-
-    std::unique_ptr<ArgumentConcept> is_forward_safe;
+    { return true; }
 };
 
 template<typename Supposed>
@@ -34,7 +25,10 @@ requires Conceptrodon::Mouldivore::Deceive<std::is_lvalue_reference, Supposed>
 struct Decipher<Supposed>
 {
     struct ArgumentConcept
-    { virtual bool isForwardSafe()=0; };
+    {
+        virtual bool isForwardSafe() = 0;
+    virtual ~ArgumentConcept() = default;
+    };
 
     template<typename Provided>
     struct Argument: public ArgumentConcept
@@ -52,8 +46,8 @@ struct Decipher<Supposed>
     };
     
     template<typename Provided>
-    Decipher(std::type_identity_t<Provided>)
-    : is_forward_safe {std::make_unique<ArgumentConcept>(Argument<Provided>{})} {}
+    Decipher(std::type_identity<Provided>)
+    : is_forward_safe {std::make_unique<Argument<Provided>>(Argument<Provided>{})} {}
 
     bool isForwardSafe()
     { return is_forward_safe -> isForwardSafe(); }

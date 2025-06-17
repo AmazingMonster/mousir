@@ -55,7 +55,7 @@ struct Releasor
                         Function wrap(Release&& release, Counter const & counter)
                         {
                             return [counter, release, this]
-                            (std::remove_reference_t<Parameters>&...args) mutable -> bool
+                            (std::remove_reference_t<Parameters>&...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
                             { 
                                 bool& flag {(*correspondence.find(counter)).second};
                                 if (flag)
@@ -63,7 +63,7 @@ struct Releasor
                                     flag = false;
                                     // It is possible for 'release' to check whether all flags are down.
                                     // Thus assign false to the flag before calling 'release'.
-                                    flag = !release(std::forward<Parameters>(args)...);
+                                    flag = !release((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...);
                                     return !flag;
                                 }
                                 return false; 
@@ -78,7 +78,7 @@ struct Releasor
                             if constexpr (std::is_lvalue_reference_v<ObjectPointer>)
                             {
                                 return [counter, release, object_pointer, this]
-                                (std::remove_reference_t<Parameters>&...args) mutable -> bool
+                                (std::remove_reference_t<Parameters>&...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
                                 { 
                                     bool& flag {(*correspondence.find(counter)).second};
                                     if (flag)
@@ -86,7 +86,7 @@ struct Releasor
                                         flag = false;
                                         // It is possible for 'release' to check whether all flags are down.
                                         // Thus assign false to the flag before calling 'release'.
-                                        flag = !(object_pointer ->* release)(std::forward<Parameters>(args)...);
+                                        flag = !(object_pointer ->* release)((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...);
                                         return !flag;
                                     }
                                     return false;
@@ -96,7 +96,7 @@ struct Releasor
                             else
                             {
                                 return [counter, release, object_pointer = std::move(object_pointer), this]
-                                (std::remove_reference_t<Parameters>&...args) mutable -> bool
+                                (std::remove_reference_t<Parameters>&...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
                                 { 
                                     bool& flag {(*correspondence.find(counter)).second};
                                     if (flag)
@@ -104,7 +104,7 @@ struct Releasor
                                         flag = false;
                                         // It is possible for 'release' to check whether all flags are down.
                                         // Thus assign false to the flag before calling 'release'.
-                                        flag = !(object_pointer ->* release)(std::forward<Parameters>(args)...);
+                                        flag = !(object_pointer ->* release)((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...);
                                         return !flag;
                                     }
                                     return false;
@@ -120,7 +120,7 @@ struct Releasor
                             if constexpr (std::is_lvalue_reference_v<Release>)
                             {
                                 return [counter, &release, this]
-                                (std::remove_reference_t<Parameters>&...args) mutable -> bool
+                                (std::remove_reference_t<Parameters>&...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
                                 {
                                     bool& flag {(*correspondence.find(counter)).second};
                                     if (flag)
@@ -128,7 +128,7 @@ struct Releasor
                                         flag = false;
                                         // It is possible for 'release' to check whether all flags are down.
                                         // Thus assign false to the flag before calling 'release'.
-                                        flag = !release(std::forward<Parameters>(args)...);
+                                        flag = !release((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...);
                                         return !flag;
                                     }
                                     return false;
@@ -138,7 +138,7 @@ struct Releasor
                             else
                             {
                                 return [counter, release=std::move(release), this]
-                                (std::remove_reference_t<Parameters>&...args) mutable -> bool
+                                (std::remove_reference_t<Parameters>&...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
                                 { 
                                     bool& flag {(*correspondence.find(counter)).second};
                                     if (flag)
@@ -146,7 +146,7 @@ struct Releasor
                                         flag = false;
                                         // It is possible for 'release' to check whether all flags are down.
                                         // Thus assign false to the flag before calling 'release'.
-                                        flag = !release(std::forward<Parameters>(args)...);
+                                        flag = !release((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...);
                                         return !flag;
                                     }
                                     return false;
@@ -158,7 +158,7 @@ struct Releasor
                         Function wrap(Release&& release, Counter const & counter)
                         {
                             return [counter, release, this]
-                            (std::remove_reference_t<Parameters>&...args) mutable -> bool
+                            (std::remove_reference_t<Parameters>&...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
                             {
                                 bool& flag {(*correspondence.find(counter)).second};
                                 if (flag)
@@ -166,7 +166,7 @@ struct Releasor
                                     flag = false;
                                     // It is possible for 'release' to check whether all flags are down.
                                     // Thus assign false to the flag before calling 'release'.
-                                    release(std::forward<Parameters>(args)...);
+                                    release((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...);
                                     return !flag;
                                 }
                                 return false;
@@ -180,7 +180,7 @@ struct Releasor
                             if constexpr (std::is_lvalue_reference_v<ObjectPointer>)
                             {
                                 return [counter, release, object_pointer, this]
-                                (std::remove_reference_t<Parameters>&...args) mutable -> bool
+                                (std::remove_reference_t<Parameters>&...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
                                 { 
                                     bool& flag {(*correspondence.find(counter)).second};
                                     if (flag)
@@ -188,7 +188,7 @@ struct Releasor
                                         flag = false;
                                         // It is possible for 'release' to check whether all flags are down.
                                         // Thus assign false to the flag before calling 'release'.
-                                        (object_pointer ->* release)(std::forward<Parameters>(args)...);
+                                        (object_pointer ->* release)((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...);
                                         return !flag;
                                     }
                                     return false;
@@ -198,7 +198,7 @@ struct Releasor
                             else
                             {
                                 return [counter, release, object_pointer = std::move(object_pointer), this]
-                                (std::remove_reference_t<Parameters>&...args) mutable -> bool
+                                (std::remove_reference_t<Parameters>&...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
                                 { 
                                     bool& flag {(*correspondence.find(counter)).second};
                                     if (flag)
@@ -206,7 +206,7 @@ struct Releasor
                                         flag = false;
                                         // It is possible for 'release' to check whether all flags are down.
                                         // Thus assign false to the flag before calling 'release'.
-                                        (object_pointer ->* release)(std::forward<Parameters>(args)...);
+                                        (object_pointer ->* release)((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...);
                                         return !flag;
                                     }
                                     return false;
@@ -221,7 +221,7 @@ struct Releasor
                             if constexpr (std::is_lvalue_reference_v<Release>)
                             {
                                 return [counter, &release, this]
-                                (std::remove_reference_t<Parameters>&...args) mutable -> bool
+                                (std::remove_reference_t<Parameters>&...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
                                 {
                                     bool& flag {(*correspondence.find(counter)).second};
                                     if (flag)
@@ -229,7 +229,7 @@ struct Releasor
                                         flag = false;
                                         // It is possible for 'release' to check whether all flags are down.
                                         // Thus assign false to the flag before calling 'release'.
-                                        release(std::forward<Parameters>(args)...);
+                                        release((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...);
                                         return !flag;
                                     }
                                     return false;
@@ -239,7 +239,7 @@ struct Releasor
                             else
                             {
                                 return [counter, release=std::move(release), this]
-                                (std::remove_reference_t<Parameters>&...args) mutable -> bool
+                                (std::remove_reference_t<Parameters>&...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
                                 {
                                     bool& flag {(*correspondence.find(counter)).second};
                                     if (flag)
@@ -247,7 +247,7 @@ struct Releasor
                                         flag = false;
                                         // It is possible for 'release' to check whether all flags are down.
                                         // Thus assign false to the flag before calling 'release'.
-                                        release(std::forward<Parameters>(args)...);
+                                        release((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...);
                                         return !flag;
                                     }
                                     return false;
@@ -259,7 +259,7 @@ struct Releasor
                         Function wrap(std::nullptr_t, Counter const & counter)
                         {
                             return [counter, this]
-                            (std::remove_reference_t<Parameters>&...) mutable -> bool
+                            (std::remove_reference_t<Parameters>&..., Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
                             {
                                 bool& flag {(*correspondence.find(counter)).second};
                                 if (flag)

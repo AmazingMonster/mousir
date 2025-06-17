@@ -7,6 +7,7 @@
 #include "mousir/activator.hpp"
 #include "mousir/correspondence.hpp"
 #include <iostream>
+#include <memory>
 #include <ostream>
 
 
@@ -74,12 +75,12 @@ inline void test()
     act_0.insert(correspondence.increment(), 1, caller);
     act_0.insert(correspondence.increment(), 2, fun);
     act_0.insert(correspondence.increment(), 3, Lambda);
+    act_0.insert(correspondence.increment(), 4, std::make_shared<Caller>(), &Caller::fun);
+    act_0.insert(correspondence.increment(), 5, &caller, &Caller::fun);
 
     while (true)
     {
         Argument a {};
-
-        auto x {std::forward<Argument>(a)};
 
         char v;
         int k;
