@@ -5,7 +5,7 @@
 #define CONCEPTRODON_TESTS_UNIT_ACTIVATOR_H
 
 #include "mousir/activator.hpp"
-#include "mousir/correspondence.hpp"
+#include "mousir/checkboxer.hpp"
 #include <iostream>
 #include <memory>
 #include <ostream>
@@ -66,8 +66,9 @@ inline auto Lambda
 
 inline void test()
 {
-    Correspondence<>::Mold<int> correspondence{};
-    Activator<>::Mold<int>::Mold<Argument, bool>::Mold<Correspondence<>::Mold<int>> act_0(correspondence);
+    using Correspondence = Checkboxer<>::Mold<int>;
+    Correspondence correspondence{};
+    Activator<>::Mold<int>::Mold<Correspondence>::Mold<Argument, bool> act_0(correspondence);
 
     Caller caller{};
 
@@ -90,6 +91,8 @@ inline void test()
         std::cout << "1: Lvalue function object" << std::endl;
         std::cout << "2: Function" << std::endl;
         std::cout << "3: Lambda" << std::endl;
+        std::cout << "4: smart pointer to member function" << std::endl;
+        std::cout << "5: pointer to member function" << std::endl;
 
         std::cin >> v >> k >> r;
         if (v == 'L' || v == 'l')

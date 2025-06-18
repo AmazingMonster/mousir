@@ -27,20 +27,19 @@ struct Releasor
     {
         struct Detail
         {
-            template<typename...Parameters>
+            template<typename Correspondence>
             struct ProtoMold
             {
                 struct Detail
                 {
                     template<typename...Args>
                     using AncestorTemplate = Cheesential::Executor<FunctionWrapper, TheMap>
-                        ::template Mold<TheKey>
-                        ::template Mold<Parameters...>
-                        ::template Mold<Args...>;
+                    ::template Mold<TheKey>
+                    ::template Mold<Args...>;
 
-                    template<typename Correspondence>
+                    template<typename...Parameters>
                     struct ProtoMold
-                    : public AncestorTemplate<ProtoMold<Correspondence>>
+                    : public AncestorTemplate<ProtoMold<Parameters...>>
                     {
                         using Ancestor = AncestorTemplate<ProtoMold>;
                         using typename Ancestor::Key;
@@ -69,48 +68,6 @@ struct Releasor
                                 return false; 
                             };
                         }
-
-                        template <typename Release, typename ObjectPointer, typename Counter>
-                        requires Conceptrodon::Functivore::InvokeReturnAs<Release, bool, Parameters...>
-                        && Conceptrodon::Functivore::MemberFunctionPointerProbe<Release>
-                        Function wrap(ObjectPointer&& object_pointer, Release&& release, Counter const & counter)
-                        {
-                            if constexpr (std::is_lvalue_reference_v<ObjectPointer>)
-                            {
-                                return [counter, release, object_pointer, this]
-                                (std::remove_reference_t<Parameters>&...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
-                                { 
-                                    bool& flag {(*correspondence.find(counter)).second};
-                                    if (flag)
-                                    {
-                                        flag = false;
-                                        // It is possible for 'release' to check whether all flags are down.
-                                        // Thus assign false to the flag before calling 'release'.
-                                        flag = !(object_pointer ->* release)((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...);
-                                        return !flag;
-                                    }
-                                    return false;
-                                };
-                            }
-                            
-                            else
-                            {
-                                return [counter, release, object_pointer = std::move(object_pointer), this]
-                                (std::remove_reference_t<Parameters>&...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
-                                { 
-                                    bool& flag {(*correspondence.find(counter)).second};
-                                    if (flag)
-                                    {
-                                        flag = false;
-                                        // It is possible for 'release' to check whether all flags are down.
-                                        // Thus assign false to the flag before calling 'release'.
-                                        flag = !(object_pointer ->* release)((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...);
-                                        return !flag;
-                                    }
-                                    return false;
-                                };
-                            }
-                        }
                     
                         template <typename Release, typename Counter>
                         requires Conceptrodon::Functivore::InvokeReturnAs<Release, bool, Parameters...>
@@ -119,7 +76,7 @@ struct Releasor
                         {
                             if constexpr (std::is_lvalue_reference_v<Release>)
                             {
-                                return [counter, &release, this]
+                                return [counter, release, this]
                                 (std::remove_reference_t<Parameters>&...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
                                 {
                                     bool& flag {(*correspondence.find(counter)).second};
@@ -172,47 +129,6 @@ struct Releasor
                                 return false;
                             };
                         }
-
-                        template <typename Release, typename ObjectPointer, typename Counter>
-                        requires Conceptrodon::Functivore::MemberFunctionPointerProbe<Release>
-                        Function wrap(ObjectPointer&& object_pointer, Release&& release, Counter const & counter)
-                        {
-                            if constexpr (std::is_lvalue_reference_v<ObjectPointer>)
-                            {
-                                return [counter, release, object_pointer, this]
-                                (std::remove_reference_t<Parameters>&...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
-                                { 
-                                    bool& flag {(*correspondence.find(counter)).second};
-                                    if (flag)
-                                    {
-                                        flag = false;
-                                        // It is possible for 'release' to check whether all flags are down.
-                                        // Thus assign false to the flag before calling 'release'.
-                                        (object_pointer ->* release)((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...);
-                                        return !flag;
-                                    }
-                                    return false;
-                                };
-                            }
-                            
-                            else
-                            {
-                                return [counter, release, object_pointer = std::move(object_pointer), this]
-                                (std::remove_reference_t<Parameters>&...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
-                                { 
-                                    bool& flag {(*correspondence.find(counter)).second};
-                                    if (flag)
-                                    {
-                                        flag = false;
-                                        // It is possible for 'release' to check whether all flags are down.
-                                        // Thus assign false to the flag before calling 'release'.
-                                        (object_pointer ->* release)((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...);
-                                        return !flag;
-                                    }
-                                    return false;
-                                };
-                            }
-                        }
                     
                         template <typename Release, typename Counter>
                         requires Conceptrodon::Mouldivore::Confess<std::is_class, std::remove_cvref_t<Release>>
@@ -220,7 +136,7 @@ struct Releasor
                         {
                             if constexpr (std::is_lvalue_reference_v<Release>)
                             {
-                                return [counter, &release, this]
+                                return [counter, release, this]
                                 (std::remove_reference_t<Parameters>&...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
                                 {
                                     bool& flag {(*correspondence.find(counter)).second};
@@ -266,6 +182,232 @@ struct Releasor
                                 {
                                     flag = false;
                                     return true;
+                                }
+                                return false;
+                            };
+                        }
+
+/**** Member Function Pointer ****/
+/**** Return Boolean ****/
+                        template <typename Release, typename ObjectPointer, typename Counter>
+                        requires Conceptrodon::Functivore::InvokeReturnAs<Release, bool, Parameters...>
+                        && Conceptrodon::Functivore::MemberFunctionPointerProbe<Release>
+                        && Conceptrodon::Mouldivore::Confess<std::is_pointer, ObjectPointer>
+                        Function wrap(ObjectPointer&& object_pointer, Release&& release, Counter const & counter)
+                        {
+                            return [counter, release, object_pointer, this]
+                            (std::remove_reference_t<Parameters>&...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
+                            { 
+                                bool& flag {(*correspondence.find(counter)).second};
+                                if (flag)
+                                {
+                                    flag = false;
+                                    // It is possible for 'release' to check whether all flags are down.
+                                    // Thus assign false to the flag before calling 'release'.
+                                    flag = !(object_pointer ->* release)((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...);
+                                    return !flag;
+                                }
+                                return false;
+                            };
+                        }
+                            
+                        template <typename Release, typename ObjectPointer, typename Counter>
+                        requires Conceptrodon::Functivore::InvokeReturnAs<Release, bool, Parameters...>
+                        && Conceptrodon::Functivore::MemberFunctionPointerProbe<Release>
+                        && Conceptrodon::Mouldivore::Deceive<std::is_pointer, ObjectPointer>
+                        && std::invocable<decltype(&ObjectPointer::operator->*), decltype(*std::declval<ObjectPointer>), Release>
+                        Function wrap(ObjectPointer&& object_pointer, Release&& release, Counter const & counter)
+                        {
+                            return [counter, release, object_pointer = std::move(object_pointer), this]
+                            (std::remove_reference_t<Parameters>&...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
+                            { 
+                                bool& flag {(*correspondence.find(counter)).second};
+                                if (flag)
+                                {
+                                    flag = false;
+                                    // It is possible for 'release' to check whether all flags are down.
+                                    // Thus assign false to the flag before calling 'release'.
+                                    flag = !(object_pointer ->* release)((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...);
+                                    return !flag;
+                                }
+                                return false;
+                            };
+                        }
+
+                        template <typename Release, typename ObjectPointer, typename Counter>
+                        requires Conceptrodon::Functivore::InvokeReturnAs<Release, bool, Parameters...>
+                        && Conceptrodon::Functivore::MemberFunctionPointerProbe<Release>
+                        && Conceptrodon::Mouldivore::Deceive<std::is_pointer, ObjectPointer>
+                        && Conceptrodon::Mouldivore::Confess<std::is_lvalue_reference, ObjectPointer>
+                        Function wrap(ObjectPointer&& object_pointer, Release&& release, Counter const & counter)
+                        {
+                            return [counter, release, object_pointer, this]
+                            (std::remove_reference_t<Parameters>&...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
+                            { 
+                                bool& flag {(*correspondence.find(counter)).second};
+                                if (flag)
+                                {
+                                    flag = false;
+                                    // It is possible for 'release' to check whether all flags are down.
+                                    // Thus assign false to the flag before calling 'release'.
+                                    flag = !(object_pointer.get() ->* release)((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...);
+                                    return !flag;
+                                }
+                                return false;
+                            };
+                        }
+
+                        template <typename Release, typename ObjectPointer, typename Counter>
+                        requires Conceptrodon::Functivore::InvokeReturnAs<Release, bool, Parameters...>
+                        && Conceptrodon::Functivore::MemberFunctionPointerProbe<Release>
+                        && Conceptrodon::Mouldivore::Deceive<std::is_pointer, ObjectPointer>
+                        && std::invocable<decltype(&ObjectPointer::operator->*), decltype(*std::declval<ObjectPointer>), Release>
+                        && Conceptrodon::Mouldivore::Confess<std::is_lvalue_reference, ObjectPointer>
+                        Function wrap(ObjectPointer&& object_pointer, Release&& release, Counter const & counter)
+                        {
+                            return [counter, release, object_pointer, this]
+                            (std::remove_reference_t<Parameters>&...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
+                            { 
+                                bool& flag {(*correspondence.find(counter)).second};
+                                if (flag)
+                                {
+                                    flag = false;
+                                    // It is possible for 'release' to check whether all flags are down.
+                                    // Thus assign false to the flag before calling 'release'.
+                                    flag = !(object_pointer ->* release)((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...);
+                                    return !flag;
+                                }
+                                return false;
+                            };
+                        }
+
+                        template <typename Release, typename ObjectPointer, typename Counter>
+                        requires Conceptrodon::Functivore::InvokeReturnAs<Release, bool, Parameters...>
+                        && Conceptrodon::Functivore::MemberFunctionPointerProbe<Release>
+                        && Conceptrodon::Mouldivore::Deceive<std::is_pointer, ObjectPointer>
+                        Function wrap(ObjectPointer&& object_pointer, Release&& release, Counter const & counter)
+                        {
+                            return [counter, release, object_pointer = std::move(object_pointer), this]
+                            (std::remove_reference_t<Parameters>&...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
+                            { 
+                                bool& flag {(*correspondence.find(counter)).second};
+                                if (flag)
+                                {
+                                    flag = false;
+                                    // It is possible for 'release' to check whether all flags are down.
+                                    // Thus assign false to the flag before calling 'release'.
+                                    flag = !(object_pointer.get() ->* release)((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...);
+                                    return !flag;
+                                }
+                                return false;
+                            };
+                        }
+
+/**** Return Others ****/
+                        template <typename Release, typename ObjectPointer, typename Counter>
+                        requires Conceptrodon::Functivore::MemberFunctionPointerProbe<Release>
+                        && Conceptrodon::Mouldivore::Confess<std::is_pointer, ObjectPointer>
+                        Function wrap(ObjectPointer&& object_pointer, Release&& release, Counter const & counter)
+                        {
+                            return [counter, release, object_pointer, this]
+                            (std::remove_reference_t<Parameters>&...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
+                            { 
+                                bool& flag {(*correspondence.find(counter)).second};
+                                if (flag)
+                                {
+                                    flag = false;
+                                    // It is possible for 'release' to check whether all flags are down.
+                                    // Thus assign false to the flag before calling 'release'.
+                                    (object_pointer ->* release)((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...);
+                                    return !flag;
+                                }
+                                return false;
+                            };
+                        }
+                            
+                        template <typename Release, typename ObjectPointer, typename Counter>
+                        requires Conceptrodon::Functivore::MemberFunctionPointerProbe<Release>
+                        && Conceptrodon::Mouldivore::Deceive<std::is_pointer, ObjectPointer>
+                        && std::invocable<decltype(&ObjectPointer::operator->*), decltype(*std::declval<ObjectPointer>), Release>
+                        Function wrap(ObjectPointer&& object_pointer, Release&& release, Counter const & counter)
+                        {
+                            return [counter, release, object_pointer = std::move(object_pointer), this]
+                            (std::remove_reference_t<Parameters>&...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
+                            { 
+                                bool& flag {(*correspondence.find(counter)).second};
+                                if (flag)
+                                {
+                                    flag = false;
+                                    // It is possible for 'release' to check whether all flags are down.
+                                    // Thus assign false to the flag before calling 'release'.
+                                    (object_pointer ->* release)((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...);
+                                    return !flag;
+                                }
+                                return false;
+                            };
+                        }
+
+                        template <typename Release, typename ObjectPointer, typename Counter>
+                        requires Conceptrodon::Functivore::MemberFunctionPointerProbe<Release>
+                        && Conceptrodon::Mouldivore::Deceive<std::is_pointer, ObjectPointer>
+                        && Conceptrodon::Mouldivore::Confess<std::is_lvalue_reference, ObjectPointer>
+                        Function wrap(ObjectPointer&& object_pointer, Release&& release, Counter const & counter)
+                        {
+                            return [counter, release, object_pointer, this]
+                            (std::remove_reference_t<Parameters>&...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
+                            { 
+                                bool& flag {(*correspondence.find(counter)).second};
+                                if (flag)
+                                {
+                                    flag = false;
+                                    // It is possible for 'release' to check whether all flags are down.
+                                    // Thus assign false to the flag before calling 'release'.
+                                    (object_pointer.get() ->* release)((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...);
+                                    return !flag;
+                                }
+                                return false;
+                            };
+                        }
+
+                        template <typename Release, typename ObjectPointer, typename Counter>
+                        requires Conceptrodon::Functivore::MemberFunctionPointerProbe<Release>
+                        && Conceptrodon::Mouldivore::Deceive<std::is_pointer, ObjectPointer>
+                        && std::invocable<decltype(&ObjectPointer::operator->*), decltype(*std::declval<ObjectPointer>), Release>
+                        && Conceptrodon::Mouldivore::Confess<std::is_lvalue_reference, ObjectPointer>
+                        Function wrap(ObjectPointer&& object_pointer, Release&& release, Counter const & counter)
+                        {
+                            return [counter, release, object_pointer, this]
+                            (std::remove_reference_t<Parameters>&...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
+                            { 
+                                bool& flag {(*correspondence.find(counter)).second};
+                                if (flag)
+                                {
+                                    flag = false;
+                                    // It is possible for 'release' to check whether all flags are down.
+                                    // Thus assign false to the flag before calling 'release'.
+                                    (object_pointer ->* release)((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...);
+                                    return !flag;
+                                }
+                                return false;
+                            };
+                        }
+
+                        template <typename Release, typename ObjectPointer, typename Counter>
+                        requires Conceptrodon::Functivore::MemberFunctionPointerProbe<Release>
+                        && Conceptrodon::Mouldivore::Deceive<std::is_pointer, ObjectPointer>
+                        Function wrap(ObjectPointer&& object_pointer, Release&& release, Counter const & counter)
+                        {
+                            return [counter, release, object_pointer = std::move(object_pointer), this]
+                            (std::remove_reference_t<Parameters>&...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
+                            { 
+                                bool& flag {(*correspondence.find(counter)).second};
+                                if (flag)
+                                {
+                                    flag = false;
+                                    // It is possible for 'release' to check whether all flags are down.
+                                    // Thus assign false to the flag before calling 'release'.
+                                    (object_pointer.get() ->* release)((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...);
+                                    return !flag;
                                 }
                                 return false;
                             };

@@ -8,6 +8,7 @@
 #include "conceptrodon/functivore/concepts/invoke_return_as.hpp"
 #include "conceptrodon/functivore/concepts/member_function_pointer_probe.hpp"
 #include "conceptrodon/mouldivore/concepts/confess.hpp"
+#include <conceptrodon/mouldivore/concepts/deceive.hpp>
 #include <concepts>
 #include <type_traits>
 #include "mousir/cheesential/executor.hpp"
@@ -31,7 +32,7 @@ struct Activator
         struct Detail
         {
                 
-            template<typename...Parameters>
+            template<typename Correspondence>
             struct ProtoMold
             {
                 struct Detail
@@ -39,12 +40,11 @@ struct Activator
                     template<typename...Args>
                     using AncestorTemplate = Cheesential::Executor<FunctionWrapper, TheMap>
                     ::template Mold<TheKey>
-                    ::template Mold<Parameters...>
                     ::template Mold<Args...>;
                     
-                    template<typename Correspondence>
+                    template<typename...Parameters>
                     struct ProtoMold
-                    : public AncestorTemplate<ProtoMold<Correspondence>>
+                    : public AncestorTemplate<ProtoMold<Parameters...>>
                     {
                         using Ancestor = AncestorTemplate<ProtoMold>;
                         using typename Ancestor::Key;
@@ -63,34 +63,6 @@ struct Activator
                             (std::remove_reference_t<Parameters>&...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
                             { return (*correspondence.find(counter)).second = activate((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...); };
                         }
-
-                        template <typename Activate, typename ObjectPointer, typename Counter>
-                        requires Conceptrodon::Functivore::InvokeReturnAs<Activate, bool, Parameters...>
-                        && Conceptrodon::Functivore::MemberFunctionPointerProbe<Activate>
-                        && Conceptrodon::Mouldivore::Confess<std::is_lvalue_reference, ObjectPointer>
-                        Function wrap(ObjectPointer&& object_pointer, Activate&& activate, Counter const & counter)
-                        {
-                            if constexpr (std::is_lvalue_reference_v<ObjectPointer>)
-                            {
-                                return [counter, activate, object_pointer, this]
-                                (std::remove_reference_t<Parameters>&...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
-                                { return (*correspondence.find(counter)).second = (object_pointer ->* activate)((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...); };
-                            }
-                            
-                            else if constexpr (std::invocable<decltype(&ObjectPointer::operator->*), decltype(*std::declval<ObjectPointer>), Activate>)
-                            {
-                                return [counter, activate, object_pointer = std::move(object_pointer), this]
-                                (std::remove_reference_t<Parameters>&...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
-                                { return (*correspondence.find(counter)).second = (object_pointer ->* activate)((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...); };
-                            }
-                            
-                            else
-                            {
-                                return [counter, activate, object_pointer = std::move(object_pointer), this]
-                                (std::remove_reference_t<Parameters>&...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
-                                { return (*correspondence.find(counter)).second = (object_pointer.get() ->* activate)((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...); };
-                            }
-                        }
                     
                         template <typename Activate, typename Counter>
                         requires Conceptrodon::Functivore::InvokeReturnAs<Activate, bool, Parameters...>
@@ -100,7 +72,7 @@ struct Activator
                             
                             if constexpr (std::is_lvalue_reference_v<Activate>)
                             {
-                                return [counter, &activate, this]
+                                return [counter, activate, this]
                                 (std::remove_reference_t<Parameters>&...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
                                 { return (*correspondence.find(counter)).second = activate((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...); };
                             }
@@ -123,42 +95,6 @@ struct Activator
                                 return (*correspondence.find(counter)).second = true;
                             };
                         }
-
-                        template <typename Activate, typename ObjectPointer, typename Counter>
-                        requires Conceptrodon::Functivore::MemberFunctionPointerProbe<Activate>
-                        Function wrap(ObjectPointer&& object_pointer, Activate&& activate, Counter const & counter)
-                        {
-                            if constexpr (std::is_lvalue_reference_v<ObjectPointer>)
-                            {
-                                return [counter, activate, object_pointer, this]
-                                (std::remove_reference_t<Parameters>&...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
-                                {
-                                    (object_pointer ->* activate)((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...);
-                                    return (*correspondence.find(counter)).second = true;
-                                };
-                            }
-                            
-                            else if constexpr (std::invocable<decltype(&ObjectPointer::operator->*), decltype(*std::declval<ObjectPointer>), Activate>)
-                            {
-                                return [counter, activate, object_pointer, this]
-                                (std::remove_reference_t<Parameters>&...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
-                                {
-                                    (object_pointer ->* activate)((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...);
-                                    return (*correspondence.find(counter)).second = true;
-                                };
-                            }
-
-                            else
-                            {
-                                return [counter, activate, object_pointer, this]
-                                (std::remove_reference_t<Parameters>&...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
-                                {
-                                    (object_pointer.get() ->* activate)((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...);
-                                    return (*correspondence.find(counter)).second = true;
-                                };
-                            
-                            }
-                        }
                     
                         template <typename Activate, typename Counter>
                         requires Conceptrodon::Mouldivore::Confess<std::is_class, std::remove_cvref_t<Activate>>
@@ -166,7 +102,7 @@ struct Activator
                         {
                             if constexpr (std::is_lvalue_reference_v<Activate>)
                             {
-                                return [counter, &activate, this]
+                                return [counter, activate, this]
                                 (std::remove_reference_t<Parameters>&...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
                                 {
                                     activate((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...);
@@ -191,6 +127,138 @@ struct Activator
                             return [counter, this]
                             (std::remove_reference_t<Parameters>&..., Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
                             { return (*correspondence.find(counter)).second = true; };
+                        }
+
+                        
+/**** Member Function Pointer ****/
+/**** Return Boolean */
+                        template <typename Activate, typename ObjectPointer, typename Counter>
+                        requires Conceptrodon::Functivore::InvokeReturnAs<Activate, bool, Parameters...>
+                        && Conceptrodon::Functivore::MemberFunctionPointerProbe<Activate>
+                        && Conceptrodon::Mouldivore::Confess<std::is_pointer, ObjectPointer>
+                        Function wrap(ObjectPointer&& object_pointer, Activate&& activate, Counter const & counter)
+                        {
+                            return [counter, activate, object_pointer, this]
+                            (std::remove_reference_t<Parameters>&...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
+                            { return (*correspondence.find(counter)).second = (object_pointer ->* activate)((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...); };
+                        }
+                            
+                        template <typename Activate, typename ObjectPointer, typename Counter>
+                        requires Conceptrodon::Functivore::InvokeReturnAs<Activate, bool, Parameters...>
+                        && Conceptrodon::Functivore::MemberFunctionPointerProbe<Activate>
+                        && Conceptrodon::Mouldivore::Deceive<std::is_pointer, ObjectPointer>
+                        && std::invocable<decltype(&ObjectPointer::operator->*), decltype(*std::declval<ObjectPointer>), Activate>
+                        Function wrap(ObjectPointer&& object_pointer, Activate&& activate, Counter const & counter)
+                        {
+                            return [counter, activate, object_pointer = std::move(object_pointer), this]
+                            (std::remove_reference_t<Parameters>&...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
+                            { return (*correspondence.find(counter)).second = (object_pointer ->* activate)((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...); };
+                        }
+
+                        template <typename Activate, typename ObjectPointer, typename Counter>
+                        requires Conceptrodon::Functivore::InvokeReturnAs<Activate, bool, Parameters...>
+                        && Conceptrodon::Functivore::MemberFunctionPointerProbe<Activate>
+                        && Conceptrodon::Mouldivore::Deceive<std::is_pointer, ObjectPointer>
+                        && Conceptrodon::Mouldivore::Confess<std::is_lvalue_reference, ObjectPointer>
+                        Function wrap(ObjectPointer&& object_pointer, Activate&& activate, Counter const & counter)
+                        {
+                            return [counter, activate, object_pointer, this]
+                            (std::remove_reference_t<Parameters>&...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
+                            { return (*correspondence.find(counter)).second = (object_pointer.get() ->* activate)((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...); };
+                        }
+
+                        template <typename Activate, typename ObjectPointer, typename Counter>
+                        requires Conceptrodon::Functivore::InvokeReturnAs<Activate, bool, Parameters...>
+                        && Conceptrodon::Functivore::MemberFunctionPointerProbe<Activate>
+                        && Conceptrodon::Mouldivore::Deceive<std::is_pointer, ObjectPointer>
+                        && std::invocable<decltype(&ObjectPointer::operator->*), decltype(*std::declval<ObjectPointer>), Activate>
+                        && Conceptrodon::Mouldivore::Confess<std::is_lvalue_reference, ObjectPointer>
+                        Function wrap(ObjectPointer&& object_pointer, Activate&& activate, Counter const & counter)
+                        {
+                            return [counter, activate, object_pointer, this]
+                            (std::remove_reference_t<Parameters>&...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
+                            { return (*correspondence.find(counter)).second = (object_pointer ->* activate)((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...); };
+                        }
+
+                        template <typename Activate, typename ObjectPointer, typename Counter>
+                        requires Conceptrodon::Functivore::InvokeReturnAs<Activate, bool, Parameters...>
+                        && Conceptrodon::Functivore::MemberFunctionPointerProbe<Activate>
+                        && Conceptrodon::Mouldivore::Deceive<std::is_pointer, ObjectPointer>
+                        Function wrap(ObjectPointer&& object_pointer, Activate&& activate, Counter const & counter)
+                        {
+                            return [counter, activate, object_pointer = std::move(object_pointer), this]
+                            (std::remove_reference_t<Parameters>&...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
+                            { return (*correspondence.find(counter)).second = (object_pointer.get() ->* activate)((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...); };
+                        }
+
+/**** Return Others ****/
+                        template <typename Activate, typename ObjectPointer, typename Counter>
+                        requires Conceptrodon::Functivore::MemberFunctionPointerProbe<Activate>
+                        && Conceptrodon::Mouldivore::Confess<std::is_pointer, ObjectPointer>
+                        Function wrap(ObjectPointer&& object_pointer, Activate&& activate, Counter const & counter)
+                        {
+                            return [counter, activate, object_pointer, this]
+                            (std::remove_reference_t<Parameters>&...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
+                            {
+                                (object_pointer ->* activate)((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...);
+                                return (*correspondence.find(counter)).second = true;
+                            };
+                        }
+
+                        template <typename Activate, typename ObjectPointer, typename Counter>
+                        requires Conceptrodon::Functivore::MemberFunctionPointerProbe<Activate>
+                        && Conceptrodon::Mouldivore::Deceive<std::is_pointer, ObjectPointer>
+                        && std::invocable<decltype(&ObjectPointer::operator->*), decltype(*std::declval<ObjectPointer>), Activate>
+                        Function wrap(ObjectPointer&& object_pointer, Activate&& activate, Counter const & counter)
+                        {
+                            return [counter, activate, object_pointer = std::move(object_pointer), this]
+                            (std::remove_reference_t<Parameters>&...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
+                            {
+                                (object_pointer ->* activate)((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...);
+                                return (*correspondence.find(counter)).second = true;
+                            };
+                        }
+
+                        template <typename Activate, typename ObjectPointer, typename Counter>
+                        requires Conceptrodon::Functivore::MemberFunctionPointerProbe<Activate>
+                        && Conceptrodon::Mouldivore::Deceive<std::is_pointer, ObjectPointer>
+                        && Conceptrodon::Mouldivore::Confess<std::is_lvalue_reference, ObjectPointer>
+                        Function wrap(ObjectPointer&& object_pointer, Activate&& activate, Counter const & counter)
+                        {
+                            return [counter, activate, object_pointer, this]
+                            (std::remove_reference_t<Parameters>&...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
+                            {
+                                (object_pointer.get() ->* activate)((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...);
+                                return (*correspondence.find(counter)).second = true;
+                            };
+                        }
+
+                        template <typename Activate, typename ObjectPointer, typename Counter>
+                        requires Conceptrodon::Functivore::MemberFunctionPointerProbe<Activate>
+                        && Conceptrodon::Mouldivore::Deceive<std::is_pointer, ObjectPointer>
+                        && std::invocable<decltype(&ObjectPointer::operator->*), decltype(*std::declval<ObjectPointer>), Activate>
+                        && Conceptrodon::Mouldivore::Confess<std::is_lvalue_reference, ObjectPointer>
+                        Function wrap(ObjectPointer&& object_pointer, Activate&& activate, Counter const & counter)
+                        {
+                            return [counter, activate, object_pointer, this]
+                            (std::remove_reference_t<Parameters>&...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
+                            {
+                                (object_pointer ->* activate)((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...);
+                                return (*correspondence.find(counter)).second = true;
+                            };
+                        }
+
+                        template <typename Activate, typename ObjectPointer, typename Counter>
+                        requires Conceptrodon::Functivore::MemberFunctionPointerProbe<Activate>
+                        && Conceptrodon::Mouldivore::Deceive<std::is_pointer, ObjectPointer>
+                        Function wrap(ObjectPointer&& object_pointer, Activate&& activate, Counter const & counter)
+                        {
+                            return [counter, activate, object_pointer = std::move(object_pointer), this]
+                            (std::remove_reference_t<Parameters>&...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
+                            {
+                                (object_pointer.get() ->* activate)((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...);
+                                return (*correspondence.find(counter)).second = true;
+                            };
                         }
 
                         Correspondence & correspondence;

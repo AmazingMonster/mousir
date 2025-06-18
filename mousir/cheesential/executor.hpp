@@ -26,81 +26,75 @@ struct Executor
     struct ProtoMold
     {
         struct Detail
-        {
-            template<typename...Parameters>
-            struct ProtoMold
+        {    
+            template<typename Derived>
+            struct ProtoMold {};
+
+            template<template<typename...> class DerivedTemplate, typename...Parameters>
+            struct ProtoMold<DerivedTemplate<Parameters...>>
             {
-                struct Detail
+                using Derived = DerivedTemplate<Parameters...>;
+                using Key = TheKey;
+                using TypeSignature = Conceptrodon::Functivore::ApplyReturnType<bool>::Mold<Parameters...>;
+                using Function = FunctionWrapper<Conceptrodon::Functivore::ApplyReturnType<bool>::Mold<std::remove_reference_t<Parameters>&..., Decipher<Parameters>...>>;
+                using Map = TheMap<Key, Function>;
+
+                template <typename Counter, typename Execute>
+                requires std::invocable<Execute, Parameters...>
+                void insert
+                (
+                    Counter const & counter,
+                    Key const & key,
+                    Execute&& exec
+                )
                 {
-                    template<typename Derived>
-                    struct ProtoMold
+                    map.emplace
+                    (
+                        key,
+                        static_cast<Derived*>(this) -> wrap
+                        (
+                            std::forward<Execute>(exec),
+                            counter
+                        )
+                    );
+                }
+
+                template <typename Counter, typename ObjectPointer, typename Execute>
+                void insert
+                (
+                    Counter const & counter,
+                    Key const & key,
+                    ObjectPointer&& object_pointer,
+                    Execute&& exec
+                )
+                {
+                    map.emplace
+                    (
+                        key,
+                        static_cast<Derived*>(this) -> wrap
+                        (
+                            std::forward<ObjectPointer>(object_pointer),
+                            std::forward<Execute>(exec),
+                            counter
+                        )
+                    );
+                }
+
+                template<typename GivenKey, typename...Args>
+                requires std::invocable<TypeSignature, Args...>
+                && std::convertible_to<GivenKey, Key>
+                auto execute(GivenKey const & the_key, Args&&...args)
+                {
+                    auto [begin, end] = map.equal_range(static_cast<Key const &>(the_key));
+                    bool result {false};
+                    for (auto iter {begin}; iter != end; iter++)
                     {
-                        using Key = TheKey;
-                        using TypeSignature = Conceptrodon::Functivore::ApplyReturnType<bool>::Mold<Parameters...>;
-                        using Function = FunctionWrapper<Conceptrodon::Functivore::ApplyReturnType<bool>::Mold<std::remove_reference_t<Parameters>&..., Decipher<Parameters>...>>;
-                        using Map = TheMap<Key, Function>;
+                        result = result || iter -> second(args..., Decipher<Parameters>{std::type_identity<Args>{}}...);
+                    }
+                    return result;
+                }
 
-                        template <typename Counter, typename Execute>
-                        requires std::invocable<Execute, Parameters...>
-                        void insert
-                        (
-                            Counter const & counter,
-                            Key const & key,
-                            Execute&& exec
-                        )
-                        {
-                            map.emplace
-                            (
-                                key,
-                                static_cast<Derived*>(this) -> wrap
-                                (
-                                    std::forward<Execute>(exec),
-                                    counter
-                                )
-                            );
-                        }
-
-                        template <typename Counter, typename ObjectPointer, typename Execute>
-                        void insert
-                        (
-                            Counter const & counter,
-                            Key const & key,
-                            ObjectPointer&& object_pointer,
-                            Execute&& exec
-                        )
-                        {
-                            map.emplace
-                            (
-                                key,
-                                static_cast<Derived*>(this) -> wrap
-                                (
-                                    std::forward<ObjectPointer>(object_pointer),
-                                    std::forward<Execute>(exec),
-                                    counter
-                                )
-                            );
-                        }
-
-                        template<typename GivenKey, typename...Args>
-                        requires std::invocable<TypeSignature, Args...>
-                        && std::convertible_to<GivenKey, Key>
-                        auto execute(GivenKey const & the_key, Args&&...args)
-                        {
-                            auto [begin, end] = map.equal_range(static_cast<Key const &>(the_key));
-                            bool result {false};
-                            for (auto iter {begin}; iter != end; iter++)
-                            {
-                                result = result || iter -> second(args..., Decipher<Parameters>{std::type_identity<Args>{}}...);
-                            }
-                            return result;
-                        }
-
-                        Map map;
-                    };
-                };
-
-                template<typename...Args>
-                using Mold = Detail::template ProtoMold<Args...>;
+                Map map;
             };
         };
 

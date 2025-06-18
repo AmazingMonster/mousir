@@ -1,15 +1,15 @@
 // Copyright 2025 Feng Mofan
 // SPDX-License-Identifier: Apache-2.0
 
-#ifndef MOUSIR_CORRESPONDENCE_H
-#define MOUSIR_CORRESPONDENCE_H
+#ifndef MOUSIR_CHECKBOXER_H
+#define MOUSIR_CHECKBOXER_H
 
 #include <unordered_map>
 
 namespace Mousir {
 
 template<template<typename...> class TheMap=std::unordered_map>
-struct Correspondence
+struct Checkboxer
 {
     template<typename TheKey=int>
     struct ProtoMold
