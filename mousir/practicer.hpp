@@ -8,12 +8,12 @@
 #include "conceptrodon/functivore/concepts/invoke_return_as.hpp"
 #include "conceptrodon/functivore/concepts/member_function_pointer_probe.hpp"
 #include "conceptrodon/mouldivore/concepts/confess.hpp"
+#include "conceptrodon/mouldivore/concepts/deceive.hpp"
 #include <conceptrodon/functivore/get_variadic_type_signature.hpp>
 #include <functional>
 #include <type_traits>
 #include <unordered_map>
 #include <utility>
-#include "mousir/cheesential/decipher.hpp"
 
 namespace Mousir {
 
@@ -39,7 +39,7 @@ struct Practicer
                     {
                         using Key = TheCorrespondenceKey;
                         using TypeSignature = Conceptrodon::Functivore::ApplyReturnType<bool>::Mold<Parameters...>;
-                        using Function = FunctionWrapper<Conceptrodon::Functivore::ApplyReturnType<bool>::Mold<std::remove_reference_t<Parameters>&..., Cheesential::Decipher<Parameters>...>>;
+                        using Function = FunctionWrapper<Conceptrodon::Functivore::ApplyReturnType<bool>::Mold<std::remove_reference_t<Parameters>&...>>;
                         using Map = TheMap<Key, Function>;
 
                         ProtoMold(Correspondence & the_correspondence)
@@ -84,28 +84,28 @@ struct Practicer
                         Function wrap(Practice&& practice)
                         {
                             return [practice]
-                            (std::remove_reference_t<Parameters>&...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
-                            { return practice((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...); };
+                            (std::remove_reference_t<Parameters>&...args) mutable -> bool
+                            { return practice(args...); };
                         }
                     
                         template <typename Practice>
                         requires
                             Conceptrodon::Functivore::InvokeReturnAs<Practice, bool, Parameters...>
-                        &&  Conceptrodon::Mouldivore::Confess<std::is_class, Practice>
+                        &&  Conceptrodon::Mouldivore::Confess<std::is_class, std::remove_cvref_t<Practice>>
                         Function wrap(Practice&& practice)
                         {
                             if constexpr (std::is_lvalue_reference_v<Practice>)
                             {
                                 return [practice]
-                                (std::remove_reference_t<Parameters>&...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
-                                { return practice((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...); };
+                                (std::remove_reference_t<Parameters>&...args) mutable -> bool
+                                { return practice(args...); };
                             }
                     
                             else
                             {
                                 return [practice=std::move(practice)]
-                                (std::remove_reference_t<Parameters>&...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
-                                { return practice((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...); };
+                                (std::remove_reference_t<Parameters>&...args) mutable -> bool
+                                { return practice(args...); };
                             }
                         }
 
@@ -113,9 +113,9 @@ struct Practicer
                         Function wrap(Practice&& practice)
                         {
                             return [practice]
-                            (std::remove_reference_t<Parameters>&...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
+                            (std::remove_reference_t<Parameters>&...args) mutable -> bool
                             {
-                                practice((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...);
+                                practice(args...);
                                 return true;
                             };
                         }
@@ -127,9 +127,9 @@ struct Practicer
                             if constexpr (std::is_lvalue_reference_v<Practice>)
                             {
                                 return [practice]
-                                (std::remove_reference_t<Parameters>&...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
+                                (std::remove_reference_t<Parameters>&...args) mutable -> bool
                                 {
-                                    practice((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...);
+                                    practice(args...);
                                     return true;
                                 };
                             }
@@ -137,9 +137,9 @@ struct Practicer
                             else
                             {
                                 return [practice=std::move(practice)]
-                                (std::remove_reference_t<Parameters>&...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
+                                (std::remove_reference_t<Parameters>&...args) mutable -> bool
                                 {
-                                    practice((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...);
+                                    practice(args...);
                                     return true;
                                 };
                             }
@@ -150,145 +150,147 @@ struct Practicer
                         template <typename Practice, typename ObjectPointer>
                         requires Conceptrodon::Functivore::InvokeReturnAs<Practice, bool, Parameters...>
                         && Conceptrodon::Functivore::MemberFunctionPointerProbe<Practice>
-                        && Conceptrodon::Mouldivore::Confess<std::is_pointer, ObjectPointer>
+                        && Conceptrodon::Mouldivore::Confess<std::is_pointer, std::remove_cvref_t<ObjectPointer>>
                         Function wrap(ObjectPointer&& object_pointer, Practice&& practice)
                         {
                             return [practice, object_pointer]
-                            (std::remove_reference_t<Parameters>&...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
-                            { return (object_pointer ->* practice)((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...); };
+                            (std::remove_reference_t<Parameters>&...args) mutable -> bool
+                            { return (object_pointer ->* practice)(args...); };
                         }
 
                         template <typename Practice, typename ObjectPointer>
                         requires Conceptrodon::Functivore::InvokeReturnAs<Practice, bool, Parameters...>
                         && Conceptrodon::Functivore::MemberFunctionPointerProbe<Practice>
-                        && Conceptrodon::Mouldivore::Deceive<std::is_pointer, ObjectPointer>
-                        && std::invocable<decltype(&ObjectPointer::operator->*), decltype(*std::declval<ObjectPointer>), Practice>
+                        && Conceptrodon::Mouldivore::Deceive<std::is_pointer, std::remove_cvref_t<ObjectPointer>>
+                        && std::invocable<decltype(std::declval<ObjectPointer>().operator->*(std::declval<Practice>())), Parameters...>
                         Function wrap(ObjectPointer&& object_pointer, Practice&& practice)
                         {
                             return [practice, object_pointer=std::move(object_pointer)]
-                            (std::remove_reference_t<Parameters>&...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
-                            { return (object_pointer ->* practice)((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...); };
+                            (std::remove_reference_t<Parameters>&...args) mutable -> bool
+                            { return (object_pointer ->* practice)(args...); };
                         }
                         
                         template <typename Practice, typename ObjectPointer>
                         requires Conceptrodon::Functivore::InvokeReturnAs<Practice, bool, Parameters...>
                         && Conceptrodon::Functivore::MemberFunctionPointerProbe<Practice>
-                        && Conceptrodon::Mouldivore::Deceive<std::is_pointer, ObjectPointer>
+                        && Conceptrodon::Mouldivore::Deceive<std::is_pointer, std::remove_cvref_t<ObjectPointer>>
                         && Conceptrodon::Mouldivore::Confess<std::is_lvalue_reference, ObjectPointer>
                         Function wrap(ObjectPointer&& object_pointer, Practice&& practice)
                         {
                             return [practice, object_pointer]
-                            (std::remove_reference_t<Parameters>&...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
-                            { return (object_pointer.get() ->* practice)((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...); };
+                            (std::remove_reference_t<Parameters>&...args) mutable -> bool
+                            { return (object_pointer.get() ->* practice)(args...); };
                         }
 
                         template <typename Practice, typename ObjectPointer>
                         requires Conceptrodon::Functivore::InvokeReturnAs<Practice, bool, Parameters...>
                         && Conceptrodon::Functivore::MemberFunctionPointerProbe<Practice>
-                        && Conceptrodon::Mouldivore::Deceive<std::is_pointer, ObjectPointer>
-                        && std::invocable<decltype(&ObjectPointer::operator->*), decltype(*std::declval<ObjectPointer>), Practice>
+                        && Conceptrodon::Mouldivore::Deceive<std::is_pointer, std::remove_cvref_t<ObjectPointer>>
+                        && std::invocable<decltype(std::declval<ObjectPointer>().operator->*(std::declval<Practice>())), Parameters...>
                         && Conceptrodon::Mouldivore::Confess<std::is_lvalue_reference, ObjectPointer>
                         Function wrap(ObjectPointer&& object_pointer, Practice&& practice)
                         {
                             return [practice, object_pointer]
-                            (std::remove_reference_t<Parameters>&...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
-                            { return (object_pointer ->* practice)((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...); };
+                            (std::remove_reference_t<Parameters>&...args) mutable -> bool
+                            { return (object_pointer ->* practice)(args...); };
                         }
 
                         template <typename Practice, typename ObjectPointer>
                         requires Conceptrodon::Functivore::InvokeReturnAs<Practice, bool, Parameters...>
                         && Conceptrodon::Functivore::MemberFunctionPointerProbe<Practice>
-                        && Conceptrodon::Mouldivore::Deceive<std::is_pointer, ObjectPointer>
+                        && Conceptrodon::Mouldivore::Deceive<std::is_pointer, std::remove_cvref_t<ObjectPointer>>
                         Function wrap(ObjectPointer&& object_pointer, Practice&& practice)
                         {
                             return [practice, object_pointer=std::move(object_pointer)]
-                            (std::remove_reference_t<Parameters>&...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
-                            { return (object_pointer.get() ->* practice)((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...); };
+                            (std::remove_reference_t<Parameters>&...args) mutable -> bool
+                            { return (object_pointer.get() ->* practice)(args...); };
                         }
 
 /**** Return Others ****/
                         template <typename Practice, typename ObjectPointer>
                         requires Conceptrodon::Functivore::MemberFunctionPointerProbe<Practice>
-                        && Conceptrodon::Mouldivore::Confess<std::is_pointer, ObjectPointer>
+                        && Conceptrodon::Mouldivore::Confess<std::is_pointer, std::remove_cvref_t<ObjectPointer>>
                         Function wrap(ObjectPointer&& object_pointer, Practice&& practice)
                         {
                             return [practice, object_pointer]
-                            (std::remove_reference_t<Parameters>&...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
+                            (std::remove_reference_t<Parameters>&...args) mutable -> bool
                             {
-                                (object_pointer ->* practice)((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...);
+                                (object_pointer ->* practice)(args...);
                                 return true;
                             };
                         }
 
                         template <typename Practice, typename ObjectPointer>
                         requires Conceptrodon::Functivore::MemberFunctionPointerProbe<Practice>
-                        && Conceptrodon::Mouldivore::Deceive<std::is_pointer, ObjectPointer>
-                        && std::invocable<decltype(&ObjectPointer::operator->*), decltype(*std::declval<ObjectPointer>), Practice>
+                        && Conceptrodon::Mouldivore::Deceive<std::is_pointer, std::remove_cvref_t<ObjectPointer>>
+                        && std::invocable<decltype(std::declval<ObjectPointer>().operator->*(std::declval<Practice>())), Parameters...>
                         Function wrap(ObjectPointer&& object_pointer, Practice&& practice)
                         {
                             return [practice, object_pointer=std::move(object_pointer)]
-                            (std::remove_reference_t<Parameters>&...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
+                            (std::remove_reference_t<Parameters>&...args) mutable -> bool
                             {
-                                (object_pointer ->* practice)((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...);
+                                (object_pointer ->* practice)(args...);
                                 return true;
                             };
                         }
                         
                         template <typename Practice, typename ObjectPointer>
                         requires Conceptrodon::Functivore::MemberFunctionPointerProbe<Practice>
-                        && Conceptrodon::Mouldivore::Deceive<std::is_pointer, ObjectPointer>
+                        && Conceptrodon::Mouldivore::Deceive<std::is_pointer, std::remove_cvref_t<ObjectPointer>>
                         && Conceptrodon::Mouldivore::Confess<std::is_lvalue_reference, ObjectPointer>
                         Function wrap(ObjectPointer&& object_pointer, Practice&& practice)
                         {
                             return [practice, object_pointer]
-                            (std::remove_reference_t<Parameters>&...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
+                            (std::remove_reference_t<Parameters>&...args) mutable -> bool
                             {
-                                (object_pointer.get() ->* practice)((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...);
+                                (object_pointer.get() ->* practice)(args...);
                                 return true;
                             };
                         }
 
                         template <typename Practice, typename ObjectPointer>
                         requires Conceptrodon::Functivore::MemberFunctionPointerProbe<Practice>
-                        && Conceptrodon::Mouldivore::Deceive<std::is_pointer, ObjectPointer>
-                        && std::invocable<decltype(&ObjectPointer::operator->*), decltype(*std::declval<ObjectPointer>), Practice>
+                        && Conceptrodon::Mouldivore::Deceive<std::is_pointer, std::remove_cvref_t<ObjectPointer>>
+                        && std::invocable<decltype(std::declval<ObjectPointer>().operator->*(std::declval<Practice>())), Parameters...>
                         && Conceptrodon::Mouldivore::Confess<std::is_lvalue_reference, ObjectPointer>
                         Function wrap(ObjectPointer&& object_pointer, Practice&& practice)
                         {
                             return [practice, object_pointer]
-                            (std::remove_reference_t<Parameters>&...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
+                            (std::remove_reference_t<Parameters>&...args) mutable -> bool
                             {
-                                (object_pointer ->* practice)((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...);
+                                (object_pointer ->* practice)(args...);
                                 return true;
                             };
                         }
 
                         template <typename Practice, typename ObjectPointer>
                         requires Conceptrodon::Functivore::MemberFunctionPointerProbe<Practice>
-                        && Conceptrodon::Mouldivore::Deceive<std::is_pointer, ObjectPointer>
+                        && Conceptrodon::Mouldivore::Deceive<std::is_pointer, std::remove_cvref_t<ObjectPointer>>
                         Function wrap(ObjectPointer&& object_pointer, Practice&& practice)
                         {
                             return [practice, object_pointer=std::move(object_pointer)]
-                            (std::remove_reference_t<Parameters>&...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
+                            (std::remove_reference_t<Parameters>&...args) mutable -> bool
                             {
-                                (object_pointer.get() ->* practice)((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...);
+                                (object_pointer.get() ->* practice)(args...);
                                 return true;
                             };
                         }
 
-                        template<typename GivenCorrespondenceKey, typename...Args>
+                        template<typename...Args>
                         requires std::invocable<TypeSignature, Args...>
                         bool execute(Args&&...args)
                         {
                             bool result {true};
-                            for (auto [key, flag] : correspondence)
+                            for (auto& pair : correspondence)
                             {
+                                auto& key = pair.first;
+                                auto& flag = pair.second;
                                 if (flag)
                                 {
                                     auto [begin, end] = map.equal_range(key);
                                     for (auto iter {begin}; iter != end; iter++)
                                     {
-                                        flag = flag && iter -> second(args..., Cheesential::Decipher<Parameters>{std::type_identity<Args>{}}...);
+                                        flag = flag && iter -> second(args...);
                                     }
                                     result = result && flag;
                                 }

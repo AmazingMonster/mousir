@@ -4,11 +4,11 @@
 #ifndef MOUSIR_CHECKBOXER_H
 #define MOUSIR_CHECKBOXER_H
 
-#include <unordered_map>
+#include <map>
 
 namespace Mousir {
 
-template<template<typename...> class TheMap=std::unordered_map>
+template<template<typename...> class TheMap=std::map>
 struct Checkboxer
 {
     template<typename TheKey=int>
@@ -31,12 +31,24 @@ struct Checkboxer
         auto find(Key const& key)
         { return map.find(key); }
 
-        Key increment()
+        Key increment(bool flag=false)
         {
             counter++;
-            map.emplace(counter, false);
+            map.emplace(counter, flag);
             return counter;
         }
+
+        auto begin() const
+        { return map.begin(); }
+
+        auto begin()
+        { return map.begin(); }
+
+        auto end() const
+        { return map.end(); }
+
+        auto end()
+        { return map.end(); }
 
         Map map;
         Key counter;

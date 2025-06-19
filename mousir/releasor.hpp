@@ -192,7 +192,7 @@ struct Releasor
                         template <typename Release, typename ObjectPointer, typename Counter>
                         requires Conceptrodon::Functivore::InvokeReturnAs<Release, bool, Parameters...>
                         && Conceptrodon::Functivore::MemberFunctionPointerProbe<Release>
-                        && Conceptrodon::Mouldivore::Confess<std::is_pointer, ObjectPointer>
+                        && Conceptrodon::Mouldivore::Confess<std::is_pointer, std::remove_cvref_t<ObjectPointer>>
                         Function wrap(ObjectPointer&& object_pointer, Release&& release, Counter const & counter)
                         {
                             return [counter, release, object_pointer, this]
@@ -214,8 +214,8 @@ struct Releasor
                         template <typename Release, typename ObjectPointer, typename Counter>
                         requires Conceptrodon::Functivore::InvokeReturnAs<Release, bool, Parameters...>
                         && Conceptrodon::Functivore::MemberFunctionPointerProbe<Release>
-                        && Conceptrodon::Mouldivore::Deceive<std::is_pointer, ObjectPointer>
-                        && std::invocable<decltype(&ObjectPointer::operator->*), decltype(*std::declval<ObjectPointer>), Release>
+                        && Conceptrodon::Mouldivore::Deceive<std::is_pointer, std::remove_cvref_t<ObjectPointer>>
+                        && std::invocable<decltype(std::declval<ObjectPointer>().operator->*(std::declval<Release>())), Parameters...>
                         Function wrap(ObjectPointer&& object_pointer, Release&& release, Counter const & counter)
                         {
                             return [counter, release, object_pointer = std::move(object_pointer), this]
@@ -237,7 +237,7 @@ struct Releasor
                         template <typename Release, typename ObjectPointer, typename Counter>
                         requires Conceptrodon::Functivore::InvokeReturnAs<Release, bool, Parameters...>
                         && Conceptrodon::Functivore::MemberFunctionPointerProbe<Release>
-                        && Conceptrodon::Mouldivore::Deceive<std::is_pointer, ObjectPointer>
+                        && Conceptrodon::Mouldivore::Deceive<std::is_pointer, std::remove_cvref_t<ObjectPointer>>
                         && Conceptrodon::Mouldivore::Confess<std::is_lvalue_reference, ObjectPointer>
                         Function wrap(ObjectPointer&& object_pointer, Release&& release, Counter const & counter)
                         {
@@ -260,8 +260,8 @@ struct Releasor
                         template <typename Release, typename ObjectPointer, typename Counter>
                         requires Conceptrodon::Functivore::InvokeReturnAs<Release, bool, Parameters...>
                         && Conceptrodon::Functivore::MemberFunctionPointerProbe<Release>
-                        && Conceptrodon::Mouldivore::Deceive<std::is_pointer, ObjectPointer>
-                        && std::invocable<decltype(&ObjectPointer::operator->*), decltype(*std::declval<ObjectPointer>), Release>
+                        && Conceptrodon::Mouldivore::Deceive<std::is_pointer, std::remove_cvref_t<ObjectPointer>>
+                        && std::invocable<decltype(std::declval<ObjectPointer>().operator->*(std::declval<Release>())), Parameters...>
                         && Conceptrodon::Mouldivore::Confess<std::is_lvalue_reference, ObjectPointer>
                         Function wrap(ObjectPointer&& object_pointer, Release&& release, Counter const & counter)
                         {
@@ -284,7 +284,7 @@ struct Releasor
                         template <typename Release, typename ObjectPointer, typename Counter>
                         requires Conceptrodon::Functivore::InvokeReturnAs<Release, bool, Parameters...>
                         && Conceptrodon::Functivore::MemberFunctionPointerProbe<Release>
-                        && Conceptrodon::Mouldivore::Deceive<std::is_pointer, ObjectPointer>
+                        && Conceptrodon::Mouldivore::Deceive<std::is_pointer, std::remove_cvref_t<ObjectPointer>>
                         Function wrap(ObjectPointer&& object_pointer, Release&& release, Counter const & counter)
                         {
                             return [counter, release, object_pointer = std::move(object_pointer), this]
@@ -306,7 +306,7 @@ struct Releasor
 /**** Return Others ****/
                         template <typename Release, typename ObjectPointer, typename Counter>
                         requires Conceptrodon::Functivore::MemberFunctionPointerProbe<Release>
-                        && Conceptrodon::Mouldivore::Confess<std::is_pointer, ObjectPointer>
+                        && Conceptrodon::Mouldivore::Confess<std::is_pointer, std::remove_cvref_t<ObjectPointer>>
                         Function wrap(ObjectPointer&& object_pointer, Release&& release, Counter const & counter)
                         {
                             return [counter, release, object_pointer, this]
@@ -327,8 +327,8 @@ struct Releasor
                             
                         template <typename Release, typename ObjectPointer, typename Counter>
                         requires Conceptrodon::Functivore::MemberFunctionPointerProbe<Release>
-                        && Conceptrodon::Mouldivore::Deceive<std::is_pointer, ObjectPointer>
-                        && std::invocable<decltype(&ObjectPointer::operator->*), decltype(*std::declval<ObjectPointer>), Release>
+                        && Conceptrodon::Mouldivore::Deceive<std::is_pointer, std::remove_cvref_t<ObjectPointer>>
+                        && std::invocable<decltype(std::declval<ObjectPointer>().operator->*(std::declval<Release>())), Parameters...>
                         Function wrap(ObjectPointer&& object_pointer, Release&& release, Counter const & counter)
                         {
                             return [counter, release, object_pointer = std::move(object_pointer), this]
@@ -349,7 +349,7 @@ struct Releasor
 
                         template <typename Release, typename ObjectPointer, typename Counter>
                         requires Conceptrodon::Functivore::MemberFunctionPointerProbe<Release>
-                        && Conceptrodon::Mouldivore::Deceive<std::is_pointer, ObjectPointer>
+                        && Conceptrodon::Mouldivore::Deceive<std::is_pointer, std::remove_cvref_t<ObjectPointer>>
                         && Conceptrodon::Mouldivore::Confess<std::is_lvalue_reference, ObjectPointer>
                         Function wrap(ObjectPointer&& object_pointer, Release&& release, Counter const & counter)
                         {
@@ -371,8 +371,8 @@ struct Releasor
 
                         template <typename Release, typename ObjectPointer, typename Counter>
                         requires Conceptrodon::Functivore::MemberFunctionPointerProbe<Release>
-                        && Conceptrodon::Mouldivore::Deceive<std::is_pointer, ObjectPointer>
-                        && std::invocable<decltype(&ObjectPointer::operator->*), decltype(*std::declval<ObjectPointer>), Release>
+                        && Conceptrodon::Mouldivore::Deceive<std::is_pointer, std::remove_cvref_t<ObjectPointer>>
+                        && std::invocable<decltype(std::declval<ObjectPointer>().operator->*(std::declval<Release>())), Parameters...>
                         && Conceptrodon::Mouldivore::Confess<std::is_lvalue_reference, ObjectPointer>
                         Function wrap(ObjectPointer&& object_pointer, Release&& release, Counter const & counter)
                         {
@@ -394,7 +394,7 @@ struct Releasor
 
                         template <typename Release, typename ObjectPointer, typename Counter>
                         requires Conceptrodon::Functivore::MemberFunctionPointerProbe<Release>
-                        && Conceptrodon::Mouldivore::Deceive<std::is_pointer, ObjectPointer>
+                        && Conceptrodon::Mouldivore::Deceive<std::is_pointer, std::remove_cvref_t<ObjectPointer>>
                         Function wrap(ObjectPointer&& object_pointer, Release&& release, Counter const & counter)
                         {
                             return [counter, release, object_pointer = std::move(object_pointer), this]

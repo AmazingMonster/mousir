@@ -135,7 +135,7 @@ struct Activator
                         template <typename Activate, typename ObjectPointer, typename Counter>
                         requires Conceptrodon::Functivore::InvokeReturnAs<Activate, bool, Parameters...>
                         && Conceptrodon::Functivore::MemberFunctionPointerProbe<Activate>
-                        && Conceptrodon::Mouldivore::Confess<std::is_pointer, ObjectPointer>
+                        && Conceptrodon::Mouldivore::Confess<std::is_pointer, std::remove_cvref_t<ObjectPointer>>
                         Function wrap(ObjectPointer&& object_pointer, Activate&& activate, Counter const & counter)
                         {
                             return [counter, activate, object_pointer, this]
@@ -146,8 +146,8 @@ struct Activator
                         template <typename Activate, typename ObjectPointer, typename Counter>
                         requires Conceptrodon::Functivore::InvokeReturnAs<Activate, bool, Parameters...>
                         && Conceptrodon::Functivore::MemberFunctionPointerProbe<Activate>
-                        && Conceptrodon::Mouldivore::Deceive<std::is_pointer, ObjectPointer>
-                        && std::invocable<decltype(&ObjectPointer::operator->*), decltype(*std::declval<ObjectPointer>), Activate>
+                        && Conceptrodon::Mouldivore::Deceive<std::is_pointer, std::remove_cvref_t<ObjectPointer>>
+                        && std::invocable<decltype(std::declval<ObjectPointer>().operator->*(std::declval<Activate>())), Parameters...>
                         Function wrap(ObjectPointer&& object_pointer, Activate&& activate, Counter const & counter)
                         {
                             return [counter, activate, object_pointer = std::move(object_pointer), this]
@@ -158,7 +158,7 @@ struct Activator
                         template <typename Activate, typename ObjectPointer, typename Counter>
                         requires Conceptrodon::Functivore::InvokeReturnAs<Activate, bool, Parameters...>
                         && Conceptrodon::Functivore::MemberFunctionPointerProbe<Activate>
-                        && Conceptrodon::Mouldivore::Deceive<std::is_pointer, ObjectPointer>
+                        && Conceptrodon::Mouldivore::Deceive<std::is_pointer, std::remove_cvref_t<ObjectPointer>>
                         && Conceptrodon::Mouldivore::Confess<std::is_lvalue_reference, ObjectPointer>
                         Function wrap(ObjectPointer&& object_pointer, Activate&& activate, Counter const & counter)
                         {
@@ -170,8 +170,8 @@ struct Activator
                         template <typename Activate, typename ObjectPointer, typename Counter>
                         requires Conceptrodon::Functivore::InvokeReturnAs<Activate, bool, Parameters...>
                         && Conceptrodon::Functivore::MemberFunctionPointerProbe<Activate>
-                        && Conceptrodon::Mouldivore::Deceive<std::is_pointer, ObjectPointer>
-                        && std::invocable<decltype(&ObjectPointer::operator->*), decltype(*std::declval<ObjectPointer>), Activate>
+                        && Conceptrodon::Mouldivore::Deceive<std::is_pointer, std::remove_cvref_t<ObjectPointer>>
+                        && std::invocable<decltype(std::declval<ObjectPointer>().operator->*(std::declval<Activate>())), Parameters...>
                         && Conceptrodon::Mouldivore::Confess<std::is_lvalue_reference, ObjectPointer>
                         Function wrap(ObjectPointer&& object_pointer, Activate&& activate, Counter const & counter)
                         {
@@ -183,7 +183,7 @@ struct Activator
                         template <typename Activate, typename ObjectPointer, typename Counter>
                         requires Conceptrodon::Functivore::InvokeReturnAs<Activate, bool, Parameters...>
                         && Conceptrodon::Functivore::MemberFunctionPointerProbe<Activate>
-                        && Conceptrodon::Mouldivore::Deceive<std::is_pointer, ObjectPointer>
+                        && Conceptrodon::Mouldivore::Deceive<std::is_pointer, std::remove_cvref_t<ObjectPointer>>
                         Function wrap(ObjectPointer&& object_pointer, Activate&& activate, Counter const & counter)
                         {
                             return [counter, activate, object_pointer = std::move(object_pointer), this]
@@ -194,7 +194,7 @@ struct Activator
 /**** Return Others ****/
                         template <typename Activate, typename ObjectPointer, typename Counter>
                         requires Conceptrodon::Functivore::MemberFunctionPointerProbe<Activate>
-                        && Conceptrodon::Mouldivore::Confess<std::is_pointer, ObjectPointer>
+                        && Conceptrodon::Mouldivore::Confess<std::is_pointer, std::remove_cvref_t<ObjectPointer>>
                         Function wrap(ObjectPointer&& object_pointer, Activate&& activate, Counter const & counter)
                         {
                             return [counter, activate, object_pointer, this]
@@ -207,8 +207,8 @@ struct Activator
 
                         template <typename Activate, typename ObjectPointer, typename Counter>
                         requires Conceptrodon::Functivore::MemberFunctionPointerProbe<Activate>
-                        && Conceptrodon::Mouldivore::Deceive<std::is_pointer, ObjectPointer>
-                        && std::invocable<decltype(&ObjectPointer::operator->*), decltype(*std::declval<ObjectPointer>), Activate>
+                        && Conceptrodon::Mouldivore::Deceive<std::is_pointer, std::remove_cvref_t<ObjectPointer>>
+                        && std::invocable<decltype(std::declval<ObjectPointer>().operator->*(std::declval<Activate>())), Parameters...>
                         Function wrap(ObjectPointer&& object_pointer, Activate&& activate, Counter const & counter)
                         {
                             return [counter, activate, object_pointer = std::move(object_pointer), this]
@@ -221,7 +221,7 @@ struct Activator
 
                         template <typename Activate, typename ObjectPointer, typename Counter>
                         requires Conceptrodon::Functivore::MemberFunctionPointerProbe<Activate>
-                        && Conceptrodon::Mouldivore::Deceive<std::is_pointer, ObjectPointer>
+                        && Conceptrodon::Mouldivore::Deceive<std::is_pointer, std::remove_cvref_t<ObjectPointer>>
                         && Conceptrodon::Mouldivore::Confess<std::is_lvalue_reference, ObjectPointer>
                         Function wrap(ObjectPointer&& object_pointer, Activate&& activate, Counter const & counter)
                         {
@@ -235,8 +235,8 @@ struct Activator
 
                         template <typename Activate, typename ObjectPointer, typename Counter>
                         requires Conceptrodon::Functivore::MemberFunctionPointerProbe<Activate>
-                        && Conceptrodon::Mouldivore::Deceive<std::is_pointer, ObjectPointer>
-                        && std::invocable<decltype(&ObjectPointer::operator->*), decltype(*std::declval<ObjectPointer>), Activate>
+                        && Conceptrodon::Mouldivore::Deceive<std::is_pointer, std::remove_cvref_t<ObjectPointer>>
+                        && std::invocable<decltype(std::declval<ObjectPointer>().operator->*(std::declval<Activate>())), Parameters...>
                         && Conceptrodon::Mouldivore::Confess<std::is_lvalue_reference, ObjectPointer>
                         Function wrap(ObjectPointer&& object_pointer, Activate&& activate, Counter const & counter)
                         {
@@ -250,7 +250,7 @@ struct Activator
 
                         template <typename Activate, typename ObjectPointer, typename Counter>
                         requires Conceptrodon::Functivore::MemberFunctionPointerProbe<Activate>
-                        && Conceptrodon::Mouldivore::Deceive<std::is_pointer, ObjectPointer>
+                        && Conceptrodon::Mouldivore::Deceive<std::is_pointer, std::remove_cvref_t<ObjectPointer>>
                         Function wrap(ObjectPointer&& object_pointer, Activate&& activate, Counter const & counter)
                         {
                             return [counter, activate, object_pointer = std::move(object_pointer), this]
