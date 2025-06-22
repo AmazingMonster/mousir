@@ -15,6 +15,9 @@ namespace Cheesential {
 template<typename Supposed>
 struct Decipher
 {
+    template<typename...Args>
+    Decipher(Args...) {}
+
     bool isForwardSafe()
     { return true; }
 };

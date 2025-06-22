@@ -1,8 +1,8 @@
 // Copyright 2024 Feng Mofan
 // SPDX-License-Identifier: Apache-2.0
 
-#ifndef CONCEPTRODON_TESTS_UNIT_ACTIVATOR_H
-#define CONCEPTRODON_TESTS_UNIT_ACTIVATOR_H
+#ifndef CONCEPTRODON_TESTS_UNIT_ACTIVATOR_LVALUE_REFERENCE_H
+#define CONCEPTRODON_TESTS_UNIT_ACTIVATOR_LVALUE_REFERENCE_H
 
 #include "mousir/activator.hpp"
 #include "mousir/checkboxer.hpp"
@@ -12,7 +12,7 @@
 
 
 namespace Mousir {
-namespace TestActivator {
+namespace TestActivatorLvalueReference {
     
 
 struct Argument
@@ -36,13 +36,13 @@ struct Caller
     Caller(Caller const && caller)
     { std::cout << "Caller move constructed" << std::endl; }
 
-    bool operator()(Argument p, bool r)
+    bool operator()(Argument const & p, bool r)
     {    
         std::cout << "Function object called" << std::endl;
         return r;
     }
 
-    bool fun(Argument p, bool r)
+    bool fun(Argument const & p, bool r)
     { 
         std::cout << "Pointer to member function called" << std::endl;
         return r; 
@@ -68,7 +68,7 @@ struct CallerPtr
     C* c;
 };
 
-inline bool fun(Argument p, bool r)
+inline bool fun(Argument const & p, bool r)
     { 
         std::cout << "Function called" << std::endl;
         return r; 
@@ -76,7 +76,7 @@ inline bool fun(Argument p, bool r)
 
 inline auto Lambda
 {
-    [](Argument p, bool r)
+    [](Argument const & p, bool r)
     { 
         std::cout << "Lambda called" << std::endl;
         return r; 
@@ -87,7 +87,7 @@ inline void test()
 {
     using Correspondence = Checkboxer<>::Mold<int>;
     Correspondence correspondence{};
-    Activator<>::Mold<int>::Mold<Correspondence>::Mold<Argument, bool> act(correspondence);
+    Activator<>::Mold<int>::Mold<Correspondence>::Mold<Argument const &, bool> act(correspondence);
 
     Caller caller{};
     Caller* c_ptr {&caller};
@@ -134,12 +134,12 @@ inline void test()
         }
         else if (v == 'P' || v == 'p')
         {
-            std::cout << "Rvalue argument" << std::endl;
+            std::cout << "Prvalue argument" << std::endl;
             act.execute(k, Argument{}, r);
         }
         else if (v == 'R' || v == 'r')
         {
-            std::cout << "Rvalue argument" << std::endl;
+            std::cout << "Rvalue reference argument" << std::endl;
             act.execute(k, std::move(a), r);
         }
     }    

@@ -1,10 +1,10 @@
 // Copyright 2024 Feng Mofan
 // SPDX-License-Identifier: Apache-2.0
 
-#ifndef CONCEPTRODON_TESTS_UNIT_RELEASOR_H
-#define CONCEPTRODON_TESTS_UNIT_RELEASOR_H
+#ifndef CONCEPTRODON_TESTS_UNIT_ACTIVATOR_ORDINARY_H
+#define CONCEPTRODON_TESTS_UNIT_ACTIVATOR_ORDINARY_H
 
-#include "mousir/releasor.hpp"
+#include "mousir/activator.hpp"
 #include "mousir/checkboxer.hpp"
 #include <iostream>
 #include <memory>
@@ -12,7 +12,7 @@
 
 
 namespace Mousir {
-namespace TestReleasor {
+namespace TestActivator {
     
 
 struct Argument
@@ -87,7 +87,7 @@ inline void test()
 {
     using Correspondence = Checkboxer<>::Mold<int>;
     Correspondence correspondence{};
-    Releasor<>::Mold<int>::Mold<Correspondence>::Mold<Argument, bool> rel(correspondence);
+    Activator<>::Mold<int>::Mold<Correspondence>::Mold<Argument, bool> act(correspondence);
 
     Caller caller{};
     Caller* c_ptr {&caller};
@@ -96,16 +96,16 @@ inline void test()
 
     static_assert(std::invocable<decltype(std::declval<CallerPtr<Caller>>().operator->*(std::declval<decltype(&Caller::fun)>())), Argument, bool>);
 
-    rel.insert(correspondence.increment(true), 0, Caller{});
-    rel.insert(correspondence.increment(true), 1, caller);
-    rel.insert(correspondence.increment(true), 2, fun);
-    rel.insert(correspondence.increment(true), 3, Lambda);
-    rel.insert(correspondence.increment(true), 4, std::make_shared<Caller>(), &Caller::fun);
-    rel.insert(correspondence.increment(true), 5, smart_c_ptr, &Caller::fun);
-    rel.insert(correspondence.increment(true), 6, &caller, &Caller::fun);
-    rel.insert(correspondence.increment(true), 7, c_ptr, &Caller::fun);
-    rel.insert(correspondence.increment(true), 8, CallerPtr<Caller>{&caller}, &Caller::fun);
-    rel.insert(correspondence.increment(true), 9, caller_ptr, &Caller::fun);
+    act.insert(correspondence.increment(), 0, Caller{});
+    act.insert(correspondence.increment(), 1, caller);
+    act.insert(correspondence.increment(), 2, fun);
+    act.insert(correspondence.increment(), 3, Lambda);
+    act.insert(correspondence.increment(), 4, std::make_shared<Caller>(), &Caller::fun);
+    act.insert(correspondence.increment(), 5, smart_c_ptr, &Caller::fun);
+    act.insert(correspondence.increment(), 6, &caller, &Caller::fun);
+    act.insert(correspondence.increment(), 7, c_ptr, &Caller::fun);
+    act.insert(correspondence.increment(), 8, CallerPtr<Caller>{&caller}, &Caller::fun);
+    act.insert(correspondence.increment(), 9, caller_ptr, &Caller::fun);
 
     while (true)
     {
@@ -130,17 +130,17 @@ inline void test()
         if (v == 'L' || v == 'l')
         {
             std::cout << "Lvalue argument" << std::endl;
-            rel.execute(k, a, r);
+            act.execute(k, a, r);
+        }
+        else if (v == 'P' || v == 'p')
+        {
+            std::cout << "Prvalue argument" << std::endl;
+            act.execute(k, Argument{}, r);
         }
         else if (v == 'R' || v == 'r')
         {
-            std::cout << "Rvalue argument" << std::endl;
-            rel.execute(k, Argument{}, r);
-        }
-        else if (v == 'R' || v == 'r')
-        {
-            std::cout << "Rvalue argument" << std::endl;
-            rel.execute(k, std::move(a), r);
+            std::cout << "Rvalue reference argument" << std::endl;
+            act.execute(k, std::move(a), r);
         }
     }    
 }
