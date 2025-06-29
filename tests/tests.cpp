@@ -5,6 +5,8 @@
 #include "tests/units/activator.lvalue_reference.test.hpp"
 #include "tests/units/activator.rvalue_reference.test.hpp"
 #include "tests/units/releasor.ordinary.test.hpp"
+#include "tests/units/releasor.lvalue_reference.test.hpp"
+#include "tests/units/releasor.rvalue_reference.test.hpp"
 #include "tests/units/practicer.ordinary.test.hpp"
 #include "tests/units/practicer.lvalue_reference.test.hpp"
 
@@ -16,5 +18,7 @@ int main()
     //Mousir::TestActivatorLvalueReference::test();
     //Mousir::TestActivatorRvalueReference::test();
     //Mousir::TestPracticerLvalueReference::test();
+    //Mousir::TestActivatorLvalueReference::test();
+    Mousir::TestActivatorRvalueReference::test();
     return 0; 
 }

@@ -12,7 +12,7 @@
 
 
 namespace Mousir {
-namespace TestPracticer {
+namespace TestPracticerOrdinary {
     
 
 struct Argument

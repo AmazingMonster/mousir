@@ -12,7 +12,7 @@
 
 
 namespace Mousir {
-namespace TestReleasor {
+namespace TestReleasorOrdinary {
     
 
 struct Argument
@@ -134,12 +134,12 @@ inline void test()
         }
         else if (v == 'P' || v == 'p')
         {
-            std::cout << "Rvalue argument" << std::endl;
+            std::cout << "PRvalue argument" << std::endl;
             rel.execute(k, Argument{}, r);
         }
         else if (v == 'R' || v == 'r')
         {
-            std::cout << "Rvalue argument" << std::endl;
+            std::cout << "Rvalue reference argument" << std::endl;
             rel.execute(k, std::move(a), r);
         }
     }    
