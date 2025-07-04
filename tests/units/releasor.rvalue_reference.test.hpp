@@ -12,7 +12,7 @@
 
 
 namespace Mousir {
-namespace TestReleasorRvalueReferece {
+namespace TestReleasorRvalueReference {
     
 
 struct Argument
@@ -87,7 +87,7 @@ inline void test()
 {
     using Correspondence = Checkboxer<>::Mold<int>;
     Correspondence correspondence{};
-    Releasor<>::Mold<int>::Mold<Correspondence>::Mold<Argument, bool> rel(correspondence);
+    Releasor<>::Mold<int>::Mold<Correspondence>::Mold<Argument&&, bool> rel(correspondence);
 
     Caller caller{};
     Caller* c_ptr {&caller};

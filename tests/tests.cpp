@@ -18,7 +18,7 @@ int main()
     //Mousir::TestActivatorLvalueReference::test();
     //Mousir::TestActivatorRvalueReference::test();
     //Mousir::TestPracticerLvalueReference::test();
-    //Mousir::TestActivatorLvalueReference::test();
-    Mousir::TestActivatorRvalueReference::test();
+    //Mousir::TestReleasorLvalueReference::test();
+    //Mousir::TestReleasorRvalueReference::test();
     return 0; 
 }
