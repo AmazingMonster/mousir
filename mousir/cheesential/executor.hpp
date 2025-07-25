@@ -41,7 +41,7 @@ struct Executor
 
                 template <typename Counter, typename Execute>
                 requires std::invocable<Execute, Parameters...>
-                void insert
+                void connect
                 (
                     Counter const & counter,
                     Key const & key,
@@ -60,7 +60,7 @@ struct Executor
                 }
 
                 template <typename Counter, typename ObjectPointer, typename Execute>
-                void insert
+                void connect
                 (
                     Counter const & counter,
                     Key const & key,

@@ -96,16 +96,16 @@ inline void test()
 
     static_assert(std::invocable<decltype(std::declval<CallerPtr<Caller>>().operator->*(std::declval<decltype(&Caller::fun)>())), Argument, bool>);
 
-    rel.insert(correspondence.increment(true), 0, Caller{});
-    rel.insert(correspondence.increment(true), 1, caller);
-    rel.insert(correspondence.increment(true), 2, fun);
-    rel.insert(correspondence.increment(true), 3, Lambda);
-    rel.insert(correspondence.increment(true), 4, std::make_shared<Caller>(), &Caller::fun);
-    rel.insert(correspondence.increment(true), 5, smart_c_ptr, &Caller::fun);
-    rel.insert(correspondence.increment(true), 6, &caller, &Caller::fun);
-    rel.insert(correspondence.increment(true), 7, c_ptr, &Caller::fun);
-    rel.insert(correspondence.increment(true), 8, CallerPtr<Caller>{&caller}, &Caller::fun);
-    rel.insert(correspondence.increment(true), 9, caller_ptr, &Caller::fun);
+    rel.connect(correspondence.increment(true), 0, Caller{});
+    rel.connect(correspondence.increment(true), 1, caller);
+    rel.connect(correspondence.increment(true), 2, fun);
+    rel.connect(correspondence.increment(true), 3, Lambda);
+    rel.connect(correspondence.increment(true), 4, std::make_shared<Caller>(), &Caller::fun);
+    rel.connect(correspondence.increment(true), 5, smart_c_ptr, &Caller::fun);
+    rel.connect(correspondence.increment(true), 6, &caller, &Caller::fun);
+    rel.connect(correspondence.increment(true), 7, c_ptr, &Caller::fun);
+    rel.connect(correspondence.increment(true), 8, CallerPtr<Caller>{&caller}, &Caller::fun);
+    rel.connect(correspondence.increment(true), 9, caller_ptr, &Caller::fun);
 
     while (true)
     {

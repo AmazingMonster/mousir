@@ -47,7 +47,7 @@ struct Practicer
                         
                         template <typename Practice>
                         requires std::invocable<Practice, Parameters...>
-                        void insert
+                        void connect
                         (
                             Key const & key,
                             Practice&& practice
@@ -61,7 +61,7 @@ struct Practicer
                         }
                         
                         template <typename ObjectPointer, typename Practice>
-                        void insert
+                        void connect
                         (
                             Key const & key,
                             ObjectPointer&& object_pointer,

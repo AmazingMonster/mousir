@@ -96,16 +96,16 @@ inline void test()
 
     static_assert(std::invocable<decltype(std::declval<CallerPtr<Caller>>().operator->*(std::declval<decltype(&Caller::fun)>())), Argument, bool>);
 
-    act.insert(correspondence.increment(), 0, Caller{});
-    act.insert(correspondence.increment(), 1, caller);
-    act.insert(correspondence.increment(), 2, fun);
-    act.insert(correspondence.increment(), 3, Lambda);
-    act.insert(correspondence.increment(), 4, std::make_shared<Caller>(), &Caller::fun);
-    act.insert(correspondence.increment(), 5, smart_c_ptr, &Caller::fun);
-    act.insert(correspondence.increment(), 6, &caller, &Caller::fun);
-    act.insert(correspondence.increment(), 7, c_ptr, &Caller::fun);
-    act.insert(correspondence.increment(), 8, CallerPtr<Caller>{&caller}, &Caller::fun);
-    act.insert(correspondence.increment(), 9, caller_ptr, &Caller::fun);
+    act.connect(correspondence.increment(), 0, Caller{});
+    act.connect(correspondence.increment(), 1, caller);
+    act.connect(correspondence.increment(), 2, fun);
+    act.connect(correspondence.increment(), 3, Lambda);
+    act.connect(correspondence.increment(), 4, std::make_shared<Caller>(), &Caller::fun);
+    act.connect(correspondence.increment(), 5, smart_c_ptr, &Caller::fun);
+    act.connect(correspondence.increment(), 6, &caller, &Caller::fun);
+    act.connect(correspondence.increment(), 7, c_ptr, &Caller::fun);
+    act.connect(correspondence.increment(), 8, CallerPtr<Caller>{&caller}, &Caller::fun);
+    act.connect(correspondence.increment(), 9, caller_ptr, &Caller::fun);
 
     while (true)
     {
