@@ -9,7 +9,6 @@
 #include "conceptrodon/functivore/concepts/member_function_pointer_probe.hpp"
 #include "conceptrodon/mouldivore/concepts/confess.hpp"
 #include "conceptrodon/mouldivore/concepts/deceive.hpp"
-#include <conceptrodon/functivore/get_variadic_type_signature.hpp>
 #include <functional>
 #include <type_traits>
 #include <unordered_map>
