@@ -1,8 +1,8 @@
 // Copyright 2024 Feng Mofan
 // SPDX-License-Identifier: Apache-2.0
 
-#ifndef CONCEPTRODON_TESTS_UNIT_ACTIVATOR_LVALUE_REFERENCE_H
-#define CONCEPTRODON_TESTS_UNIT_ACTIVATOR_LVALUE_REFERENCE_H
+#ifndef MOUSIR_TESTS_UNIT_ACTIVATOR_LVALUE_REFERENCE_H
+#define MOUSIR_TESTS_UNIT_ACTIVATOR_LVALUE_REFERENCE_H
 
 #include "mousir/activator.hpp"
 #include "mousir/checkboxer.hpp"

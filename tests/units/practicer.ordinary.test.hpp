@@ -1,8 +1,8 @@
 // Copyright 2024 Feng Mofan
 // SPDX-License-Identifier: Apache-2.0
 
-#ifndef CONCEPTRODON_TESTS_UNIT_PRACTICER_ORDINARY_H
-#define CONCEPTRODON_TESTS_UNIT_PRACTICER_ORDINARY_H
+#ifndef MOUSIR_TESTS_UNIT_PRACTICER_ORDINARY_H
+#define MOUSIR_TESTS_UNIT_PRACTICER_ORDINARY_H
 
 #include "mousir/practicer.hpp"
 #include "mousir/checkboxer.hpp"

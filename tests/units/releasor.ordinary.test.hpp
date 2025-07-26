@@ -1,8 +1,8 @@
 // Copyright 2024 Feng Mofan
 // SPDX-License-Identifier: Apache-2.0
 
-#ifndef CONCEPTRODON_TESTS_UNIT_RELEASOR_ORDINARY_H
-#define CONCEPTRODON_TESTS_UNIT_RELEASOR_ORDINARY_H
+#ifndef MOUSIR_TESTS_UNIT_RELEASOR_ORDINARY_H
+#define MOUSIR_TESTS_UNIT_RELEASOR_ORDINARY_H
 
 #include "mousir/releasor.hpp"
 #include "mousir/checkboxer.hpp"
