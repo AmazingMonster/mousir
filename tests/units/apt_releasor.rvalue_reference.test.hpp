@@ -1,18 +1,17 @@
 // Copyright 2024 Feng Mofan
 // SPDX-License-Identifier: Apache-2.0
 
-#ifndef MOUSIR_TESTS_UNIT_RELEASOR_RVALUE_REFERENCE_H
-#define MOUSIR_TESTS_UNIT_RELEASOR_RVALUE_REFERENCE_H
+#ifndef MOUSIR_TESTS_UNIT_APT_RELEASOR_RVALUE_REFERENCE_H
+#define MOUSIR_TESTS_UNIT_APT_RELEASOR_RVALUE_REFERENCE_H
 
-#include "mousir/releasor.hpp"
-#include "mousir/checkboxer.hpp"
+#include "mousir/apt_releasor.hpp"
 #include <iostream>
 #include <memory>
 #include <ostream>
 
 
 namespace Mousir {
-namespace TestReleasorRvalueReference {
+namespace TestAptReleasorRvalueReference {
     
 
 struct Argument
@@ -85,62 +84,84 @@ inline auto Lambda
 
 inline void test()
 {
-    using Correspondence = Checkboxer<>::Mold<int>;
-    Correspondence correspondence{};
-    Releasor<>::Mold<int>::Mold<Correspondence>::Mold<Argument&&, bool> rel(correspondence);
+    AptCheckBoxer correspondence{};
+    AptReleasor<int>::Mold<Argument&&, bool> rel(correspondence);
 
     Caller caller{};
     Caller* c_ptr {&caller};
     std::shared_ptr<Caller> smart_c_ptr {std::make_shared<Caller>()};
     CallerPtr<Caller> caller_ptr{&caller};
-
-    static_assert(std::invocable<decltype(std::declval<CallerPtr<Caller>>().operator->*(std::declval<decltype(&Caller::fun)>())), Argument, bool>);
-
+    
+    std::cout << "/**** Connect ****/" << std::endl;
+    std::cout << "0: Rvalue function object" << std::endl;
     rel.connect(correspondence.increment(true), 0, Caller{});
+    std::cout << "1: Lvalue function object" << std::endl;
     rel.connect(correspondence.increment(true), 1, caller);
+    std::cout << "2: Function" << std::endl;
     rel.connect(correspondence.increment(true), 2, fun);
+    std::cout << "3: Lambda" << std::endl;
     rel.connect(correspondence.increment(true), 3, Lambda);
+    std::cout << "4: Rvalue smart pointer to object and pointer to member function" << std::endl;
     rel.connect(correspondence.increment(true), 4, std::make_shared<Caller>(), &Caller::fun);
+    std::cout << "5: Lvalue smart pointer to object and pointer to member function" << std::endl;
     rel.connect(correspondence.increment(true), 5, smart_c_ptr, &Caller::fun);
+    std::cout << "6: Rvalue pointer to object and pointer to member function" << std::endl;
     rel.connect(correspondence.increment(true), 6, &caller, &Caller::fun);
+    std::cout << "7: Lvalue pointer to object and pointer to member function" << std::endl;
     rel.connect(correspondence.increment(true), 7, c_ptr, &Caller::fun);
+    std::cout << "8: Rvalue pointer to object like and pointer to member function" << std::endl;
     rel.connect(correspondence.increment(true), 8, CallerPtr<Caller>{&caller}, &Caller::fun);
+    std::cout << "9: Lvalue pointer to object like and pointer to member function" << std::endl;
     rel.connect(correspondence.increment(true), 9, caller_ptr, &Caller::fun);
+    std::cout << "/********/" << std::endl;
+
+    auto print_instruction 
+    {
+        []() -> void
+        {
+            std::cout << "/**** Instruction ****/" << std::endl;
+            std::cout << "0: Rvalue function object" << std::endl;
+            std::cout << "1: Lvalue function object" << std::endl;
+            std::cout << "2: Function" << std::endl;
+            std::cout << "3: Lambda" << std::endl;
+            std::cout << "4: Rvalue smart pointer to object and pointer to member function" << std::endl;
+            std::cout << "5: Lvalue smart pointer to object and pointer to member function" << std::endl;
+            std::cout << "6: Rvalue pointer to object and pointer to member function" << std::endl;
+            std::cout << "7: Lvalue pointer to object and pointer to member function" << std::endl;
+            std::cout << "8: Rvalue pointer to object like and pointer to member function" << std::endl;
+            std::cout << "9: Lvalue pointer to object like and pointer to member function" << std::endl;
+            std::cout << "/********/" << std::endl;
+        }
+    };
 
     while (true)
     {
         Argument a {};
 
         char v;
-        int k;
         bool r;
+        int k;
         
-        std::cout << "0: Rvalue function object" << std::endl;
-        std::cout << "1: Lvalue function object" << std::endl;
-        std::cout << "2: Function" << std::endl;
-        std::cout << "3: Lambda" << std::endl;
-        std::cout << "4: Rvalue smart pointer to object and pointer to member function" << std::endl;
-        std::cout << "5: Lvalue smart pointer to object and pointer to member function" << std::endl;
-        std::cout << "6: Rvalue pointer to object and pointer to member function" << std::endl;
-        std::cout << "7: Lvalue pointer to object and pointer to member function" << std::endl;
-        std::cout << "8: Rvalue pointer to object like and pointer to member function" << std::endl;
-        std::cout << "9: Lvalue pointer to object like and pointer to member function" << std::endl;
+        print_instruction();
 
-        std::cin >> v >> k >> r;
+        std::cin >> v >> r >> k;
         if (v == 'L' || v == 'l')
         {
-            std::cout << "Lvalue argument fail" << std::endl;
-            //rel.execute(k, a, r);
+            std::cout << "/**** Lvalue argument fail ****/" << std::endl;
+            // rel.execute(k, a, r);
+            std::cout << "/********/" << std::endl;
         }
         else if (v == 'P' || v == 'p')
         {
-            std::cout << "PRvalue argument" << std::endl;
+            std::cout << "/**** Prvalue argument ****/" << std::endl;
             rel.execute(k, Argument{}, r);
+            std::cout << "/********/" << std::endl;
         }
         else if (v == 'R' || v == 'r')
         {
-            std::cout << "Rvalue reference argument" << std::endl;
+            std::cout << "/**** Rvalue reference argument ****/" << std::endl;
             rel.execute(k, std::move(a), r);
+            std::cout << "/********/" << std::endl;
         }
     }    
 }

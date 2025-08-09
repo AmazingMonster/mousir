@@ -39,9 +39,24 @@ struct Executor
                 using Function = FunctionWrapper<Conceptrodon::Functivore::ApplyReturnType<bool>::Mold<std::remove_reference_t<Parameters>&..., Decipher<Parameters>...>>;
                 using Map = TheMap<Key, Function>;
 
+                template <typename Counter>
+                Counter connect
+                (
+                    Counter const & counter,
+                    Key const & key
+                )
+                {
+                    map.emplace
+                    (
+                        key,
+                        static_cast<Derived*>(this) -> wrap(counter)
+                    );
+                    return counter;
+                }
+
                 template <typename Counter, typename Execute>
                 requires std::invocable<Execute, Parameters...>
-                void connect
+                Counter connect
                 (
                     Counter const & counter,
                     Key const & key,
@@ -53,14 +68,15 @@ struct Executor
                         key,
                         static_cast<Derived*>(this) -> wrap
                         (
-                            std::forward<Execute>(exec),
-                            counter
+                            counter,
+                            std::forward<Execute>(exec)
                         )
                     );
+                    return counter;
                 }
 
                 template <typename Counter, typename ObjectPointer, typename Execute>
-                void connect
+                Counter connect
                 (
                     Counter const & counter,
                     Key const & key,
@@ -73,11 +89,12 @@ struct Executor
                         key,
                         static_cast<Derived*>(this) -> wrap
                         (
+                            counter,
                             std::forward<ObjectPointer>(object_pointer),
-                            std::forward<Execute>(exec),
-                            counter
+                            std::forward<Execute>(exec)
                         )
                     );
+                    return counter;
                 }
 
                 template<typename GivenKey, typename...Args>

@@ -23,12 +23,12 @@ template
 >
 struct Practicer
 {
-    template<typename TheCorrespondenceKey>
+    template<typename Correspondence>
     struct ProtoMold
     {
         struct Detail
         {
-            template<typename Correspondence>
+            template<typename TheCorrespondenceKey>
             struct ProtoMold
             {
                 struct Detail
@@ -46,7 +46,7 @@ struct Practicer
                         
                         template <typename Practice>
                         requires std::invocable<Practice, Parameters...>
-                        void connect
+                        Key connect
                         (
                             Key const & key,
                             Practice&& practice
@@ -57,10 +57,11 @@ struct Practicer
                                 key,
                                 wrap(std::forward<Practice>(practice))
                             );
+                            return key;
                         }
                         
                         template <typename ObjectPointer, typename Practice>
-                        void connect
+                        Key connect
                         (
                             Key const & key,
                             ObjectPointer&& object_pointer,
@@ -76,6 +77,7 @@ struct Practicer
                                     std::forward<Practice>(practice)
                                 )
                             );
+                            return key;
                         }
 
                         template <typename Practice>
@@ -146,42 +148,42 @@ struct Practicer
 
 /**** Member Function Pointer ****/
 /**** Return Boolean ****/
-                        template <typename Practice, typename ObjectPointer>
+                        template <typename ObjectPointer, typename Practice>
                         requires Conceptrodon::Functivore::InvokeReturnAs<Practice, bool, Parameters...>
                         && Conceptrodon::Functivore::MemberFunctionPointerProbe<Practice>
                         && Conceptrodon::Mouldivore::Confess<std::is_pointer, std::remove_cvref_t<ObjectPointer>>
                         Function wrap(ObjectPointer&& object_pointer, Practice&& practice)
                         {
-                            return [practice, object_pointer]
+                            return [object_pointer, practice]
                             (std::remove_reference_t<Parameters>&...args) mutable -> bool
                             { return (object_pointer ->* practice)(args...); };
                         }
 
-                        template <typename Practice, typename ObjectPointer>
+                        template <typename ObjectPointer, typename Practice>
                         requires Conceptrodon::Functivore::InvokeReturnAs<Practice, bool, Parameters...>
                         && Conceptrodon::Functivore::MemberFunctionPointerProbe<Practice>
                         && Conceptrodon::Mouldivore::Deceive<std::is_pointer, std::remove_cvref_t<ObjectPointer>>
                         && std::invocable<decltype(std::declval<ObjectPointer>().operator->*(std::declval<Practice>())), Parameters...>
                         Function wrap(ObjectPointer&& object_pointer, Practice&& practice)
                         {
-                            return [practice, object_pointer=std::move(object_pointer)]
+                            return [object_pointer=std::move(object_pointer), practice]
                             (std::remove_reference_t<Parameters>&...args) mutable -> bool
                             { return (object_pointer ->* practice)(args...); };
                         }
                         
-                        template <typename Practice, typename ObjectPointer>
+                        template <typename ObjectPointer, typename Practice>
                         requires Conceptrodon::Functivore::InvokeReturnAs<Practice, bool, Parameters...>
                         && Conceptrodon::Functivore::MemberFunctionPointerProbe<Practice>
                         && Conceptrodon::Mouldivore::Deceive<std::is_pointer, std::remove_cvref_t<ObjectPointer>>
                         && Conceptrodon::Mouldivore::Confess<std::is_lvalue_reference, ObjectPointer>
                         Function wrap(ObjectPointer&& object_pointer, Practice&& practice)
                         {
-                            return [practice, object_pointer]
+                            return [object_pointer, practice]
                             (std::remove_reference_t<Parameters>&...args) mutable -> bool
                             { return (object_pointer.get() ->* practice)(args...); };
                         }
 
-                        template <typename Practice, typename ObjectPointer>
+                        template <typename ObjectPointer, typename Practice>
                         requires Conceptrodon::Functivore::InvokeReturnAs<Practice, bool, Parameters...>
                         && Conceptrodon::Functivore::MemberFunctionPointerProbe<Practice>
                         && Conceptrodon::Mouldivore::Deceive<std::is_pointer, std::remove_cvref_t<ObjectPointer>>
@@ -189,29 +191,29 @@ struct Practicer
                         && Conceptrodon::Mouldivore::Confess<std::is_lvalue_reference, ObjectPointer>
                         Function wrap(ObjectPointer&& object_pointer, Practice&& practice)
                         {
-                            return [practice, object_pointer]
+                            return [object_pointer, practice]
                             (std::remove_reference_t<Parameters>&...args) mutable -> bool
                             { return (object_pointer ->* practice)(args...); };
                         }
 
-                        template <typename Practice, typename ObjectPointer>
+                        template <typename ObjectPointer, typename Practice>
                         requires Conceptrodon::Functivore::InvokeReturnAs<Practice, bool, Parameters...>
                         && Conceptrodon::Functivore::MemberFunctionPointerProbe<Practice>
                         && Conceptrodon::Mouldivore::Deceive<std::is_pointer, std::remove_cvref_t<ObjectPointer>>
                         Function wrap(ObjectPointer&& object_pointer, Practice&& practice)
                         {
-                            return [practice, object_pointer=std::move(object_pointer)]
+                            return [object_pointer=std::move(object_pointer), practice]
                             (std::remove_reference_t<Parameters>&...args) mutable -> bool
                             { return (object_pointer.get() ->* practice)(args...); };
                         }
 
 /**** Return Others ****/
-                        template <typename Practice, typename ObjectPointer>
+                        template <typename ObjectPointer, typename Practice>
                         requires Conceptrodon::Functivore::MemberFunctionPointerProbe<Practice>
                         && Conceptrodon::Mouldivore::Confess<std::is_pointer, std::remove_cvref_t<ObjectPointer>>
                         Function wrap(ObjectPointer&& object_pointer, Practice&& practice)
                         {
-                            return [practice, object_pointer]
+                            return [object_pointer, practice]
                             (std::remove_reference_t<Parameters>&...args) mutable -> bool
                             {
                                 (object_pointer ->* practice)(args...);
@@ -219,13 +221,13 @@ struct Practicer
                             };
                         }
 
-                        template <typename Practice, typename ObjectPointer>
+                        template <typename ObjectPointer, typename Practice>
                         requires Conceptrodon::Functivore::MemberFunctionPointerProbe<Practice>
                         && Conceptrodon::Mouldivore::Deceive<std::is_pointer, std::remove_cvref_t<ObjectPointer>>
                         && std::invocable<decltype(std::declval<ObjectPointer>().operator->*(std::declval<Practice>())), Parameters...>
                         Function wrap(ObjectPointer&& object_pointer, Practice&& practice)
                         {
-                            return [practice, object_pointer=std::move(object_pointer)]
+                            return [object_pointer=std::move(object_pointer), practice]
                             (std::remove_reference_t<Parameters>&...args) mutable -> bool
                             {
                                 (object_pointer ->* practice)(args...);
@@ -233,13 +235,13 @@ struct Practicer
                             };
                         }
                         
-                        template <typename Practice, typename ObjectPointer>
+                        template <typename ObjectPointer, typename Practice>
                         requires Conceptrodon::Functivore::MemberFunctionPointerProbe<Practice>
                         && Conceptrodon::Mouldivore::Deceive<std::is_pointer, std::remove_cvref_t<ObjectPointer>>
                         && Conceptrodon::Mouldivore::Confess<std::is_lvalue_reference, ObjectPointer>
                         Function wrap(ObjectPointer&& object_pointer, Practice&& practice)
                         {
-                            return [practice, object_pointer]
+                            return [object_pointer, practice]
                             (std::remove_reference_t<Parameters>&...args) mutable -> bool
                             {
                                 (object_pointer.get() ->* practice)(args...);
@@ -247,14 +249,14 @@ struct Practicer
                             };
                         }
 
-                        template <typename Practice, typename ObjectPointer>
+                        template <typename ObjectPointer, typename Practice>
                         requires Conceptrodon::Functivore::MemberFunctionPointerProbe<Practice>
                         && Conceptrodon::Mouldivore::Deceive<std::is_pointer, std::remove_cvref_t<ObjectPointer>>
                         && std::invocable<decltype(std::declval<ObjectPointer>().operator->*(std::declval<Practice>())), Parameters...>
                         && Conceptrodon::Mouldivore::Confess<std::is_lvalue_reference, ObjectPointer>
                         Function wrap(ObjectPointer&& object_pointer, Practice&& practice)
                         {
-                            return [practice, object_pointer]
+                            return [object_pointer, practice]
                             (std::remove_reference_t<Parameters>&...args) mutable -> bool
                             {
                                 (object_pointer ->* practice)(args...);
@@ -262,12 +264,12 @@ struct Practicer
                             };
                         }
 
-                        template <typename Practice, typename ObjectPointer>
+                        template <typename ObjectPointer, typename Practice>
                         requires Conceptrodon::Functivore::MemberFunctionPointerProbe<Practice>
                         && Conceptrodon::Mouldivore::Deceive<std::is_pointer, std::remove_cvref_t<ObjectPointer>>
                         Function wrap(ObjectPointer&& object_pointer, Practice&& practice)
                         {
-                            return [practice, object_pointer=std::move(object_pointer)]
+                            return [object_pointer=std::move(object_pointer), practice]
                             (std::remove_reference_t<Parameters>&...args) mutable -> bool
                             {
                                 (object_pointer.get() ->* practice)(args...);

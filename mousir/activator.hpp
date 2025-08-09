@@ -9,10 +9,9 @@
 #include "conceptrodon/functivore/concepts/member_function_pointer_probe.hpp"
 #include "conceptrodon/mouldivore/concepts/confess.hpp"
 #include "conceptrodon/mouldivore/concepts/deceive.hpp"
+#include "mousir/cheesential/executor.hpp"
 #include <concepts>
 #include <type_traits>
-#include "mousir/cheesential/executor.hpp"
-#include <cstddef>
 #include <functional>
 #include <unordered_map>
 #include <utility>
@@ -31,7 +30,6 @@ struct Activator
     {
         struct Detail
         {
-                
             template<typename Correspondence>
             struct ProtoMold
             {
@@ -55,209 +53,379 @@ struct Activator
                         ProtoMold(Correspondence & the_correspondence)
                         : correspondence{the_correspondence} {}
 
-                        template <typename Activate, typename Counter>
+                        template <typename Counter, typename Activate>
                         requires Conceptrodon::Functivore::InvokeReturnAs<Activate, bool, Parameters...>
-                        Function wrap(Activate&& activate, Counter const & counter)
+                        Function wrap(Counter const & counter, Activate&& activate)
                         {
-                            return [counter, activate, this]
-                            (std::remove_reference_t<Parameters>&...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
-                            { return (*correspondence.find(counter)).second = activate((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...); };
-                        }
-                    
-                        template <typename Activate, typename Counter>
-                        requires Conceptrodon::Functivore::InvokeReturnAs<Activate, bool, Parameters...>
-                        && Conceptrodon::Mouldivore::Confess<std::is_class, std::remove_cvref_t<Activate>>
-                        Function wrap(Activate&& activate, Counter const & counter)
-                        {
-                            
-                            if constexpr (std::is_lvalue_reference_v<Activate>)
-                            {
-                                return [counter, activate, this]
-                                (std::remove_reference_t<Parameters>&...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
-                                { return (*correspondence.find(counter)).second = activate((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...); };
-                            }
-                    
-                            else
-                            {
-                                return [counter, activate=std::move(activate), this]
-                                (std::remove_reference_t<Parameters>&...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
-                                { return (*correspondence.find(counter)).second = activate((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...); };
-                            }
-                        }
-
-                        template <typename Activate, typename Counter>
-                        Function wrap(Activate&& activate, Counter const & counter)
-                        {
-                            return [counter, activate, this]
+                            return [this, counter, activate]
                             (std::remove_reference_t<Parameters>&...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
                             {
-                                activate(activate((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...));
-                                return (*correspondence.find(counter)).second = true;
+                                auto iter {correspondence.find(counter)};
+                                if (iter != correspondence.end())
+                                {
+                                    iter -> second = activate((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...);
+                                    return iter -> second;
+                                }
+                                else
+                                {
+                                    return false;
+                                }
                             };
                         }
                     
-                        template <typename Activate, typename Counter>
-                        requires Conceptrodon::Mouldivore::Confess<std::is_class, std::remove_cvref_t<Activate>>
-                        Function wrap(Activate&& activate, Counter const & counter)
+                        template <typename Counter, typename Activate>
+                        requires Conceptrodon::Functivore::InvokeReturnAs<Activate, bool, Parameters...>
+                        && Conceptrodon::Mouldivore::Confess<std::is_class, std::remove_cvref_t<Activate>>
+                        Function wrap(Counter const & counter, Activate&& activate)
                         {
                             if constexpr (std::is_lvalue_reference_v<Activate>)
                             {
-                                return [counter, activate, this]
+                                return [this, counter, activate]
                                 (std::remove_reference_t<Parameters>&...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
                                 {
-                                    activate((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...);
-                                    return (*correspondence.find(counter)).second = true;
+                                    auto iter {correspondence.find(counter)};
+                                    if (iter != correspondence.end())
+                                    {
+                                        iter -> second = activate((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...);
+                                        return iter -> second;
+                                    }
+                                    else
+                                    {
+                                        return false;
+                                    }
                                 };
                             }
                     
                             else
                             {
-                                return [counter, activate=std::move(activate), this]
+                                return [this, counter, activate=std::move(activate)]
                                 (std::remove_reference_t<Parameters>&...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
                                 {
+                                    auto iter {correspondence.find(counter)};
+                                    if (iter != correspondence.end())
+                                    {
+                                        iter -> second = activate((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...);
+                                        return iter -> second;
+                                    }
+                                    else
+                                    {
+                                        return false;
+                                    }
+                                };
+                            }
+                        }
+
+                        template <typename Counter, typename Activate>
+                        Function wrap(Counter const & counter, Activate&& activate)
+                        {
+                            return [this, counter, activate]
+                            (std::remove_reference_t<Parameters>&...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
+                            {
+                                auto iter {correspondence.find(counter)};
+                                if (iter != correspondence.end())
+                                {
                                     activate((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...);
-                                    return (*correspondence.find(counter)).second = true;
+                                    iter -> second = true;
+                                    return iter -> second;
+                                }
+                                else
+                                {
+                                    return false;
+                                }
+                            };
+                        }
+                    
+                        template <typename Counter, typename Activate>
+                        requires Conceptrodon::Mouldivore::Confess<std::is_class, std::remove_cvref_t<Activate>>
+                        Function wrap(Counter const & counter, Activate&& activate)
+                        {
+                            if constexpr (std::is_lvalue_reference_v<Activate>)
+                            {
+                                return [this, counter, activate]
+                                (std::remove_reference_t<Parameters>&...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
+                                {
+                                    auto iter {correspondence.find(counter)};
+                                    if (iter != correspondence.end())
+                                    {
+                                        activate((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...);
+                                        iter -> second = true;
+                                        return iter -> second;
+                                    }
+                                    else
+                                    {
+                                        return false;
+                                    }
+                                };
+                            }
+                    
+                            else
+                            {
+                                return [this, counter, activate=std::move(activate)]
+                                (std::remove_reference_t<Parameters>&...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
+                                {
+                                    auto iter {correspondence.find(counter)};
+                                    if (iter != correspondence.end())
+                                    {
+                                        activate((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...);
+                                        iter -> second = true;
+                                        return iter -> second;
+                                    }
+                                    else
+                                    {
+                                        return false;
+                                    }
                                 };
                             }
                         }
                     
                         template <typename Counter>
-                        Function wrap(std::nullptr_t, Counter const & counter)
+                        Function wrap(Counter const & counter)
                         {
-                            return [counter, this]
+                            return [this, counter]
                             (std::remove_reference_t<Parameters>&..., Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
-                            { return (*correspondence.find(counter)).second = true; };
+                            {
+                                auto iter {correspondence.find(counter)};
+                                if (iter != correspondence.end())
+                                {
+                                    iter -> second = true;
+                                    return iter -> second;
+                                }
+                                else
+                                {
+                                    return false;
+                                }
+                            };
                         }
 
                         
 /**** Member Function Pointer ****/
 /**** Return Boolean */
-                        template <typename Activate, typename ObjectPointer, typename Counter>
+                        template <typename Counter, typename ObjectPointer, typename Activate>
                         requires Conceptrodon::Functivore::InvokeReturnAs<Activate, bool, Parameters...>
                         && Conceptrodon::Functivore::MemberFunctionPointerProbe<Activate>
                         && Conceptrodon::Mouldivore::Confess<std::is_pointer, std::remove_cvref_t<ObjectPointer>>
-                        Function wrap(ObjectPointer&& object_pointer, Activate&& activate, Counter const & counter)
+                        Function wrap(Counter const & counter, ObjectPointer&& object_pointer, Activate&& activate)
                         {
-                            return [counter, activate, object_pointer, this]
+                            return [this, counter, object_pointer, activate]
                             (std::remove_reference_t<Parameters>&...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
-                            { return (*correspondence.find(counter)).second = (object_pointer ->* activate)((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...); };
+                            {
+                                auto iter {correspondence.find(counter)};
+                                if (iter != correspondence.end())
+                                {
+                                    iter -> second = (object_pointer ->* activate)((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...);
+                                    return iter -> second;
+                                }
+                                else
+                                {
+                                    return false;
+                                }
+                            };
                         }
                             
-                        template <typename Activate, typename ObjectPointer, typename Counter>
+                        template <typename Counter, typename ObjectPointer, typename Activate>
                         requires Conceptrodon::Functivore::InvokeReturnAs<Activate, bool, Parameters...>
                         && Conceptrodon::Functivore::MemberFunctionPointerProbe<Activate>
                         && Conceptrodon::Mouldivore::Deceive<std::is_pointer, std::remove_cvref_t<ObjectPointer>>
                         && std::invocable<decltype(std::declval<ObjectPointer>().operator->*(std::declval<Activate>())), Parameters...>
-                        Function wrap(ObjectPointer&& object_pointer, Activate&& activate, Counter const & counter)
+                        Function wrap(Counter const & counter, ObjectPointer&& object_pointer, Activate&& activate)
                         {
-                            return [counter, activate, object_pointer = std::move(object_pointer), this]
+                            return [this, counter, object_pointer = std::move(object_pointer), activate]
                             (std::remove_reference_t<Parameters>&...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
-                            { return (*correspondence.find(counter)).second = (object_pointer ->* activate)((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...); };
+                            {
+                                auto iter {correspondence.find(counter)};
+                                if (iter != correspondence.end())
+                                {
+                                    iter -> second = (object_pointer ->* activate)((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...);
+                                    return iter -> second;
+                                }
+                                else
+                                {
+                                    return false;
+                                }
+                            };
                         }
 
-                        template <typename Activate, typename ObjectPointer, typename Counter>
+                        template <typename Counter, typename ObjectPointer, typename Activate>
                         requires Conceptrodon::Functivore::InvokeReturnAs<Activate, bool, Parameters...>
                         && Conceptrodon::Functivore::MemberFunctionPointerProbe<Activate>
                         && Conceptrodon::Mouldivore::Deceive<std::is_pointer, std::remove_cvref_t<ObjectPointer>>
                         && Conceptrodon::Mouldivore::Confess<std::is_lvalue_reference, ObjectPointer>
-                        Function wrap(ObjectPointer&& object_pointer, Activate&& activate, Counter const & counter)
+                        Function wrap(Counter const & counter, ObjectPointer&& object_pointer, Activate&& activate)
                         {
-                            return [counter, activate, object_pointer, this]
+                            return [this, counter, object_pointer, activate]
                             (std::remove_reference_t<Parameters>&...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
-                            { return (*correspondence.find(counter)).second = (object_pointer.get() ->* activate)((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...); };
+                            {
+                                auto iter {correspondence.find(counter)};
+                                if (iter != correspondence.end())
+                                {
+                                    iter -> second = (object_pointer.get() ->* activate)((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...);
+                                    return iter -> second;
+                                }
+                                else
+                                {
+                                    return false;
+                                }
+                            };
                         }
 
-                        template <typename Activate, typename ObjectPointer, typename Counter>
+                        template <typename Counter, typename ObjectPointer, typename Activate>
                         requires Conceptrodon::Functivore::InvokeReturnAs<Activate, bool, Parameters...>
                         && Conceptrodon::Functivore::MemberFunctionPointerProbe<Activate>
                         && Conceptrodon::Mouldivore::Deceive<std::is_pointer, std::remove_cvref_t<ObjectPointer>>
                         && std::invocable<decltype(std::declval<ObjectPointer>().operator->*(std::declval<Activate>())), Parameters...>
                         && Conceptrodon::Mouldivore::Confess<std::is_lvalue_reference, ObjectPointer>
-                        Function wrap(ObjectPointer&& object_pointer, Activate&& activate, Counter const & counter)
+                        Function wrap(Counter const & counter, ObjectPointer&& object_pointer, Activate&& activate)
                         {
-                            return [counter, activate, object_pointer, this]
+                            return [this, counter, object_pointer, activate]
                             (std::remove_reference_t<Parameters>&...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
-                            { return (*correspondence.find(counter)).second = (object_pointer ->* activate)((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...); };
+                            {
+                                auto iter {correspondence.find(counter)};
+                                if (iter != correspondence.end())
+                                {
+                                    iter -> second = (object_pointer ->* activate)((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...);
+                                    return iter -> second;
+                                }
+                                else
+                                {
+                                    return false;
+                                }
+                            };
                         }
 
-                        template <typename Activate, typename ObjectPointer, typename Counter>
+                        template <typename Counter, typename ObjectPointer, typename Activate>
                         requires Conceptrodon::Functivore::InvokeReturnAs<Activate, bool, Parameters...>
                         && Conceptrodon::Functivore::MemberFunctionPointerProbe<Activate>
                         && Conceptrodon::Mouldivore::Deceive<std::is_pointer, std::remove_cvref_t<ObjectPointer>>
-                        Function wrap(ObjectPointer&& object_pointer, Activate&& activate, Counter const & counter)
+                        Function wrap(Counter const & counter, ObjectPointer&& object_pointer, Activate&& activate)
                         {
-                            return [counter, activate, object_pointer = std::move(object_pointer), this]
+                            return [this, counter, object_pointer = std::move(object_pointer), activate]
                             (std::remove_reference_t<Parameters>&...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
-                            { return (*correspondence.find(counter)).second = (object_pointer.get() ->* activate)((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...); };
+                            {
+                                auto iter {correspondence.find(counter)};
+                                if (iter != correspondence.end())
+                                {
+                                    iter -> second = (object_pointer.get() ->* activate)((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...);
+                                    return iter -> second;
+                                }
+                                else
+                                {
+                                    return false;
+                                }
+                            };
                         }
 
 /**** Return Others ****/
-                        template <typename Activate, typename ObjectPointer, typename Counter>
+                        template <typename Counter, typename ObjectPointer, typename Activate>
                         requires Conceptrodon::Functivore::MemberFunctionPointerProbe<Activate>
                         && Conceptrodon::Mouldivore::Confess<std::is_pointer, std::remove_cvref_t<ObjectPointer>>
-                        Function wrap(ObjectPointer&& object_pointer, Activate&& activate, Counter const & counter)
+                        Function wrap(Counter const & counter, ObjectPointer&& object_pointer, Activate&& activate)
                         {
-                            return [counter, activate, object_pointer, this]
+                            return [this, counter, object_pointer, activate]
                             (std::remove_reference_t<Parameters>&...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
                             {
-                                (object_pointer ->* activate)((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...);
-                                return (*correspondence.find(counter)).second = true;
+                                auto iter {correspondence.find(counter)};
+                                if (iter != correspondence.end())
+                                {
+                                    (object_pointer ->* activate)((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...);
+                                    iter -> second = true;
+                                    return iter -> second;
+                                }
+                                else
+                                {
+                                    return false;
+                                }
                             };
                         }
 
-                        template <typename Activate, typename ObjectPointer, typename Counter>
+                        template <typename Counter, typename ObjectPointer, typename Activate>
                         requires Conceptrodon::Functivore::MemberFunctionPointerProbe<Activate>
                         && Conceptrodon::Mouldivore::Deceive<std::is_pointer, std::remove_cvref_t<ObjectPointer>>
                         && std::invocable<decltype(std::declval<ObjectPointer>().operator->*(std::declval<Activate>())), Parameters...>
-                        Function wrap(ObjectPointer&& object_pointer, Activate&& activate, Counter const & counter)
+                        Function wrap(Counter const & counter, ObjectPointer&& object_pointer, Activate&& activate)
                         {
-                            return [counter, activate, object_pointer = std::move(object_pointer), this]
+                            return [this, counter, object_pointer = std::move(object_pointer), activate]
                             (std::remove_reference_t<Parameters>&...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
                             {
-                                (object_pointer ->* activate)((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...);
-                                return (*correspondence.find(counter)).second = true;
+                                auto iter {correspondence.find(counter)};
+                                if (iter != correspondence.end())
+                                {
+                                    (object_pointer ->* activate)((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...);
+                                    iter -> second = true;
+                                    return iter -> second;
+                                }
+                                else
+                                {
+                                    return false;
+                                }
                             };
                         }
 
-                        template <typename Activate, typename ObjectPointer, typename Counter>
+                        template <typename Counter, typename ObjectPointer, typename Activate>
                         requires Conceptrodon::Functivore::MemberFunctionPointerProbe<Activate>
                         && Conceptrodon::Mouldivore::Deceive<std::is_pointer, std::remove_cvref_t<ObjectPointer>>
                         && Conceptrodon::Mouldivore::Confess<std::is_lvalue_reference, ObjectPointer>
-                        Function wrap(ObjectPointer&& object_pointer, Activate&& activate, Counter const & counter)
+                        Function wrap(Counter const & counter, ObjectPointer&& object_pointer, Activate&& activate)
                         {
-                            return [counter, activate, object_pointer, this]
+                            return [this, counter, object_pointer, activate]
                             (std::remove_reference_t<Parameters>&...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
                             {
-                                (object_pointer.get() ->* activate)((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...);
-                                return (*correspondence.find(counter)).second = true;
+                                auto iter {correspondence.find(counter)};
+                                if (iter != correspondence.end())
+                                {
+                                    (object_pointer.get() ->* activate)((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...);
+                                    iter -> second = true;
+                                    return iter -> second;
+                                }
+                                else
+                                {
+                                    return false;
+                                }
                             };
                         }
 
-                        template <typename Activate, typename ObjectPointer, typename Counter>
+                        template <typename Counter, typename ObjectPointer, typename Activate>
                         requires Conceptrodon::Functivore::MemberFunctionPointerProbe<Activate>
                         && Conceptrodon::Mouldivore::Deceive<std::is_pointer, std::remove_cvref_t<ObjectPointer>>
                         && std::invocable<decltype(std::declval<ObjectPointer>().operator->*(std::declval<Activate>())), Parameters...>
                         && Conceptrodon::Mouldivore::Confess<std::is_lvalue_reference, ObjectPointer>
-                        Function wrap(ObjectPointer&& object_pointer, Activate&& activate, Counter const & counter)
+                        Function wrap(Counter const & counter, ObjectPointer&& object_pointer, Activate&& activate)
                         {
-                            return [counter, activate, object_pointer, this]
+                            return [this, counter, object_pointer, activate]
                             (std::remove_reference_t<Parameters>&...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
                             {
-                                (object_pointer ->* activate)((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...);
-                                return (*correspondence.find(counter)).second = true;
+                                auto iter {correspondence.find(counter)};
+                                if (iter != correspondence.end())
+                                {
+                                    (object_pointer ->* activate)((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...);
+                                    iter -> second = true;
+                                    return iter -> second;
+                                }
+                                else
+                                {
+                                    return false;
+                                }
                             };
                         }
 
-                        template <typename Activate, typename ObjectPointer, typename Counter>
+                        template <typename Counter, typename ObjectPointer, typename Activate>
                         requires Conceptrodon::Functivore::MemberFunctionPointerProbe<Activate>
                         && Conceptrodon::Mouldivore::Deceive<std::is_pointer, std::remove_cvref_t<ObjectPointer>>
-                        Function wrap(ObjectPointer&& object_pointer, Activate&& activate, Counter const & counter)
+                        Function wrap(Counter const & counter, ObjectPointer&& object_pointer, Activate&& activate)
                         {
-                            return [counter, activate, object_pointer = std::move(object_pointer), this]
+                            return [this, counter, object_pointer = std::move(object_pointer), activate]
                             (std::remove_reference_t<Parameters>&...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
                             {
-                                (object_pointer.get() ->* activate)((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...);
-                                return (*correspondence.find(counter)).second = true;
+                                auto iter {correspondence.find(counter)};
+                                if (iter != correspondence.end())
+                                {
+                                    (object_pointer.get() ->* activate)((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...);
+                                    iter -> second = true;
+                                    return iter -> second;
+                                }
+                                else
+                                {
+                                    return false;
+                                }
                             };
                         }
 
