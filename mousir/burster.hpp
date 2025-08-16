@@ -79,7 +79,7 @@ struct Burster
                 {
                     return [burst]
                      (std::remove_reference_t<Parameters>&...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
-                    { return burst((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...); };
+                    { return burst((deciphers.is_forward_safe() ? std::forward<Parameters>(args) : args)...); };
                 }
             
                 template <typename Burst>
@@ -92,14 +92,14 @@ struct Burster
                     {
                         return [burst]
                          (std::remove_reference_t<Parameters>&...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
-                        { return burst((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...); };
+                        { return burst((deciphers.is_forward_safe() ? std::forward<Parameters>(args) : args)...); };
                     }
             
                     else
                     {
                         return [burst=std::move(burst)]
                          (std::remove_reference_t<Parameters>&...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
-                        { return burst((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...); };
+                        { return burst((deciphers.is_forward_safe() ? std::forward<Parameters>(args) : args)...); };
                     }
                 }
 
@@ -109,7 +109,7 @@ struct Burster
                     return [burst]
                      (std::remove_reference_t<Parameters>&...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
                     {
-                        burst((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...);
+                        burst((deciphers.is_forward_safe() ? std::forward<Parameters>(args) : args)...);
                         return true;
                     };
                 }
@@ -123,7 +123,7 @@ struct Burster
                         return [burst]
                          (std::remove_reference_t<Parameters>&...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
                         {
-                            burst((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...);
+                            burst((deciphers.is_forward_safe() ? std::forward<Parameters>(args) : args)...);
                             return true;
                         };
                     }
@@ -133,7 +133,7 @@ struct Burster
                         return [burst=std::move(burst)]
                          (std::remove_reference_t<Parameters>&...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
                         {
-                            burst((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...);
+                            burst((deciphers.is_forward_safe() ? std::forward<Parameters>(args) : args)...);
                             return true;
                         };
                     }
@@ -149,7 +149,7 @@ struct Burster
                 {
                     return [object_pointer, burst]
                      (std::remove_reference_t<Parameters>&...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
-                    { return (object_pointer ->* burst)((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...); };
+                    { return (object_pointer ->* burst)((deciphers.is_forward_safe() ? std::forward<Parameters>(args) : args)...); };
                 }
 
                 template <typename ObjectPointer, typename Burst>
@@ -161,7 +161,7 @@ struct Burster
                 {
                     return [object_pointer=std::move(object_pointer), burst]
                      (std::remove_reference_t<Parameters>&...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
-                    { return (object_pointer ->* burst)((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...); };
+                    { return (object_pointer ->* burst)((deciphers.is_forward_safe() ? std::forward<Parameters>(args) : args)...); };
                 }
                 
                 template <typename ObjectPointer, typename Burst>
@@ -173,7 +173,7 @@ struct Burster
                 {
                     return [object_pointer, burst]
                      (std::remove_reference_t<Parameters>&...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
-                    { return (object_pointer.get() ->* burst)((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...); };
+                    { return (object_pointer.get() ->* burst)((deciphers.is_forward_safe() ? std::forward<Parameters>(args) : args)...); };
                 }
 
                 template <typename ObjectPointer, typename Burst>
@@ -186,7 +186,7 @@ struct Burster
                 {
                     return [object_pointer, burst]
                      (std::remove_reference_t<Parameters>&...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
-                    { return (object_pointer ->* burst)((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...); };
+                    { return (object_pointer ->* burst)((deciphers.is_forward_safe() ? std::forward<Parameters>(args) : args)...); };
                 }
 
                 template <typename ObjectPointer, typename Burst>
@@ -197,7 +197,7 @@ struct Burster
                 {
                     return [object_pointer=std::move(object_pointer), burst]
                      (std::remove_reference_t<Parameters>&...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
-                    { return (object_pointer.get() ->* burst)((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...); };
+                    { return (object_pointer.get() ->* burst)((deciphers.is_forward_safe() ? std::forward<Parameters>(args) : args)...); };
                 }
 
 /**** Return Others ****/
@@ -209,7 +209,7 @@ struct Burster
                     return [object_pointer, burst]
                      (std::remove_reference_t<Parameters>&...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
                     {
-                        (object_pointer ->* burst)((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...);
+                        (object_pointer ->* burst)((deciphers.is_forward_safe() ? std::forward<Parameters>(args) : args)...);
                         return true;
                     };
                 }
@@ -223,7 +223,7 @@ struct Burster
                     return [object_pointer=std::move(object_pointer), burst]
                      (std::remove_reference_t<Parameters>&...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
                     {
-                        (object_pointer ->* burst)((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...);
+                        (object_pointer ->* burst)((deciphers.is_forward_safe() ? std::forward<Parameters>(args) : args)...);
                         return true;
                     };
                 }
@@ -237,7 +237,7 @@ struct Burster
                     return [object_pointer, burst]
                     (std::remove_reference_t<Parameters>&...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
                     {
-                        (object_pointer.get() ->* burst)((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...);
+                        (object_pointer.get() ->* burst)((deciphers.is_forward_safe() ? std::forward<Parameters>(args) : args)...);
                         return true;
                     };
                 }
@@ -252,7 +252,7 @@ struct Burster
                     return [object_pointer, burst]
                     (std::remove_reference_t<Parameters>&...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
                     {
-                        (object_pointer ->* burst)((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...);
+                        (object_pointer ->* burst)((deciphers.is_forward_safe() ? std::forward<Parameters>(args) : args)...);
                         return true;
                     };
                 }
@@ -265,7 +265,7 @@ struct Burster
                     return [object_pointer=std::move(object_pointer), burst]
                     (std::remove_reference_t<Parameters>&...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
                     {
-                        (object_pointer.get() ->* burst)((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...);
+                        (object_pointer.get() ->* burst)((deciphers.is_forward_safe() ? std::forward<Parameters>(args) : args)...);
                         return true;
                     };
                 }

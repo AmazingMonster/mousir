@@ -18,7 +18,7 @@ struct Decipher
     template<typename...Args>
     Decipher(Args...) {}
 
-    bool isForwardSafe()
+    bool is_forward_safe()
     { return true; }
 };
 
@@ -29,14 +29,14 @@ struct Decipher<Supposed>
 {
     struct ArgumentConcept
     {
-        virtual bool isForwardSafe() = 0;
+        virtual bool is_forward_safe() = 0;
     virtual ~ArgumentConcept() = default;
     };
 
     template<typename Provided>
     struct Argument: public ArgumentConcept
     {
-        bool isForwardSafe() override
+        bool is_forward_safe() override
         { return true; }
     };
 
@@ -44,18 +44,18 @@ struct Decipher<Supposed>
     requires Conceptrodon::Mouldivore::Confess<std::is_lvalue_reference, Provided>
     struct Argument<Provided>: public ArgumentConcept
     {
-        bool isForwardSafe() override
+        bool is_forward_safe() override
         { return false; }
     };
     
     template<typename Provided>
     Decipher(std::type_identity<Provided>)
-    : is_forward_safe {std::make_unique<Argument<Provided>>(Argument<Provided>{})} {}
+    : checker {std::make_unique<Argument<Provided>>(Argument<Provided>{})} {}
 
-    bool isForwardSafe()
-    { return is_forward_safe -> isForwardSafe(); }
+    bool is_forward_safe()
+    { return checker -> is_forward_safe(); }
 
-    std::unique_ptr<ArgumentConcept> is_forward_safe;
+    std::unique_ptr<ArgumentConcept> checker;
 };
 
 }}

@@ -15,7 +15,7 @@
 
 int main()
 {
-    // Mousir::TestAptActivatorOrdinary::test();
+     Mousir::TestAptActivatorOrdinary::test();
     // Mousir::TestAptActivatorLvalueReference::test();
     // Mousir::TestAptActivatorRvalueReference::test();
     // Mousir::TestAptReleasorOrdinary::test();

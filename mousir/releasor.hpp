@@ -64,7 +64,7 @@ struct Releasor
                                         flag = false;
                                         // It is possible for 'release' to check whether all flags are down.
                                         // Thus assign false to the flag before calling 'release'.
-                                        flag = ! release((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...);
+                                        flag = ! release((deciphers.is_forward_safe() ? std::forward<Parameters>(args) : args)...);
                                         return ! flag;
                                     }
                                     else
@@ -98,7 +98,7 @@ struct Releasor
                                             flag = false;
                                             // It is possible for 'release' to check whether all flags are down.
                                             // Thus assign false to the flag before calling 'release'.
-                                            flag = ! release((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...);
+                                            flag = ! release((deciphers.is_forward_safe() ? std::forward<Parameters>(args) : args)...);
                                             return ! flag;
                                         }
                                         else
@@ -127,7 +127,7 @@ struct Releasor
                                             flag = false;
                                             // It is possible for 'release' to check whether all flags are down.
                                             // Thus assign false to the flag before calling 'release'.
-                                            flag = ! release((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...);
+                                            flag = ! release((deciphers.is_forward_safe() ? std::forward<Parameters>(args) : args)...);
                                             return ! flag;
                                         }
                                         else
@@ -158,7 +158,7 @@ struct Releasor
                                         flag = false;
                                         // It is possible for 'release' to check whether all flags are down.
                                         // Thus assign false to the flag before calling 'release'.
-                                        release((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...);
+                                        release((deciphers.is_forward_safe() ? std::forward<Parameters>(args) : args)...);
                                         return ! flag;
                                     }
                                     else
@@ -191,7 +191,7 @@ struct Releasor
                                             flag = false;
                                             // It is possible for 'release' to check whether all flags are down.
                                             // Thus assign false to the flag before calling 'release'.
-                                            release((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...);
+                                            release((deciphers.is_forward_safe() ? std::forward<Parameters>(args) : args)...);
                                             return ! flag;
                                         }
                                         else
@@ -220,7 +220,7 @@ struct Releasor
                                             flag = false;
                                             // It is possible for 'release' to check whether all flags are down.
                                             // Thus assign false to the flag before calling 'release'.
-                                            release((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...);
+                                            release((deciphers.is_forward_safe() ? std::forward<Parameters>(args) : args)...);
                                             return ! flag;
                                         }
                                         else
@@ -283,7 +283,7 @@ struct Releasor
                                         flag = false;
                                         // It is possible for 'release' to check whether all flags are down.
                                         // Thus assign false to the flag before calling 'release'.
-                                        flag = ! (object_pointer ->* release)((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...);
+                                        flag = ! (object_pointer ->* release)((deciphers.is_forward_safe() ? std::forward<Parameters>(args) : args)...);
                                         return ! flag;
                                     }
                                     else
@@ -317,7 +317,7 @@ struct Releasor
                                         flag = false;
                                         // It is possible for 'release' to check whether all flags are down.
                                         // Thus assign false to the flag before calling 'release'.
-                                        flag = ! (object_pointer ->* release)((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...);
+                                        flag = ! (object_pointer ->* release)((deciphers.is_forward_safe() ? std::forward<Parameters>(args) : args)...);
                                         return ! flag;
                                     }
                                     else
@@ -351,7 +351,7 @@ struct Releasor
                                         flag = false;
                                         // It is possible for 'release' to check whether all flags are down.
                                         // Thus assign false to the flag before calling 'release'.
-                                        flag = ! (object_pointer.get() ->* release)((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...);
+                                        flag = ! (object_pointer.get() ->* release)((deciphers.is_forward_safe() ? std::forward<Parameters>(args) : args)...);
                                         return ! flag;
                                     }
                                     else
@@ -386,7 +386,7 @@ struct Releasor
                                         flag = false;
                                         // It is possible for 'release' to check whether all flags are down.
                                         // Thus assign false to the flag before calling 'release'.
-                                        flag = ! (object_pointer ->* release)((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...);
+                                        flag = ! (object_pointer ->* release)((deciphers.is_forward_safe() ? std::forward<Parameters>(args) : args)...);
                                         return ! flag;
                                     }
                                     else
@@ -419,7 +419,7 @@ struct Releasor
                                         flag = false;
                                         // It is possible for 'release' to check whether all flags are down.
                                         // Thus assign false to the flag before calling 'release'.
-                                        flag = ! (object_pointer.get() ->* release)((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...);
+                                        flag = ! (object_pointer.get() ->* release)((deciphers.is_forward_safe() ? std::forward<Parameters>(args) : args)...);
                                         return ! flag;
                                     }
                                     else
@@ -452,7 +452,7 @@ struct Releasor
                                         flag = false;
                                         // It is possible for 'release' to check whether all flags are down.
                                         // Thus assign false to the flag before calling 'release'.
-                                        (object_pointer ->* release)((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...);
+                                        (object_pointer ->* release)((deciphers.is_forward_safe() ? std::forward<Parameters>(args) : args)...);
                                         return ! flag;
                                     }
                                     else
@@ -485,7 +485,7 @@ struct Releasor
                                         flag = false;
                                         // It is possible for 'release' to check whether all flags are down.
                                         // Thus assign false to the flag before calling 'release'.
-                                        (object_pointer ->* release)((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...);
+                                        (object_pointer ->* release)((deciphers.is_forward_safe() ? std::forward<Parameters>(args) : args)...);
                                         return ! flag;
                                     }
                                     else
@@ -518,7 +518,7 @@ struct Releasor
                                         flag = false;
                                         // It is possible for 'release' to check whether all flags are down.
                                         // Thus assign false to the flag before calling 'release'.
-                                        (object_pointer.get() ->* release)((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...);
+                                        (object_pointer.get() ->* release)((deciphers.is_forward_safe() ? std::forward<Parameters>(args) : args)...);
                                         return ! flag;
                                     }
                                     else
@@ -552,7 +552,7 @@ struct Releasor
                                         flag = false;
                                         // It is possible for 'release' to check whether all flags are down.
                                         // Thus assign false to the flag before calling 'release'.
-                                        (object_pointer ->* release)((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...);
+                                        (object_pointer ->* release)((deciphers.is_forward_safe() ? std::forward<Parameters>(args) : args)...);
                                         return ! flag;
                                     }
                                     else
@@ -584,7 +584,7 @@ struct Releasor
                                         flag = false;
                                         // It is possible for 'release' to check whether all flags are down.
                                         // Thus assign false to the flag before calling 'release'.
-                                        (object_pointer.get() ->* release)((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...);
+                                        (object_pointer.get() ->* release)((deciphers.is_forward_safe() ? std::forward<Parameters>(args) : args)...);
                                         return ! flag;
                                     }
                                     else

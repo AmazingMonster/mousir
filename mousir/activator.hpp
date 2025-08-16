@@ -63,7 +63,7 @@ struct Activator
                                 auto iter {correspondence.find(counter)};
                                 if (iter != correspondence.end())
                                 {
-                                    iter -> second = activate((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...);
+                                    iter -> second = activate((deciphers.is_forward_safe() ? std::forward<Parameters>(args) : args)...);
                                     return iter -> second;
                                 }
                                 else
@@ -86,7 +86,7 @@ struct Activator
                                     auto iter {correspondence.find(counter)};
                                     if (iter != correspondence.end())
                                     {
-                                        iter -> second = activate((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...);
+                                        iter -> second = activate((deciphers.is_forward_safe() ? std::forward<Parameters>(args) : args)...);
                                         return iter -> second;
                                     }
                                     else
@@ -104,7 +104,7 @@ struct Activator
                                     auto iter {correspondence.find(counter)};
                                     if (iter != correspondence.end())
                                     {
-                                        iter -> second = activate((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...);
+                                        iter -> second = activate((deciphers.is_forward_safe() ? std::forward<Parameters>(args) : args)...);
                                         return iter -> second;
                                     }
                                     else
@@ -124,7 +124,7 @@ struct Activator
                                 auto iter {correspondence.find(counter)};
                                 if (iter != correspondence.end())
                                 {
-                                    activate((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...);
+                                    activate((deciphers.is_forward_safe() ? std::forward<Parameters>(args) : args)...);
                                     iter -> second = true;
                                     return iter -> second;
                                 }
@@ -147,7 +147,7 @@ struct Activator
                                     auto iter {correspondence.find(counter)};
                                     if (iter != correspondence.end())
                                     {
-                                        activate((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...);
+                                        activate((deciphers.is_forward_safe() ? std::forward<Parameters>(args) : args)...);
                                         iter -> second = true;
                                         return iter -> second;
                                     }
@@ -166,7 +166,7 @@ struct Activator
                                     auto iter {correspondence.find(counter)};
                                     if (iter != correspondence.end())
                                     {
-                                        activate((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...);
+                                        activate((deciphers.is_forward_safe() ? std::forward<Parameters>(args) : args)...);
                                         iter -> second = true;
                                         return iter -> second;
                                     }
@@ -212,7 +212,7 @@ struct Activator
                                 auto iter {correspondence.find(counter)};
                                 if (iter != correspondence.end())
                                 {
-                                    iter -> second = (object_pointer ->* activate)((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...);
+                                    iter -> second = (object_pointer ->* activate)((deciphers.is_forward_safe() ? std::forward<Parameters>(args) : args)...);
                                     return iter -> second;
                                 }
                                 else
@@ -235,7 +235,7 @@ struct Activator
                                 auto iter {correspondence.find(counter)};
                                 if (iter != correspondence.end())
                                 {
-                                    iter -> second = (object_pointer ->* activate)((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...);
+                                    iter -> second = (object_pointer ->* activate)((deciphers.is_forward_safe() ? std::forward<Parameters>(args) : args)...);
                                     return iter -> second;
                                 }
                                 else
@@ -258,7 +258,7 @@ struct Activator
                                 auto iter {correspondence.find(counter)};
                                 if (iter != correspondence.end())
                                 {
-                                    iter -> second = (object_pointer.get() ->* activate)((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...);
+                                    iter -> second = (object_pointer.get() ->* activate)((deciphers.is_forward_safe() ? std::forward<Parameters>(args) : args)...);
                                     return iter -> second;
                                 }
                                 else
@@ -282,7 +282,7 @@ struct Activator
                                 auto iter {correspondence.find(counter)};
                                 if (iter != correspondence.end())
                                 {
-                                    iter -> second = (object_pointer ->* activate)((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...);
+                                    iter -> second = (object_pointer ->* activate)((deciphers.is_forward_safe() ? std::forward<Parameters>(args) : args)...);
                                     return iter -> second;
                                 }
                                 else
@@ -304,7 +304,7 @@ struct Activator
                                 auto iter {correspondence.find(counter)};
                                 if (iter != correspondence.end())
                                 {
-                                    iter -> second = (object_pointer.get() ->* activate)((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...);
+                                    iter -> second = (object_pointer.get() ->* activate)((deciphers.is_forward_safe() ? std::forward<Parameters>(args) : args)...);
                                     return iter -> second;
                                 }
                                 else
@@ -326,7 +326,7 @@ struct Activator
                                 auto iter {correspondence.find(counter)};
                                 if (iter != correspondence.end())
                                 {
-                                    (object_pointer ->* activate)((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...);
+                                    (object_pointer ->* activate)((deciphers.is_forward_safe() ? std::forward<Parameters>(args) : args)...);
                                     iter -> second = true;
                                     return iter -> second;
                                 }
@@ -349,7 +349,7 @@ struct Activator
                                 auto iter {correspondence.find(counter)};
                                 if (iter != correspondence.end())
                                 {
-                                    (object_pointer ->* activate)((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...);
+                                    (object_pointer ->* activate)((deciphers.is_forward_safe() ? std::forward<Parameters>(args) : args)...);
                                     iter -> second = true;
                                     return iter -> second;
                                 }
@@ -372,7 +372,7 @@ struct Activator
                                 auto iter {correspondence.find(counter)};
                                 if (iter != correspondence.end())
                                 {
-                                    (object_pointer.get() ->* activate)((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...);
+                                    (object_pointer.get() ->* activate)((deciphers.is_forward_safe() ? std::forward<Parameters>(args) : args)...);
                                     iter -> second = true;
                                     return iter -> second;
                                 }
@@ -396,7 +396,7 @@ struct Activator
                                 auto iter {correspondence.find(counter)};
                                 if (iter != correspondence.end())
                                 {
-                                    (object_pointer ->* activate)((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...);
+                                    (object_pointer ->* activate)((deciphers.is_forward_safe() ? std::forward<Parameters>(args) : args)...);
                                     iter -> second = true;
                                     return iter -> second;
                                 }
@@ -418,7 +418,7 @@ struct Activator
                                 auto iter {correspondence.find(counter)};
                                 if (iter != correspondence.end())
                                 {
-                                    (object_pointer.get() ->* activate)((deciphers.isForwardSafe() ? std::forward<Parameters>(args) : args)...);
+                                    (object_pointer.get() ->* activate)((deciphers.is_forward_safe() ? std::forward<Parameters>(args) : args)...);
                                     iter -> second = true;
                                     return iter -> second;
                                 }
