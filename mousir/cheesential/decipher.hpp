@@ -6,8 +6,8 @@
 
 #include <memory>
 #include <type_traits>
-#include "conceptrodon/mouldivore/concepts/confess.hpp"
-#include "conceptrodon/mouldivore/concepts/deceive.hpp"
+#include "conceptrodon/concepts/mouldivore/confess.hpp"
+#include "conceptrodon/concepts/mouldivore/deceive.hpp"
 
 namespace Mousir {
 namespace Cheesential {
@@ -30,7 +30,7 @@ struct Decipher<Supposed>
     struct ArgumentConcept
     {
         virtual bool is_forward_safe() = 0;
-    virtual ~ArgumentConcept() = default;
+        virtual ~ArgumentConcept() = default;
     };
 
     template<typename Provided>
@@ -43,6 +43,13 @@ struct Decipher<Supposed>
     template<typename Provided>
     requires Conceptrodon::Mouldivore::Confess<std::is_lvalue_reference, Provided>
     struct Argument<Provided>: public ArgumentConcept
+    {
+        bool is_forward_safe() override
+        { return false; }
+    };
+
+    template<>
+    struct Argument<void>: public ArgumentConcept
     {
         bool is_forward_safe() override
         { return false; }

@@ -4,11 +4,11 @@
 #ifndef MOUSIR_BURSTER_H
 #define MOUSIR_BURSTER_H
 
-#include "conceptrodon/functivore/apply_return_type.hpp"
-#include "conceptrodon/functivore/concepts/invoke_return_as.hpp"
-#include "conceptrodon/functivore/concepts/member_function_pointer_probe.hpp"
-#include "conceptrodon/mouldivore/concepts/confess.hpp"
-#include "conceptrodon/mouldivore/concepts/deceive.hpp"
+#include "conceptrodon/metafunctions/functivore/apply_return_type.hpp"
+#include "conceptrodon/concepts/functivore/invoke_return_as.hpp"
+#include "conceptrodon/concepts/functivore/member_function_pointer_probe.hpp"
+#include "conceptrodon/concepts/mouldivore/confess.hpp"
+#include "conceptrodon/concepts/mouldivore/deceive.hpp"
 #include "mousir/cheesential/decipher.hpp"
 #include <functional>
 #include <type_traits>

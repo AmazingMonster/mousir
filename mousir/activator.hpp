@@ -5,10 +5,10 @@
 #define MOUSIR_ACTIVATOR_H
 
 #include "cheesential/decipher.hpp"
-#include "conceptrodon/functivore/concepts/invoke_return_as.hpp"
-#include "conceptrodon/functivore/concepts/member_function_pointer_probe.hpp"
-#include "conceptrodon/mouldivore/concepts/confess.hpp"
-#include "conceptrodon/mouldivore/concepts/deceive.hpp"
+#include "conceptrodon/concepts/functivore/invoke_return_as.hpp"
+#include "conceptrodon/concepts/functivore/member_function_pointer_probe.hpp"
+#include "conceptrodon/concepts/mouldivore/confess.hpp"
+#include "conceptrodon/concepts/mouldivore/deceive.hpp"
 #include "mousir/cheesential/executor.hpp"
 #include <concepts>
 #include <type_traits>

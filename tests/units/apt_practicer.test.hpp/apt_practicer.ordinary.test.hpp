@@ -6,6 +6,7 @@
 
 #include "mousir/apt_practicer.hpp"
 #include <iostream>
+#include <memory>
 #include <ostream>
 
 

@@ -4,7 +4,7 @@
 #ifndef MOUSIR_CHEESENTIAL_EXECUTOR_H
 #define MOUSIR_CHEESENTIAL_EXECUTOR_H
 
-#include "conceptrodon/functivore/apply_return_type.hpp"
+#include "conceptrodon/metafunctions/functivore/apply_return_type.hpp"
 #include <concepts>
 #include <functional>
 #include <type_traits>
@@ -104,10 +104,22 @@ struct Executor
                 {
                     auto [begin, end] = map.equal_range(static_cast<Key const &>(the_key));
                     bool result {false};
-                    for (auto iter {begin}; iter != end; iter++)
+
+                    if (std::distance(begin, end) == 1)
                     {
-                        result = result || iter -> second(args..., Decipher<Parameters>{std::type_identity<Args>{}}...);
+                        for (auto iter {begin}; iter != end; iter++)
+                        {
+                            result = result || iter -> second(args..., Decipher<Parameters>{std::type_identity<Args>{}}...);
+                        }
                     }
+                    else
+                    {
+                        for (auto iter {begin}; iter != end; iter++)
+                        {
+                            result = result || iter -> second(args..., Decipher<Parameters>{std::type_identity<void>{}}...);
+                        }
+                    }
+
                     return result;
                 }
 
