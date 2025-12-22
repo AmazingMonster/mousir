@@ -53,6 +53,9 @@ struct Activator
                         ProtoMold(Correspondence & the_correspondence)
                         : correspondence{the_correspondence} {}
 
+/**** Pointer to Function ****//**** Return Boolean ****/
+/**** Copy ****/
+
                         template <typename Counter, typename Activate>
                         requires Conceptrodon::Functivore::InvokeReturnAs<Activate, bool, Parameters...>
                         Function wrap(Counter const & counter, Activate&& activate)
@@ -78,8 +81,12 @@ struct Activator
                         && Conceptrodon::Mouldivore::Confess<std::is_class, std::remove_cvref_t<Activate>>
                         Function wrap(Counter const & counter, Activate&& activate)
                         {
+                             
+/**** Function Object ****//**** Return Boolean ****//**** LValue ****/
+/**** Copy ****/
                             if constexpr (std::is_lvalue_reference_v<Activate>)
                             {
+
                                 return [this, counter, activate]
                                 (std::remove_reference_t<Parameters>&...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
                                 {
@@ -95,9 +102,13 @@ struct Activator
                                     }
                                 };
                             }
+                             
+/**** Function Object ****//**** Return Boolean ****//**** RValue ****/
+/**** Move ****/
                     
                             else
                             {
+
                                 return [this, counter, activate=std::move(activate)]
                                 (std::remove_reference_t<Parameters>&...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
                                 {
@@ -114,6 +125,9 @@ struct Activator
                                 };
                             }
                         }
+                             
+/**** Pointer to Function ****//**** Return Others ****//**** LValue ****/
+/**** Copy ****/
 
                         template <typename Counter, typename Activate>
                         Function wrap(Counter const & counter, Activate&& activate)
@@ -139,6 +153,9 @@ struct Activator
                         requires Conceptrodon::Mouldivore::Confess<std::is_class, std::remove_cvref_t<Activate>>
                         Function wrap(Counter const & counter, Activate&& activate)
                         {
+                             
+/**** Function Object ****//**** Return Others ****//**** LValue ****/
+/**** Copy ****/
                             if constexpr (std::is_lvalue_reference_v<Activate>)
                             {
                                 return [this, counter, activate]
@@ -157,6 +174,9 @@ struct Activator
                                     }
                                 };
                             }
+                             
+/**** Function Object ****//**** Return Others ****//**** RValue ****/
+/**** Move ****/
                     
                             else
                             {
@@ -177,6 +197,8 @@ struct Activator
                                 };
                             }
                         }
+                             
+/**** Nothing ****/
                     
                         template <typename Counter>
                         Function wrap(Counter const & counter)
@@ -198,8 +220,10 @@ struct Activator
                         }
 
                         
-/**** Member Function Pointer ****/
-/**** Return Boolean */
+/**** Pointer to Member Function ****//**** Return Boolean ****/
+/**** Pointer ****/
+/**** Copy ****/
+
                         template <typename Counter, typename ObjectPointer, typename Activate>
                         requires Conceptrodon::Functivore::InvokeReturnAs<Activate, bool, Parameters...>
                         && Conceptrodon::Functivore::MemberFunctionPointerProbe<Activate>
@@ -222,6 +246,10 @@ struct Activator
                             };
                         }
                             
+/**** Pointer to Member Function ****//**** Return Boolean ****/
+/**** Pointer-like ****//**** Implemented `operator->*` ****//**** RValue ****/
+/**** Move ****/
+
                         template <typename Counter, typename ObjectPointer, typename Activate>
                         requires Conceptrodon::Functivore::InvokeReturnAs<Activate, bool, Parameters...>
                         && Conceptrodon::Functivore::MemberFunctionPointerProbe<Activate>
@@ -244,6 +272,10 @@ struct Activator
                                 }
                             };
                         }
+                            
+/**** Pointer to Member Function ****//**** Return Boolean ****/
+/**** Pointer-like ****//**** Implemented `get` Returning a Pointer ****//**** LValue ****/
+/**** Copy ****/
 
                         template <typename Counter, typename ObjectPointer, typename Activate>
                         requires Conceptrodon::Functivore::InvokeReturnAs<Activate, bool, Parameters...>
@@ -267,6 +299,10 @@ struct Activator
                                 }
                             };
                         }
+                        
+/**** Pointer to Member Function ****//**** Return Boolean ****/
+/**** Pointer-like ****//**** Implemented `operator->*` ****//**** LValue ****/
+/**** Copy ****/
 
                         template <typename Counter, typename ObjectPointer, typename Activate>
                         requires Conceptrodon::Functivore::InvokeReturnAs<Activate, bool, Parameters...>
@@ -292,6 +328,10 @@ struct Activator
                             };
                         }
 
+/**** Pointer to Member Function ****//**** Return Boolean ****/
+/**** Pointer-like ****//**** Implemented `get` Returning a Pointer ****//**** RValue ****/
+/**** Move ****/
+
                         template <typename Counter, typename ObjectPointer, typename Activate>
                         requires Conceptrodon::Functivore::InvokeReturnAs<Activate, bool, Parameters...>
                         && Conceptrodon::Functivore::MemberFunctionPointerProbe<Activate>
@@ -313,8 +353,11 @@ struct Activator
                                 }
                             };
                         }
+                        
+/**** Pointer to Member Function ****//**** Return Others ****/
+/**** Pointer ****/
+/**** Copy ****/
 
-/**** Return Others ****/
                         template <typename Counter, typename ObjectPointer, typename Activate>
                         requires Conceptrodon::Functivore::MemberFunctionPointerProbe<Activate>
                         && Conceptrodon::Mouldivore::Confess<std::is_pointer, std::remove_cvref_t<ObjectPointer>>
@@ -336,6 +379,10 @@ struct Activator
                                 }
                             };
                         }
+                            
+/**** Pointer to Member Function ****//**** Return Others ****/
+/**** Pointer-like ****//**** Implemented `operator->*` ****//**** RValue ****/
+/**** Move ****/
 
                         template <typename Counter, typename ObjectPointer, typename Activate>
                         requires Conceptrodon::Functivore::MemberFunctionPointerProbe<Activate>
@@ -359,6 +406,10 @@ struct Activator
                                 }
                             };
                         }
+                            
+/**** Pointer to Member Function ****//**** Return Others ****/
+/**** Pointer-like ****//**** Implemented `get` Returning a Pointer ****//**** LValue ****/
+/**** Copy ****/
 
                         template <typename Counter, typename ObjectPointer, typename Activate>
                         requires Conceptrodon::Functivore::MemberFunctionPointerProbe<Activate>
@@ -382,6 +433,10 @@ struct Activator
                                 }
                             };
                         }
+                        
+/**** Pointer to Member Function ****//**** Return Others ****/
+/**** Pointer-like ****//**** Implemented `operator->*` ****//**** LValue ****/
+/**** Copy ****/
 
                         template <typename Counter, typename ObjectPointer, typename Activate>
                         requires Conceptrodon::Functivore::MemberFunctionPointerProbe<Activate>
@@ -406,6 +461,10 @@ struct Activator
                                 }
                             };
                         }
+
+/**** Pointer Member Function ****//**** Return Others ****/
+/**** Pointer-like ****//**** Implemented `get` Returning a Pointer ****//**** RValue ****/
+/**** Move ****/
 
                         template <typename Counter, typename ObjectPointer, typename Activate>
                         requires Conceptrodon::Functivore::MemberFunctionPointerProbe<Activate>

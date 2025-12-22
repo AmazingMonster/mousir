@@ -48,6 +48,9 @@ struct Releasor
                         ProtoMold(Correspondence & the_correspondence)
                         : correspondence{the_correspondence} {}
 
+/**** Pointer to Function ****//**** Return Boolean ****/
+/**** Copy ****/
+
                         template <typename Counter, typename Release>
                         requires Conceptrodon::Functivore::InvokeReturnAs<Release, bool, Parameters...>
                         Function wrap(Counter const & counter, Release&& release)
@@ -84,6 +87,9 @@ struct Releasor
                         && Conceptrodon::Mouldivore::Confess<std::is_class, std::remove_cvref_t<Release>>
                         Function wrap(Counter const & counter, Release&& release)
                         {
+                             
+/**** Function Object ****//**** Return Boolean ****//**** LValue ****/
+/**** Copy ****/
                             if constexpr (std::is_lvalue_reference_v<Release>)
                             {
                                 return [this, counter, release]
@@ -112,6 +118,9 @@ struct Releasor
                                     }
                                 };
                             }
+                             
+/**** Function Object ****//**** Return Boolean ****//**** RValue ****/
+/**** Move ****/
                     
                             else
                             {
@@ -142,6 +151,9 @@ struct Releasor
                                 };
                             }
                         }
+                             
+/**** Pointer to Function ****//**** Return Others ****//**** LValue ****/
+/**** Copy ****/
 
                         template <typename Counter, typename Release>
                         Function wrap(Counter const & counter, Release&& release)
@@ -177,6 +189,9 @@ struct Releasor
                         requires Conceptrodon::Mouldivore::Confess<std::is_class, std::remove_cvref_t<Release>>
                         Function wrap(Counter const & counter, Release&& release)
                         {
+                             
+/**** Function Object ****//**** Return Others ****//**** LValue ****/
+/**** Copy ****/
                             if constexpr (std::is_lvalue_reference_v<Release>)
                             {
                                 return [this, counter, release]
@@ -205,6 +220,9 @@ struct Releasor
                                     }
                                 };
                             }
+                             
+/**** Function Object ****//**** Return Others ****//**** RValue ****/
+/**** Move ****/
                     
                             else
                             {
@@ -235,6 +253,8 @@ struct Releasor
                                 };
                             }
                         }
+                             
+/**** Nothing ****/
                     
                         template <typename Counter>
                         Function wrap(Counter const & counter)
@@ -263,8 +283,11 @@ struct Releasor
                             };
                         }
 
-/**** Member Function Pointer ****/
-/**** Return Boolean ****/
+                        
+/**** Pointer to Member Function ****//**** Return Boolean ****/
+/**** Pointer ****/
+/**** Copy ****/
+
                         template <typename Counter, typename ObjectPointer, typename Release>
                         requires Conceptrodon::Functivore::InvokeReturnAs<Release, bool, Parameters...>
                         && Conceptrodon::Functivore::MemberFunctionPointerProbe<Release>
@@ -297,6 +320,10 @@ struct Releasor
                                 }
                             };
                         }
+                            
+/**** Pointer to Member Function ****//**** Return Boolean ****/
+/**** Pointer-like ****//**** Implemented `operator->*` ****//**** RValue ****/
+/**** Move ****/
                             
                         template <typename Counter, typename ObjectPointer, typename Release>
                         requires Conceptrodon::Functivore::InvokeReturnAs<Release, bool, Parameters...>
@@ -331,6 +358,10 @@ struct Releasor
                                 }
                             };
                         }
+                            
+/**** Pointer to Member Function ****//**** Return Boolean ****/
+/**** Pointer-like ****//**** Implemented `get` Returning a Pointer ****//**** LValue ****/
+/**** Copy ****/
 
                         template <typename Counter, typename ObjectPointer, typename Release>
                         requires Conceptrodon::Functivore::InvokeReturnAs<Release, bool, Parameters...>
@@ -365,6 +396,10 @@ struct Releasor
                                 }
                             };
                         }
+                        
+/**** Pointer to Member Function ****//**** Return Boolean ****/
+/**** Pointer-like ****//**** Implemented `operator->*` ****//**** LValue ****/
+/**** Copy ****/
 
                         template <typename Counter, typename ObjectPointer, typename Release>
                         requires Conceptrodon::Functivore::InvokeReturnAs<Release, bool, Parameters...>
@@ -401,6 +436,10 @@ struct Releasor
                             };
                         }
 
+/**** Pointer to Member Function ****//**** Return Boolean ****/
+/**** Pointer-like ****//**** Implemented `get` Returning a Pointer ****//**** RValue ****/
+/**** Move ****/
+
                         template <typename Counter, typename ObjectPointer, typename Release>
                         requires Conceptrodon::Functivore::InvokeReturnAs<Release, bool, Parameters...>
                         && Conceptrodon::Functivore::MemberFunctionPointerProbe<Release>
@@ -433,8 +472,11 @@ struct Releasor
                                 }
                             };
                         }
+                        
+/**** Pointer to Member Function ****//**** Return Others ****/
+/**** Pointer ****/
+/**** Copy ****/
 
-/**** Return Others ****/
                         template <typename Counter, typename ObjectPointer, typename Release>
                         requires Conceptrodon::Functivore::MemberFunctionPointerProbe<Release>
                         && Conceptrodon::Mouldivore::Confess<std::is_pointer, std::remove_cvref_t<ObjectPointer>>
@@ -466,6 +508,10 @@ struct Releasor
                                 }
                             };
                         }
+                            
+/**** Pointer to Member Function ****//**** Return Others ****/
+/**** Pointer-like ****//**** Implemented `operator->*` ****//**** RValue ****/
+/**** Move ****/
                             
                         template <typename Counter, typename ObjectPointer, typename Release>
                         requires Conceptrodon::Functivore::MemberFunctionPointerProbe<Release>
@@ -499,6 +545,10 @@ struct Releasor
                                 }
                             };
                         }
+                            
+/**** Pointer to Member Function ****//**** Return Others ****/
+/**** Pointer-like ****//**** Implemented `get` Returning a Pointer ****//**** LValue ****/
+/**** Copy ****/
 
                         template <typename Counter, typename ObjectPointer, typename Release>
                         requires Conceptrodon::Functivore::MemberFunctionPointerProbe<Release>
@@ -532,6 +582,10 @@ struct Releasor
                                 }
                             };
                         }
+                        
+/**** Pointer to Member Function ****//**** Return Others ****/
+/**** Pointer-like ****//**** Implemented `operator->*` ****//**** LValue ****/
+/**** Copy ****/
 
                         template <typename Counter, typename ObjectPointer, typename Release>
                         requires Conceptrodon::Functivore::MemberFunctionPointerProbe<Release>
@@ -566,6 +620,10 @@ struct Releasor
                                 }
                             };
                         }
+
+/**** Pointer Member Function ****//**** Return Others ****/
+/**** Pointer-like ****//**** Implemented `get` Returning a Pointer ****//**** RValue ****/
+/**** Move ****/
 
                         template <typename Counter, typename ObjectPointer, typename Release>
                         requires Conceptrodon::Functivore::MemberFunctionPointerProbe<Release>

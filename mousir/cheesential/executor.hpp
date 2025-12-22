@@ -105,6 +105,8 @@ struct Executor
                     auto [begin, end] = map.equal_range(static_cast<Key const &>(the_key));
                     bool result {false};
 
+// Enable 'Move' if there is only one matching item in the map; 
+
                     if (std::distance(begin, end) == 1)
                     {
                         for (auto iter {begin}; iter != end; iter++)
@@ -112,6 +114,9 @@ struct Executor
                             result = result || iter -> second(args..., Decipher<Parameters>{std::type_identity<Args>{}}...);
                         }
                     }
+
+// Always 'Copy' if there is more; 
+
                     else
                     {
                         for (auto iter {begin}; iter != end; iter++)
