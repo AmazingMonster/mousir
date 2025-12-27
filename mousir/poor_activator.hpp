@@ -59,13 +59,13 @@ struct PoorActivator
                         Function wrap(Counter const & counter, Activate&& activate)
                         {
                             return [this, counter, activate]
-                            (Parameters const &...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
+                            (Parameters &...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
                             {
                                 auto iter {correspondence.find(counter)};
 
                                 if (iter != correspondence.end())
                                 {
-                                    activate((deciphers.is_forward_safe() ? std::forward<Parameters>(const_cast<Parameters&>(args)) : args)...);
+                                    activate((deciphers.is_forward_safe() ? std::forward<Parameters>(args) : args)...);
                                     iter -> second = true;
                                     return true;
                                 }
@@ -87,13 +87,13 @@ struct PoorActivator
                             if constexpr (std::is_lvalue_reference_v<Activate>)
                             {
                                 return [this, counter, activate]
-                                (Parameters const &...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
+                                (Parameters &...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
                                 {
                                     auto iter {correspondence.find(counter)};
 
                                     if (iter != correspondence.end())
                                     {
-                                        activate((deciphers.is_forward_safe() ? std::forward<Parameters>(const_cast<Parameters&>(args)) : args)...);
+                                        activate((deciphers.is_forward_safe() ? std::forward<Parameters>(args) : args)...);
                                         iter -> second = true;
                                         return true;
                                     }
@@ -110,13 +110,13 @@ struct PoorActivator
                             else
                             {
                                 return [this, counter, activate=std::move(activate)]
-                                (Parameters const &...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
+                                (Parameters &...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
                                 {
                                     auto iter {correspondence.find(counter)};
 
                                     if (iter != correspondence.end())
                                     {
-                                        activate((deciphers.is_forward_safe() ? std::forward<Parameters>(const_cast<Parameters&>(args)) : args)...);
+                                        activate((deciphers.is_forward_safe() ? std::forward<Parameters>(args) : args)...);
                                         iter -> second = true;
                                         return true;
                                     }
@@ -134,7 +134,7 @@ struct PoorActivator
                         Function wrap(Counter const & counter)
                         {
                             return [this, counter]
-                            (Parameters const &..., Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
+                            (Parameters &..., Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
                             {
                                 auto iter {correspondence.find(counter)};
 
@@ -149,7 +149,7 @@ struct PoorActivator
                                 }
                             };
                         }
-                        
+
 /**** Pointer to Member Function ****/
 /**** Pointer ****/
 /**** Copy ****/
@@ -160,13 +160,13 @@ struct PoorActivator
                         Function wrap(Counter const & counter, ObjectPointer&& object_pointer, Activate&& activate)
                         {
                             return [this, counter, object_pointer, activate]
-                            (Parameters const &...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
+                            (Parameters &...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
                             {
                                 auto iter {correspondence.find(counter)};
 
                                 if (iter != correspondence.end())
                                 {
-                                    (object_pointer ->* activate)((deciphers.is_forward_safe() ? std::forward<Parameters>(const_cast<Parameters&>(args)) : args)...);
+                                    (object_pointer ->* activate)((deciphers.is_forward_safe() ? std::forward<Parameters>(args) : args)...);
                                     iter -> second = true;
                                     return true;
                                 }
@@ -188,13 +188,13 @@ struct PoorActivator
                         Function wrap(Counter const & counter, ObjectPointer&& object_pointer, Activate&& activate)
                         {
                             return [this, counter, object_pointer = std::move(object_pointer), activate]
-                            (Parameters const &...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
+                            (Parameters &...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
                             {
                                 auto iter {correspondence.find(counter)};
                                 
                                 if (iter != correspondence.end())
                                 {
-                                    (object_pointer ->* activate)((deciphers.is_forward_safe() ? std::forward<Parameters>(const_cast<Parameters&>(args)) : args)...);
+                                    (object_pointer ->* activate)((deciphers.is_forward_safe() ? std::forward<Parameters>(args) : args)...);
                                     iter -> second = true;
                                     return true;
                                 }
@@ -216,13 +216,13 @@ struct PoorActivator
                         Function wrap(Counter const & counter, ObjectPointer&& object_pointer, Activate&& activate)
                         {
                             return [this, counter, object_pointer, activate]
-                            (Parameters const &...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
+                            (Parameters &...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
                             {
                                 auto iter {correspondence.find(counter)};
 
                                 if (iter != correspondence.end())
                                 {
-                                    (object_pointer.get() ->* activate)((deciphers.is_forward_safe() ? std::forward<Parameters>(const_cast<Parameters&>(args)) : args)...);
+                                    (object_pointer.get() ->* activate)((deciphers.is_forward_safe() ? std::forward<Parameters>(args) : args)...);
                                     iter -> second = true;
                                     return true;
                                 }
@@ -245,13 +245,13 @@ struct PoorActivator
                         Function wrap(Counter const & counter, ObjectPointer&& object_pointer, Activate&& activate)
                         {
                             return [this, counter, object_pointer, activate]
-                            (Parameters const &...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
+                            (Parameters &...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
                             {
                                 auto iter {correspondence.find(counter)};
 
                                 if (iter != correspondence.end())
                                 {
-                                    (object_pointer ->* activate)((deciphers.is_forward_safe() ? std::forward<Parameters>(const_cast<Parameters&>(args)) : args)...);
+                                    (object_pointer ->* activate)((deciphers.is_forward_safe() ? std::forward<Parameters>(args) : args)...);
                                     iter -> second = true;
                                     return true;
                                 }
@@ -272,13 +272,13 @@ struct PoorActivator
                         Function wrap(Counter const & counter, ObjectPointer&& object_pointer, Activate&& activate)
                         {
                             return [this, counter, object_pointer = std::move(object_pointer), activate]
-                            (Parameters const &...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
+                            (Parameters &...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
                             {
                                 auto iter {correspondence.find(counter)};
                                 
                                 if (iter != correspondence.end())
                                 {
-                                    (object_pointer.get() ->* activate)((deciphers.is_forward_safe() ? std::forward<Parameters>(const_cast<Parameters&>(args)) : args)...);
+                                    (object_pointer.get() ->* activate)((deciphers.is_forward_safe() ? std::forward<Parameters>(args) : args)...);
                                     iter -> second = true;
                                     return true;
                                 }

@@ -59,7 +59,7 @@ struct RichActivator
                         Function wrap(Counter const & counter, Activate&& activate)
                         {
                             return [this, counter, activate]
-                            (Parameters const &...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
+                            (Parameters &...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
                             {
                                 auto iter {correspondence.find(counter)};
                                 
@@ -88,7 +88,7 @@ struct RichActivator
                             {
 
                                 return [this, counter, activate]
-                                (Parameters const &...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
+                                (Parameters &...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
                                 {
                                     auto iter {correspondence.find(counter)};
 
@@ -113,7 +113,7 @@ struct RichActivator
                             {
 
                                 return [this, counter, activate=std::move(activate)]
-                                (Parameters const &...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
+                                (Parameters &...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
                                 {
                                     auto iter {correspondence.find(counter)};
 
@@ -142,7 +142,7 @@ struct RichActivator
                         Function wrap(Counter const & counter, ObjectPointer&& object_pointer, Activate&& activate)
                         {
                             return [this, counter, object_pointer, activate]
-                            (Parameters const &...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
+                            (Parameters &...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
                             {
                                 auto iter {correspondence.find(counter)};
 
@@ -171,7 +171,7 @@ struct RichActivator
                         Function wrap(Counter const & counter, ObjectPointer&& object_pointer, Activate&& activate)
                         {
                             return [this, counter, object_pointer = std::move(object_pointer), activate]
-                            (Parameters const &...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
+                            (Parameters &...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
                             {
                                 auto iter {correspondence.find(counter)};
 
@@ -200,7 +200,7 @@ struct RichActivator
                         Function wrap(Counter const & counter, ObjectPointer&& object_pointer, Activate&& activate)
                         {
                             return [this, counter, object_pointer, activate]
-                            (Parameters const &...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
+                            (Parameters &...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
                             {
                                 auto iter {correspondence.find(counter)};
 
@@ -230,7 +230,7 @@ struct RichActivator
                         Function wrap(Counter const & counter, ObjectPointer&& object_pointer, Activate&& activate)
                         {
                             return [this, counter, object_pointer, activate]
-                            (Parameters const &...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
+                            (Parameters &...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
                             {
                                 auto iter {correspondence.find(counter)};
                                 if (iter != correspondence.end())
@@ -257,7 +257,7 @@ struct RichActivator
                         Function wrap(Counter const & counter, ObjectPointer&& object_pointer, Activate&& activate)
                         {
                             return [this, counter, object_pointer = std::move(object_pointer), activate]
-                            (Parameters const &...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
+                            (Parameters &...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
                             {
                                 auto iter {correspondence.find(counter)};
 

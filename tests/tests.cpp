@@ -11,10 +11,24 @@
 #include "tests/unit/apt_poor_activator.test.hpp/function_object/prvalue/apt_poor_activator.function_object.prvalue.lvalue_reference.test.hpp"
 #include "tests/unit/apt_poor_activator.test.hpp/function_object/prvalue/apt_poor_activator.function_object.prvalue.lvalue_reference_to_const.test.hpp"
 
+#include "tests/unit/apt_poor_activator.test.hpp/pointer_to_function/apt_poor_activator.pointer_to_function.connection.test.hpp"
+
 #include "tests/unit/apt_poor_activator.test.hpp/pointer_to_function/apt_poor_activator.pointer_to_function.rvalue_reference.test.hpp"
 #include "tests/unit/apt_poor_activator.test.hpp/pointer_to_function/apt_poor_activator.pointer_to_function.regular.test.hpp"
 #include "tests/unit/apt_poor_activator.test.hpp/pointer_to_function/apt_poor_activator.pointer_to_function.lvalue_reference.test.hpp"
 #include "tests/unit/apt_poor_activator.test.hpp/pointer_to_function/apt_poor_activator.pointer_to_function.lvalue_reference_to_const.test.hpp"
+
+#include "tests/unit/apt_poor_activator.test.hpp/pointer_to_member_function/apt_poor_activator.pointer_to_member_function.connection.test.hpp"
+
+#include "tests/unit/apt_poor_activator.test.hpp/pointer_to_member_function/pointer/apt_poor_activator.pointer_to_member_function.pointer.rvalue_reference.test.hpp"
+#include "tests/unit/apt_poor_activator.test.hpp/pointer_to_member_function/pointer/apt_poor_activator.pointer_to_member_function.pointer.regular.test.hpp"
+#include "tests/unit/apt_poor_activator.test.hpp/pointer_to_member_function/pointer/apt_poor_activator.pointer_to_member_function.pointer.lvalue_reference.test.hpp"
+#include "tests/unit/apt_poor_activator.test.hpp/pointer_to_member_function/pointer/apt_poor_activator.pointer_to_member_function.pointer.lvalue_reference_to_const.test.hpp"
+
+#include "tests/unit/apt_poor_activator.test.hpp/pointer_to_member_function/pointer_to_const/apt_poor_activator.pointer_to_member_function.pointer_to_const.rvalue_reference.test.hpp"
+#include "tests/unit/apt_poor_activator.test.hpp/pointer_to_member_function/pointer_to_const/apt_poor_activator.pointer_to_member_function.pointer_to_const.regular.test.hpp"
+#include "tests/unit/apt_poor_activator.test.hpp/pointer_to_member_function/pointer_to_const/apt_poor_activator.pointer_to_member_function.pointer_to_const.lvalue_reference.test.hpp"
+#include "tests/unit/apt_poor_activator.test.hpp/pointer_to_member_function/pointer_to_const/apt_poor_activator.pointer_to_member_function.pointer_to_const.lvalue_reference_to_const.test.hpp"
 
 int main()
 {
@@ -28,9 +42,23 @@ int main()
     //Mousir::UnitTests::TestAptActivator::FunctionObject::PRvalue::RvalueReference::test();
     //Mousir::UnitTests::TestAptActivator::FunctionObject::PRvalue::Regular::test();
 
+    //Mousir::UnitTests::TestAptActivator::PointerToFunction::Connection::test();
+
     //Mousir::UnitTests::TestAptActivator::PointerToFunction::LvalueReferenceToConst::test();
     //Mousir::UnitTests::TestAptActivator::PointerToFunction::LvalueReference::test();
     //Mousir::UnitTests::TestAptActivator::PointerToFunction::RvalueReference::test();
     //Mousir::UnitTests::TestAptActivator::PointerToFunction::Regular::test();
+
+    //Mousir::UnitTests::TestAptActivator::PointerToMemberFunction::Connection::test();
+
+    //Mousir::UnitTests::TestAptActivator::PointerToMemberFunction::Pointer::LvalueReferenceToConst::test();
+    //Mousir::UnitTests::TestAptActivator::PointerToMemberFunction::Pointer::LvalueReference::test();
+    //Mousir::UnitTests::TestAptActivator::PointerToMemberFunction::Pointer::Regular::test();
+    //Mousir::UnitTests::TestAptActivator::PointerToMemberFunction::Pointer::RvalueReference::test();
+
+    //Mousir::UnitTests::TestAptActivator::PointerToMemberFunction::PointerToConst::LvalueReferenceToConst::test();
+    //Mousir::UnitTests::TestAptActivator::PointerToMemberFunction::PointerToConst::LvalueReference::test();
+    //Mousir::UnitTests::TestAptActivator::PointerToMemberFunction::PointerToConst::Regular::test();
+    //Mousir::UnitTests::TestAptActivator::PointerToMemberFunction::PointerToConst::RvalueReference::test();
     return 0; 
 }

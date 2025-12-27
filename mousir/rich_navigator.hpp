@@ -54,7 +54,7 @@ struct RichNavigator
                         Function wrap(Counter const & counter, Navigate&& navigate)
                         {
                             return [this, counter, navigate]
-                            (Parameters const &...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
+                            (Parameters &...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
                             {
                                 auto iter = correspondence.find(counter);
                                 if (iter != correspondence.end())
@@ -89,7 +89,7 @@ struct RichNavigator
                             if constexpr (std::is_lvalue_reference_v<Navigate>)
                             {
                                 return [this, counter, navigate]
-                                (Parameters const &...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
+                                (Parameters &...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
                                 {
                                     auto iter = correspondence.find(counter);
                                     if (iter != correspondence.end())
@@ -120,7 +120,7 @@ struct RichNavigator
                             else
                             {
                                 return [counter, navigate=std::move(navigate), this]
-                                (Parameters const &...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
+                                (Parameters &...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
                                 {
                                     auto iter = correspondence.find(counter);
                                     if (iter != correspondence.end())
@@ -156,7 +156,7 @@ struct RichNavigator
                         Function wrap(Counter const & counter, ObjectPointer&& object_pointer, Navigate&& navigate)
                         {
                             return [this, counter, object_pointer, navigate]
-                            (Parameters const &...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
+                            (Parameters &...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
                             {
                                 auto iter = correspondence.find(counter);
                                 if (iter != correspondence.end())
@@ -192,7 +192,7 @@ struct RichNavigator
                         Function wrap(Counter const & counter, ObjectPointer&& object_pointer, Navigate&& navigate)
                         {
                             return [this, counter, object_pointer = std::move(object_pointer), navigate]
-                            (Parameters const &...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
+                            (Parameters &...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
                             {
                                 auto iter = correspondence.find(counter);
                                 if (iter != correspondence.end())
@@ -228,7 +228,7 @@ struct RichNavigator
                         Function wrap(Counter const & counter, ObjectPointer&& object_pointer, Navigate&& navigate)
                         {
                             return [this, counter, object_pointer, navigate]
-                            (Parameters const &...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
+                            (Parameters &...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
                             {
                                 auto iter = correspondence.find(counter);
                                 if (iter != correspondence.end())
@@ -265,7 +265,7 @@ struct RichNavigator
                         Function wrap(Counter const & counter, ObjectPointer&& object_pointer, Navigate&& navigate)
                         {
                             return [this, counter, object_pointer, navigate]
-                            (Parameters const &...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
+                            (Parameters &...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
                             {
                                 auto iter = correspondence.find(counter);
                                 if (iter != correspondence.end())
@@ -300,7 +300,7 @@ struct RichNavigator
                         Function wrap(Counter const & counter, ObjectPointer&& object_pointer, Navigate&& navigate)
                         {
                             return [this, counter, object_pointer = std::move(object_pointer), navigate]
-                            (Parameters const &...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
+                            (Parameters &...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
                             {
                                 auto iter = correspondence.find(counter);
                                 if (iter != correspondence.end())

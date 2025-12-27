@@ -24,7 +24,7 @@ struct Argument
     Argument(Argument const & argument)
     { std::cout << "Argument copy constructed" << std::endl; }
     
-    Argument(Argument const && argument)
+    Argument(Argument && argument)
     { std::cout << "Argument move constructed" << std::endl; }
 };
 
@@ -36,11 +36,11 @@ inline void test()
     using Rolodex = AptRolodex;
 
     Rolodex correspondence{};
-    Activator activator(correspondence);
+    Activator activator{correspondence};
 
     {   
-        std::nullptr_t key = nullptr;
-        std::cout << "/**** Connect to PRvalue Function Object ****/" << std::endl;
+        std::nullptr_t key {nullptr};
+        std::cout << "/**** Connect to Function Pointer ****/" << std::endl;
         activator.connect(correspondence.increment(), key, fun);
         std::cout << "Current counter: " << correspondence.get_counter() << std::endl; 
     }

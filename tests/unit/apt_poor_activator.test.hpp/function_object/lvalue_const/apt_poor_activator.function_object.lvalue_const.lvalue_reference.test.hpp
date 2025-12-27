@@ -33,7 +33,7 @@ struct Argument
     Argument(Argument const & argument)
     { std::cout << "Argument copy constructed" << std::endl; }
     
-    Argument(Argument const && argument)
+    Argument(Argument && argument)
     { std::cout << "Argument move constructed" << std::endl; }
 };
 
@@ -44,7 +44,7 @@ struct Caller
     Caller(Caller const & caller)
     { std::cout << "Function object copy constructed" << std::endl; }
     
-    Caller(Caller const && caller)
+    Caller(Caller && caller)
     { std::cout << "Function object move constructed" << std::endl; }
 
     void operator()(Argument const & arg)
@@ -84,10 +84,10 @@ inline void test()
     using Rolodex = AptRolodex;
 
     Rolodex correspondence{};
-    Activator activator(correspondence);
+    Activator activator{correspondence};
     Caller caller{};
     const Caller const_caller{};
-    ValueCategory key = ValueCategory::LvalueConst;
+    ValueCategory key {ValueCategory::LvalueConst};
 
     {    
         std::cout << "/**** Connect to Lvalue Const Function Object ****/" << std::endl;

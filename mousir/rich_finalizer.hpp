@@ -54,7 +54,7 @@ struct RichFinalizer
                         Function wrap(Counter const & counter, Finalize&& finalize)
                         {
                             return [this, counter, finalize]
-                            (Parameters const &...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
+                            (Parameters &...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
                             {
                                 auto iter = correspondence.find(counter);
                                 if (iter != correspondence.end())
@@ -92,7 +92,7 @@ struct RichFinalizer
                             if constexpr (std::is_lvalue_reference_v<Finalize>)
                             {
                                 return [this, counter, finalize]
-                                (Parameters const &...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
+                                (Parameters &...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
                                 {
                                     auto iter = correspondence.find(counter);
                                     if (iter != correspondence.end())
@@ -126,7 +126,7 @@ struct RichFinalizer
                             else
                             {
                                 return [counter, finalize=std::move(finalize), this]
-                                (Parameters const &...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
+                                (Parameters &...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
                                 {
                                     auto iter = correspondence.find(counter);
                                     if (iter != correspondence.end())
@@ -165,7 +165,7 @@ struct RichFinalizer
                         Function wrap(Counter const & counter, ObjectPointer&& object_pointer, Finalize&& finalize)
                         {
                             return [this, counter, object_pointer, finalize]
-                            (Parameters const &...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
+                            (Parameters &...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
                             {
                                 auto iter = correspondence.find(counter);
                                 if (iter != correspondence.end())
@@ -204,7 +204,7 @@ struct RichFinalizer
                         Function wrap(Counter const & counter, ObjectPointer&& object_pointer, Finalize&& finalize)
                         {
                             return [this, counter, object_pointer = std::move(object_pointer), finalize]
-                            (Parameters const &...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
+                            (Parameters &...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
                             {
                                 auto iter = correspondence.find(counter);
                                 if (iter != correspondence.end())
@@ -243,7 +243,7 @@ struct RichFinalizer
                         Function wrap(Counter const & counter, ObjectPointer&& object_pointer, Finalize&& finalize)
                         {
                             return [this, counter, object_pointer, finalize]
-                            (Parameters const &...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
+                            (Parameters &...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
                             {
                                 auto iter = correspondence.find(counter);
                                 if (iter != correspondence.end())
@@ -283,7 +283,7 @@ struct RichFinalizer
                         Function wrap(Counter const & counter, ObjectPointer&& object_pointer, Finalize&& finalize)
                         {
                             return [this, counter, object_pointer, finalize]
-                            (Parameters const &...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
+                            (Parameters &...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
                             {
                                 auto iter = correspondence.find(counter);
                                 if (iter != correspondence.end())
@@ -321,7 +321,7 @@ struct RichFinalizer
                         Function wrap(Counter const & counter, ObjectPointer&& object_pointer, Finalize&& finalize)
                         {
                             return [this, counter, object_pointer = std::move(object_pointer), finalize]
-                            (Parameters const &...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
+                            (Parameters &...args, Cheesential::Decipher<Parameters>...deciphers) mutable -> bool
                             {
                                 auto iter = correspondence.find(counter);
                                 if (iter != correspondence.end())

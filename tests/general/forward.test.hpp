@@ -21,6 +21,7 @@ const Tester const_tester{};
 int a {1};
 
 static_assert(std::same_as<decltype(std::forward<const int&>(a)), const int&>);
+static_assert(std::same_as<decltype(std::forward<int>(a)), int&&>);
 static_assert(std::same_as<std::decay_t<decltype(std::move(const_tester))>, Tester>);
 
 }

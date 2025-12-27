@@ -36,7 +36,7 @@ struct Executor
                 using Derived = DerivedTemplate<Parameters...>;
                 using Key = TheKey;
                 using TypeSignature = Conceptrodon::Functivore::ApplyReturnType<bool>::Mold<Parameters...>;
-                using Function = FunctionWrapper<Conceptrodon::Functivore::ApplyReturnType<bool>::Mold<Parameters const &..., Decipher<Parameters>...>>;
+                using Function = FunctionWrapper<Conceptrodon::Functivore::ApplyReturnType<bool>::Mold<Parameters &..., Decipher<Parameters>...>>;
                 using Map = TheMap<Key, Function>;
 
                 template <typename Counter>
@@ -116,10 +116,10 @@ struct Executor
 
                     for (; fast_iter != end; slow_iter++, fast_iter++)
                     {
-                        result = result && slow_iter -> second(args..., Cheesential::Decipher<Parameters>{std::type_identity<void>{}}...);
+                        result = result && slow_iter -> second(const_cast<std::remove_cvref_t<Args>&>(args)..., Cheesential::Decipher<Parameters>{std::type_identity<void>{}}...);
                     }
 
-                    return result && slow_iter -> second(args..., Cheesential::Decipher<Parameters>{std::type_identity<Args>{}}...);
+                    return result && slow_iter -> second(const_cast<std::remove_cvref_t<Args>&>(args)..., Cheesential::Decipher<Parameters>{std::type_identity<Args>{}}...);
                 }
 
                 Map map;

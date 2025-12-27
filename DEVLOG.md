@@ -2,7 +2,26 @@
 
 ## Diary
 
-### 2025/12/25
+### 2025/12/28
+
+<ul>
+  <li>
+    <table>
+      <tbody>
+        <tr>
+          <td>Plan</td>
+          <td>Add unit tests</td>
+        </tr>
+        <tr>
+          <td>Progress</td>
+          <td>In progress</td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
+</ul>
+
+### 2025/12/27
 
 <ul>
   <li>
