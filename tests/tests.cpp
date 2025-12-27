@@ -1,30 +1,36 @@
 // Copyright 2024 Feng Mofan
 // SPDX-License-Identifier: Apache-2.0
 
-#include "tests/units/apt_activator.ordinary.test.hpp"
-#include "tests/units/apt_activator.lvalue_reference.test.hpp"
-#include "tests/units/apt_activator.rvalue_reference.test.hpp"
-#include "tests/units/apt_releasor.ordinary.test.hpp"
-#include "tests/units/apt_releasor.lvalue_reference.test.hpp"
-#include "tests/units/apt_releasor.rvalue_reference.test.hpp"
-#include "tests/units/apt_practicer.ordinary.test.hpp"
-#include "tests/units/apt_practicer.lvalue_reference.test.hpp"
-#include "tests/units/apt_burster.ordinary.test.hpp"
-#include "tests/units/apt_burster.lvalue_reference.test.hpp"
-#include "tests/units/apt_burster.rvalue_reference.test.hpp"
+#include "tests/general/initialization_of_standard_function.test.hpp"
+#include "tests/general/overload.test.hpp"
+
+#include "tests/unit/apt_poor_activator.test.hpp/function_object/apt_poor_activator.function_object.connection.test.hpp"
+
+#include "tests/unit/apt_poor_activator.test.hpp/function_object/prvalue/apt_poor_activator.function_object.prvalue.rvalue_reference.test.hpp"
+#include "tests/unit/apt_poor_activator.test.hpp/function_object/prvalue/apt_poor_activator.function_object.prvalue.regular.test.hpp"
+#include "tests/unit/apt_poor_activator.test.hpp/function_object/prvalue/apt_poor_activator.function_object.prvalue.lvalue_reference.test.hpp"
+#include "tests/unit/apt_poor_activator.test.hpp/function_object/prvalue/apt_poor_activator.function_object.prvalue.lvalue_reference_to_const.test.hpp"
+
+#include "tests/unit/apt_poor_activator.test.hpp/pointer_to_function/apt_poor_activator.pointer_to_function.rvalue_reference.test.hpp"
+#include "tests/unit/apt_poor_activator.test.hpp/pointer_to_function/apt_poor_activator.pointer_to_function.regular.test.hpp"
+#include "tests/unit/apt_poor_activator.test.hpp/pointer_to_function/apt_poor_activator.pointer_to_function.lvalue_reference.test.hpp"
+#include "tests/unit/apt_poor_activator.test.hpp/pointer_to_function/apt_poor_activator.pointer_to_function.lvalue_reference_to_const.test.hpp"
 
 int main()
 {
-     Mousir::TestAptActivatorOrdinary::test();
-    // Mousir::TestAptActivatorLvalueReference::test();
-    // Mousir::TestAptActivatorRvalueReference::test();
-    // Mousir::TestAptReleasorOrdinary::test();
-    // Mousir::TestAptReleasorLvalueReference::test();
-    // Mousir::TestAptReleasorRvalueReference::test();
-    // Mousir::TestAptPracticerOrdinary::test();
-    // Mousir::TestAptPracticerLvalueReference::test();
-    // Mousir::TestAptBursterOrdinary::test();
-    // Mousir::TestAptBursterLvalueReference::test();
-    // Mousir::TestAptBursterRvalueReference::test();
+    //Mousir::GeneralTests::TestInitialzationOfStandardFunction::test();
+    //Mousir::GeneralTests::TestOverload::test();
+
+    //Mousir::UnitTests::TestAptActivator::FunctionObject::Connection::test();
+
+    //Mousir::UnitTests::TestAptActivator::FunctionObject::PRvalue::LvalueReferenceToConst::test();
+    //Mousir::UnitTests::TestAptActivator::FunctionObject::PRvalue::LvalueReference::test();
+    //Mousir::UnitTests::TestAptActivator::FunctionObject::PRvalue::RvalueReference::test();
+    //Mousir::UnitTests::TestAptActivator::FunctionObject::PRvalue::Regular::test();
+
+    //Mousir::UnitTests::TestAptActivator::PointerToFunction::LvalueReferenceToConst::test();
+    //Mousir::UnitTests::TestAptActivator::PointerToFunction::LvalueReference::test();
+    //Mousir::UnitTests::TestAptActivator::PointerToFunction::RvalueReference::test();
+    //Mousir::UnitTests::TestAptActivator::PointerToFunction::Regular::test();
     return 0; 
 }

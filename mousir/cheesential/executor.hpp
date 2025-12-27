@@ -36,7 +36,7 @@ struct Executor
                 using Derived = DerivedTemplate<Parameters...>;
                 using Key = TheKey;
                 using TypeSignature = Conceptrodon::Functivore::ApplyReturnType<bool>::Mold<Parameters...>;
-                using Function = FunctionWrapper<Conceptrodon::Functivore::ApplyReturnType<bool>::Mold<std::remove_reference_t<Parameters>&..., Decipher<Parameters>...>>;
+                using Function = FunctionWrapper<Conceptrodon::Functivore::ApplyReturnType<bool>::Mold<Parameters const &..., Decipher<Parameters>...>>;
                 using Map = TheMap<Key, Function>;
 
                 template <typename Counter>
@@ -55,7 +55,6 @@ struct Executor
                 }
 
                 template <typename Counter, typename Execute>
-                requires std::invocable<Execute, Parameters...>
                 Counter connect
                 (
                     Counter const & counter,
@@ -103,29 +102,24 @@ struct Executor
                 auto execute(GivenKey const & the_key, Args&&...args)
                 {
                     auto [begin, end] = map.equal_range(static_cast<Key const &>(the_key));
-                    bool result {false};
-
-// Enable 'Move' if there is only one matching item in the map; 
-
-                    if (std::distance(begin, end) == 1)
+                            
+                    if (begin == end)
                     {
-                        for (auto iter {begin}; iter != end; iter++)
-                        {
-                            result = result || iter -> second(args..., Decipher<Parameters>{std::type_identity<Args>{}}...);
-                        }
+                        return false;
                     }
 
-// Always 'Copy' if there is more; 
+                    bool result {true};
 
-                    else
+                    auto slow_iter {begin};
+                    auto fast_iter {begin};
+                    fast_iter ++;
+
+                    for (; fast_iter != end; slow_iter++, fast_iter++)
                     {
-                        for (auto iter {begin}; iter != end; iter++)
-                        {
-                            result = result || iter -> second(args..., Decipher<Parameters>{std::type_identity<void>{}}...);
-                        }
+                        result = result && slow_iter -> second(args..., Cheesential::Decipher<Parameters>{std::type_identity<void>{}}...);
                     }
 
-                    return result;
+                    return result && slow_iter -> second(args..., Cheesential::Decipher<Parameters>{std::type_identity<Args>{}}...);
                 }
 
                 Map map;
