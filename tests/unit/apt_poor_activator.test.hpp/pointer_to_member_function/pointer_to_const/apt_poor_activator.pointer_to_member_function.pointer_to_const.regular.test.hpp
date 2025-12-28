@@ -64,10 +64,10 @@ struct CallerDescendant: public Caller
 {
     CallerDescendant() = default;
 
-    CallerDescendant(Caller const & caller)
+    CallerDescendant(CallerDescendant const & caller)
     { std::cout << "Function object copy constructed" << std::endl; }
     
-    CallerDescendant(Caller && caller)
+    CallerDescendant(CallerDescendant && caller)
     { std::cout << "Function object move constructed" << std::endl; }
 
     void fun(Argument) const override
@@ -87,7 +87,7 @@ inline void test()
     PointerSpecifier virtual_key {PointerSpecifier::Virtual};
 
     const Caller caller{};
-    CallerDescendant caller_descendant{};
+    const CallerDescendant  caller_descendant{};
 
     {    
         std::cout << "/**** Connect to Pointer to Member Function with Pointer to Const ****/" << std::endl;

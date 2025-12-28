@@ -89,7 +89,7 @@ struct CustomPointer
     {
         return [fun, this](Ps...ps) -> R
         {
-            std::cout << "Calling pointer to member function from pointer like object" << std::endl;
+            std::cout << "Calling pointer to const member function from pointer like object" << std::endl;
             return (c->*fun)(ps...);
         };
     }

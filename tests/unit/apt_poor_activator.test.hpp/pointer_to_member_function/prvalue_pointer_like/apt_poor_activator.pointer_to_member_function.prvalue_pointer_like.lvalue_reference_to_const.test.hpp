@@ -1,8 +1,8 @@
 // Copyright 2024 Feng Mofan
 // SPDX-License-Identifier: Apache-2.0
 
-#ifndef MOUSIR_UNIT_TESTS_TEST_APT_POOR_ACTIVATOR_POINTER_TO_MEMBER_FUNCTION_POINTER_RVALUE_REFERENCE_H
-#define MOUSIR_UNIT_TESTS_TEST_APT_POOR_ACTIVATOR_POINTER_TO_MEMBER_FUNCTION_POINTER_RVALUE_REFERENCE_H
+#ifndef MOUSIR_UNIT_TESTS_TEST_APT_POOR_ACTIVATOR_POINTER_TO_MEMBER_FUNCTION_PRVALUE_POINTER_LIKE_LVALUE_REFERENCE_TO_CONST_H
+#define MOUSIR_UNIT_TESTS_TEST_APT_POOR_ACTIVATOR_POINTER_TO_MEMBER_FUNCTION_PRVALUE_POINTER_LIKE_LVALUE_REFERENCE_TO_CONST_H
 
 #include "mousir/apt_poor_activator.hpp"
 #include "mousir/apt_rolodex.hpp"
@@ -10,20 +10,13 @@
 #include <iostream>
 #include <ostream>
 
-#define CHECK_VIABILITY 0
-#if CHECK_VIABILITY
-#define BLANKET(...) __VA_ARGS__
-#else
-#define BLANKET(...)
-#endif
-
 
 namespace Mousir {
 namespace UnitTests {
 namespace TestAptActivator {
 namespace PointerToMemberFunction {
-namespace Pointer {
-namespace RvalueReference {
+namespace PRvaluePointerLike {
+namespace LvalueReferenceToConst {
 
 enum PointerSpecifier
 {
@@ -62,9 +55,9 @@ struct Caller
     Caller(Caller && caller)
     { std::cout << "Function object move constructed" << std::endl; }
 
-    virtual void fun(Argument &&)
+    virtual void fun(Argument const &)
     {
-        std::cout << "Pointer to member function called by rvalue reference" << std::endl;
+        std::cout << "Pointer to member function called by lvalue reference to const" << std::endl;
     }
 };
 
@@ -78,36 +71,77 @@ struct CallerDescendant: public Caller
     CallerDescendant(CallerDescendant && caller)
     { std::cout << "Function object move constructed" << std::endl; }
 
-    void fun(Argument &&) override
+    void fun(Argument const &) override
     {
-        std::cout << "Descendant pointer to member function called by rvalue reference" << std::endl;
+        std::cout << "Descendant pointer to member function called by lvalue reference to const" << std::endl;
     }
+};
+
+template<typename C>
+struct CustomPointer
+{
+    CustomPointer(C* the_c): c{the_c} {}
+
+    CustomPointer(CustomPointer const & caller)
+    {
+        c = caller.c;
+        std::cout << "Custom pointer copy constructed" << std::endl;
+    }
+    
+    CustomPointer(CustomPointer && caller)
+    {
+        c = caller.c;
+        std::cout << "Custom pointer move constructed" << std::endl;
+    }
+    
+    template<typename R, typename...Ps>
+    std::function<R(Ps...)> operator->*(R(C::*fun)(Ps...)) const
+    {
+        return [fun, this](Ps...ps) -> R
+        {
+            std::cout << "Calling pointer to member function from pointer like object" << std::endl;
+            return (c->*fun)(std::forward<Ps>(ps)...);
+        };
+    }
+    
+    template<typename R, typename...Ps>
+    std::function<R(Ps...)> operator->*(R(C::*fun)(Ps...) const) const
+    {
+        return [fun, this](Ps...ps) -> R
+        {
+            std::cout << "Calling pointer to const member function from pointer like object" << std::endl;
+            return (c->*fun)(std::forward<Ps>(ps)...);
+        };
+    }
+
+    C& operator*() { return *c; }
+
+    C* c;
 };
 
 inline void test()
 {
-    using Activator = AptPoorActivator<PointerSpecifier>::Mold<Argument &&>;
+    using Activator = AptPoorActivator<PointerSpecifier>::Mold<Argument const &>;
     using Rolodex = AptRolodex;
 
     Rolodex correspondence{};
     Activator activator {correspondence};
     PointerSpecifier key {PointerSpecifier::Pointer};
     PointerSpecifier virtual_key {PointerSpecifier::Virtual};
-
     Caller caller{};
     CallerDescendant caller_descendant{};
 
     {    
-        std::cout << "/**** Connect to Pointer to Member Function with Pointer ****/" << std::endl;
-        activator.connect(correspondence.increment(), key, &caller, &Caller::fun);
+        std::cout << "/**** Connect to Pointer to Member Function with PRvalue Pointer Like ****/" << std::endl;
+        activator.connect(correspondence.increment(), key, CustomPointer<Caller>{&caller}, &Caller::fun);
         std::cout << "Current counter: " << correspondence.get_counter() << std::endl; 
     }
 
     std::cout << std::endl;
 
     {    
-        std::cout << "/**** Connect to Pointer to Member Function with Pointer to Descendant ****/" << std::endl;
-        activator.connect(correspondence.increment(), virtual_key, &caller_descendant, &Caller::fun);
+        std::cout << "/**** Connect to Pointer to Member Function with PRvalue Pointer Like to Descendant ****/" << std::endl;
+        activator.connect(correspondence.increment(), virtual_key, CustomPointer<Caller>{&caller_descendant}, &Caller::fun);
         std::cout << "Current counter: " << correspondence.get_counter() << std::endl; 
     }
 
@@ -121,7 +155,7 @@ inline void test()
         flag = false;
 
         std::cout << "Execution ---> " << std::boolalpha << flag << std::endl;
-        BLANKET(bool ret = activator.execute(key, arg));
+        bool ret = activator.execute(key, arg);
         std::cout << "Execution <--- " << std::boolalpha << flag << std::endl;
     }
 
@@ -135,7 +169,7 @@ inline void test()
         flag = false;
 
         std::cout << "Execution ---> " << std::boolalpha << flag << std::endl;
-        BLANKET(bool ret = activator.execute(key, arg));
+        bool ret = activator.execute(key, arg);
         std::cout << "Execution <--- " << std::boolalpha << flag << std::endl;
     }
 
@@ -176,7 +210,7 @@ inline void test()
         flag = false;
 
         std::cout << "Execution ---> " << std::boolalpha << flag << std::endl;
-        BLANKET(bool ret = activator.execute(virtual_key, arg));
+        bool ret = activator.execute(virtual_key, arg);
         std::cout << "Execution <--- " << std::boolalpha << flag << std::endl;
     }
 
@@ -190,7 +224,7 @@ inline void test()
         flag = false;
 
         std::cout << "Execution ---> " << std::boolalpha << flag << std::endl;
-        BLANKET(bool ret = activator.execute(virtual_key, arg));
+        bool ret = activator.execute(virtual_key, arg);
         std::cout << "Execution <--- " << std::boolalpha << flag << std::endl;
     }
 
@@ -223,8 +257,5 @@ inline void test()
 }
 
 }}}}}}
-
-#undef BLANKET
-#undef CHECK_VIABILITY
 
 #endif

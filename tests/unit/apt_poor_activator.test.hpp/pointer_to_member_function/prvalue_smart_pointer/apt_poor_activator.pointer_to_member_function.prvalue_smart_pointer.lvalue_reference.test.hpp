@@ -1,8 +1,8 @@
 // Copyright 2024 Feng Mofan
 // SPDX-License-Identifier: Apache-2.0
 
-#ifndef MOUSIR_UNIT_TESTS_TEST_APT_POOR_ACTIVATOR_POINTER_TO_MEMBER_FUNCTION_POINTER_RVALUE_REFERENCE_H
-#define MOUSIR_UNIT_TESTS_TEST_APT_POOR_ACTIVATOR_POINTER_TO_MEMBER_FUNCTION_POINTER_RVALUE_REFERENCE_H
+#ifndef MOUSIR_UNIT_TESTS_TEST_APT_POOR_ACTIVATOR_POINTER_TO_MEMBER_FUNCTION_PRVALUE_SMART_POINTER_LVALUE_REFERENCE_H
+#define MOUSIR_UNIT_TESTS_TEST_APT_POOR_ACTIVATOR_POINTER_TO_MEMBER_FUNCTION_PRVALUE_SMART_POINTER_LVALUE_REFERENCE_H
 
 #include "mousir/apt_poor_activator.hpp"
 #include "mousir/apt_rolodex.hpp"
@@ -22,8 +22,8 @@ namespace Mousir {
 namespace UnitTests {
 namespace TestAptActivator {
 namespace PointerToMemberFunction {
-namespace Pointer {
-namespace RvalueReference {
+namespace PRvalueSmartPointer {
+namespace LvalueReference {
 
 enum PointerSpecifier
 {
@@ -62,9 +62,9 @@ struct Caller
     Caller(Caller && caller)
     { std::cout << "Function object move constructed" << std::endl; }
 
-    virtual void fun(Argument &&)
+    virtual void fun(Argument &)
     {
-        std::cout << "Pointer to member function called by rvalue reference" << std::endl;
+        std::cout << "Pointer to member function called by lvalue reference" << std::endl;
     }
 };
 
@@ -78,15 +78,38 @@ struct CallerDescendant: public Caller
     CallerDescendant(CallerDescendant && caller)
     { std::cout << "Function object move constructed" << std::endl; }
 
-    void fun(Argument &&) override
+    void fun(Argument &) override
     {
-        std::cout << "Descendant pointer to member function called by rvalue reference" << std::endl;
+        std::cout << "Descendant pointer to member function called by lvalue reference" << std::endl;
     }
+};
+
+template<typename C>
+struct CustomSmartPointer
+{
+    CustomSmartPointer(): smart_ptr{std::make_shared<C>()} {}
+
+    CustomSmartPointer(CustomSmartPointer const & caller)
+    {
+        smart_ptr = caller.smart_ptr;
+        std::cout << "Custom smart pointer copy constructed" << std::endl;
+    }
+    
+    CustomSmartPointer(CustomSmartPointer && caller)
+    {
+        smart_ptr = std::move(caller.smart_ptr);
+        std::cout << "Custom smart pointer move constructed" << std::endl;
+    }
+
+    auto get() const 
+    {return smart_ptr.get();}
+
+    std::shared_ptr<C> smart_ptr;
 };
 
 inline void test()
 {
-    using Activator = AptPoorActivator<PointerSpecifier>::Mold<Argument &&>;
+    using Activator = AptPoorActivator<PointerSpecifier>::Mold<Argument &>;
     using Rolodex = AptRolodex;
 
     Rolodex correspondence{};
@@ -94,20 +117,17 @@ inline void test()
     PointerSpecifier key {PointerSpecifier::Pointer};
     PointerSpecifier virtual_key {PointerSpecifier::Virtual};
 
-    Caller caller{};
-    CallerDescendant caller_descendant{};
-
     {    
-        std::cout << "/**** Connect to Pointer to Member Function with Pointer ****/" << std::endl;
-        activator.connect(correspondence.increment(), key, &caller, &Caller::fun);
+        std::cout << "/**** Connect to Pointer to Member Function with PRvalue Smart Pointer ****/" << std::endl;
+        activator.connect(correspondence.increment(), key, CustomSmartPointer<Caller>{}, &Caller::fun);
         std::cout << "Current counter: " << correspondence.get_counter() << std::endl; 
     }
 
     std::cout << std::endl;
 
     {    
-        std::cout << "/**** Connect to Pointer to Member Function with Pointer to Descendant ****/" << std::endl;
-        activator.connect(correspondence.increment(), virtual_key, &caller_descendant, &Caller::fun);
+        std::cout << "/**** Connect to Pointer to Member Function with PRvalue Smart Pointer to Descendant ****/" << std::endl;
+        activator.connect(correspondence.increment(), virtual_key, CustomSmartPointer<CallerDescendant>{}, &Caller::fun);
         std::cout << "Current counter: " << correspondence.get_counter() << std::endl; 
     }
 
@@ -121,7 +141,7 @@ inline void test()
         flag = false;
 
         std::cout << "Execution ---> " << std::boolalpha << flag << std::endl;
-        BLANKET(bool ret = activator.execute(key, arg));
+        bool ret = activator.execute(key, arg);
         std::cout << "Execution <--- " << std::boolalpha << flag << std::endl;
     }
 
@@ -148,7 +168,7 @@ inline void test()
         flag = false;
 
         std::cout << "Execution ---> " << std::boolalpha << flag << std::endl;
-        bool ret = activator.execute(key, Argument{});
+        BLANKET(bool ret = activator.execute(key, Argument{}));
         std::cout << "Execution <--- " << std::boolalpha << flag << std::endl;
     }
 
@@ -162,7 +182,7 @@ inline void test()
         flag = false;
 
         std::cout << "Execution ---> " << std::boolalpha << flag << std::endl;
-        bool ret = activator.execute(key, std::move(arg));
+        BLANKET(bool ret = activator.execute(key, std::move(arg)));
         std::cout << "Execution <--- " << std::boolalpha << flag << std::endl;
     }
 
@@ -176,7 +196,7 @@ inline void test()
         flag = false;
 
         std::cout << "Execution ---> " << std::boolalpha << flag << std::endl;
-        BLANKET(bool ret = activator.execute(virtual_key, arg));
+        bool ret = activator.execute(virtual_key, arg);
         std::cout << "Execution <--- " << std::boolalpha << flag << std::endl;
     }
 
@@ -203,7 +223,7 @@ inline void test()
         flag = false;
 
         std::cout << "Execution ---> " << std::boolalpha << flag << std::endl;
-        bool ret = activator.execute(virtual_key, Argument{});
+        BLANKET(bool ret = activator.execute(virtual_key, Argument{}));
         std::cout << "Execution <--- " << std::boolalpha << flag << std::endl;
     }
 
@@ -217,7 +237,7 @@ inline void test()
         flag = false;
 
         std::cout << "Execution ---> " << std::boolalpha << flag << std::endl;
-        bool ret = activator.execute(virtual_key, std::move(arg));
+        BLANKET(bool ret = activator.execute(virtual_key, std::move(arg)));
         std::cout << "Execution <--- " << std::boolalpha << flag << std::endl;
     }
 }

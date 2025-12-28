@@ -30,6 +30,21 @@
 #include "tests/unit/apt_poor_activator.test.hpp/pointer_to_member_function/pointer_to_const/apt_poor_activator.pointer_to_member_function.pointer_to_const.lvalue_reference.test.hpp"
 #include "tests/unit/apt_poor_activator.test.hpp/pointer_to_member_function/pointer_to_const/apt_poor_activator.pointer_to_member_function.pointer_to_const.lvalue_reference_to_const.test.hpp"
 
+#include "tests/unit/apt_poor_activator.test.hpp/pointer_to_member_function/prvalue_smart_pointer/apt_poor_activator.pointer_to_member_function.prvalue_smart_pointer.rvalue_reference.test.hpp"
+#include "tests/unit/apt_poor_activator.test.hpp/pointer_to_member_function/prvalue_smart_pointer/apt_poor_activator.pointer_to_member_function.prvalue_smart_pointer.regular.test.hpp"
+#include "tests/unit/apt_poor_activator.test.hpp/pointer_to_member_function/prvalue_smart_pointer/apt_poor_activator.pointer_to_member_function.prvalue_smart_pointer.lvalue_reference.test.hpp"
+#include "tests/unit/apt_poor_activator.test.hpp/pointer_to_member_function/prvalue_smart_pointer/apt_poor_activator.pointer_to_member_function.prvalue_smart_pointer.lvalue_reference_to_const.test.hpp"
+
+#include "tests/unit/apt_poor_activator.test.hpp/pointer_to_member_function/lvalue_smart_pointer_to_const/apt_poor_activator.pointer_to_member_function.lvalue_smart_pointer_to_const.rvalue_reference.test.hpp"
+#include "tests/unit/apt_poor_activator.test.hpp/pointer_to_member_function/lvalue_smart_pointer_to_const/apt_poor_activator.pointer_to_member_function.lvalue_smart_pointer_to_const.regular.test.hpp"
+#include "tests/unit/apt_poor_activator.test.hpp/pointer_to_member_function/lvalue_smart_pointer_to_const/apt_poor_activator.pointer_to_member_function.lvalue_smart_pointer_to_const.lvalue_reference.test.hpp"
+#include "tests/unit/apt_poor_activator.test.hpp/pointer_to_member_function/lvalue_smart_pointer_to_const/apt_poor_activator.pointer_to_member_function.lvalue_smart_pointer_to_const.lvalue_reference_to_const.test.hpp"
+
+#include "tests/unit/apt_poor_activator.test.hpp/pointer_to_member_function/prvalue_pointer_like/apt_poor_activator.pointer_to_member_function.prvalue_pointer_like.rvalue_reference.test.hpp"
+#include "tests/unit/apt_poor_activator.test.hpp/pointer_to_member_function/prvalue_pointer_like/apt_poor_activator.pointer_to_member_function.prvalue_pointer_like.regular.test.hpp"
+#include "tests/unit/apt_poor_activator.test.hpp/pointer_to_member_function/prvalue_pointer_like/apt_poor_activator.pointer_to_member_function.prvalue_pointer_like.lvalue_reference.test.hpp"
+#include "tests/unit/apt_poor_activator.test.hpp/pointer_to_member_function/prvalue_pointer_like/apt_poor_activator.pointer_to_member_function.prvalue_pointer_like.lvalue_reference_to_const.test.hpp"
+
 int main()
 {
     //Mousir::GeneralTests::TestInitialzationOfStandardFunction::test();
@@ -60,5 +75,20 @@ int main()
     //Mousir::UnitTests::TestAptActivator::PointerToMemberFunction::PointerToConst::LvalueReference::test();
     //Mousir::UnitTests::TestAptActivator::PointerToMemberFunction::PointerToConst::Regular::test();
     //Mousir::UnitTests::TestAptActivator::PointerToMemberFunction::PointerToConst::RvalueReference::test();
+
+    // Mousir::UnitTests::TestAptActivator::PointerToMemberFunction::PRvalueSmartPointer::LvalueReferenceToConst::test();
+    // Mousir::UnitTests::TestAptActivator::PointerToMemberFunction::PRvalueSmartPointer::LvalueReference::test();
+    // Mousir::UnitTests::TestAptActivator::PointerToMemberFunction::PRvalueSmartPointer::Regular::test();
+    // Mousir::UnitTests::TestAptActivator::PointerToMemberFunction::PRvalueSmartPointer::RvalueReference::test();
+
+    // Mousir::UnitTests::TestAptActivator::PointerToMemberFunction::LvalueSmartPointerToConst::LvalueReferenceToConst::test();
+    // Mousir::UnitTests::TestAptActivator::PointerToMemberFunction::LvalueSmartPointerToConst::LvalueReference::test();
+    // Mousir::UnitTests::TestAptActivator::PointerToMemberFunction::LvalueSmartPointerToConst::Regular::test();
+    // Mousir::UnitTests::TestAptActivator::PointerToMemberFunction::LvalueSmartPointerToConst::RvalueReference::test();
+
+    // Mousir::UnitTests::TestAptActivator::PointerToMemberFunction::PRvaluePointerLike::LvalueReferenceToConst::test();
+    // Mousir::UnitTests::TestAptActivator::PointerToMemberFunction::PRvaluePointerLike::LvalueReference::test();
+    // Mousir::UnitTests::TestAptActivator::PointerToMemberFunction::PRvaluePointerLike::Regular::test();
+    // Mousir::UnitTests::TestAptActivator::PointerToMemberFunction::PRvaluePointerLike::RvalueReference::test();
     return 0; 
 }

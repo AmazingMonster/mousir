@@ -1,8 +1,8 @@
 // Copyright 2024 Feng Mofan
 // SPDX-License-Identifier: Apache-2.0
 
-#ifndef MOUSIR_UNIT_TESTS_TEST_APT_POOR_ACTIVATOR_POINTER_TO_MEMBER_FUNCTION_POINTER_RVALUE_REFERENCE_H
-#define MOUSIR_UNIT_TESTS_TEST_APT_POOR_ACTIVATOR_POINTER_TO_MEMBER_FUNCTION_POINTER_RVALUE_REFERENCE_H
+#ifndef MOUSIR_UNIT_TESTS_TEST_APT_POOR_ACTIVATOR_POINTER_TO_MEMBER_FUNCTION_PRVALUE_SMART_POINTER_RVALUE_REFERENCE_H
+#define MOUSIR_UNIT_TESTS_TEST_APT_POOR_ACTIVATOR_POINTER_TO_MEMBER_FUNCTION_PRVALUE_SMART_POINTER_RVALUE_REFERENCE_H
 
 #include "mousir/apt_poor_activator.hpp"
 #include "mousir/apt_rolodex.hpp"
@@ -22,7 +22,7 @@ namespace Mousir {
 namespace UnitTests {
 namespace TestAptActivator {
 namespace PointerToMemberFunction {
-namespace Pointer {
+namespace PRvalueSmartPointer {
 namespace RvalueReference {
 
 enum PointerSpecifier
@@ -84,6 +84,29 @@ struct CallerDescendant: public Caller
     }
 };
 
+template<typename C>
+struct CustomSmartPointer
+{
+    CustomSmartPointer(): smart_ptr{std::make_shared<C>()} {}
+
+    CustomSmartPointer(CustomSmartPointer const & caller)
+    {
+        smart_ptr = caller.smart_ptr;
+        std::cout << "Custom smart pointer copy constructed" << std::endl;
+    }
+    
+    CustomSmartPointer(CustomSmartPointer && caller)
+    {
+        smart_ptr = std::move(caller.smart_ptr);
+        std::cout << "Custom smart pointer move constructed" << std::endl;
+    }
+
+    auto get() const 
+    {return smart_ptr.get();}
+
+    std::shared_ptr<C> smart_ptr;
+};
+
 inline void test()
 {
     using Activator = AptPoorActivator<PointerSpecifier>::Mold<Argument &&>;
@@ -94,20 +117,17 @@ inline void test()
     PointerSpecifier key {PointerSpecifier::Pointer};
     PointerSpecifier virtual_key {PointerSpecifier::Virtual};
 
-    Caller caller{};
-    CallerDescendant caller_descendant{};
-
     {    
-        std::cout << "/**** Connect to Pointer to Member Function with Pointer ****/" << std::endl;
-        activator.connect(correspondence.increment(), key, &caller, &Caller::fun);
+        std::cout << "/**** Connect to Pointer to Member Function with PRvalue Smart Pointer ****/" << std::endl;
+        activator.connect(correspondence.increment(), key, CustomSmartPointer<Caller>{}, &Caller::fun);
         std::cout << "Current counter: " << correspondence.get_counter() << std::endl; 
     }
 
     std::cout << std::endl;
 
     {    
-        std::cout << "/**** Connect to Pointer to Member Function with Pointer to Descendant ****/" << std::endl;
-        activator.connect(correspondence.increment(), virtual_key, &caller_descendant, &Caller::fun);
+        std::cout << "/**** Connect to Pointer to Member Function with PRvalue Smart Pointer to Descendant ****/" << std::endl;
+        activator.connect(correspondence.increment(), virtual_key, CustomSmartPointer<CallerDescendant>{}, &Caller::fun);
         std::cout << "Current counter: " << correspondence.get_counter() << std::endl; 
     }
 

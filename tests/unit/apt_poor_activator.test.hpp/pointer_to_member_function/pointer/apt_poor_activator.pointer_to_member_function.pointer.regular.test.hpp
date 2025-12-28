@@ -64,10 +64,10 @@ struct CallerDescendant: public Caller
 {
     CallerDescendant() = default;
 
-    CallerDescendant(Caller const & caller)
+    CallerDescendant(CallerDescendant const & caller)
     { std::cout << "Function object copy constructed" << std::endl; }
     
-    CallerDescendant(Caller && caller)
+    CallerDescendant(CallerDescendant && caller)
     { std::cout << "Function object move constructed" << std::endl; }
 
     void fun(Argument) override

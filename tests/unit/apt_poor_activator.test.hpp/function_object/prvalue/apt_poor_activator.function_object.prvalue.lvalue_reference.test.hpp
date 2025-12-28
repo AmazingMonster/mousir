@@ -86,7 +86,6 @@ inline void test()
     Rolodex correspondence{};
     Activator activator{correspondence};
     Caller caller{};
-    const Caller const_caller{};
     ValueCategory key {ValueCategory::PRvalue};
 
     {    
